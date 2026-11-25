@@ -22,16 +22,6 @@
   --console-danger: #b42318;
   --console-row-hover: #f7f8fb;
 
-  /* Portal / marketing remnants (customer surfaces) */
-  --rutr-ink: #141210;
-  --rutr-asphalt: #1e1a16;
-  --rutr-chalk: #f3ebe0;
-  --rutr-mist: #cfc3b2;
-  --rutr-copper: #c45c26;
-  --rutr-copper-hot: #e07a35;
-  --rutr-sage: #7f8f6b;
-  --rutr-line: rgba(243, 235, 224, 0.14);
-
   --background: var(--console-bg);
   --foreground: var(--console-text);
 }
@@ -219,11 +209,4 @@ a {
     transform: scale(1.25);
     opacity: 0.55;
   }
-}
-
-/* Portal keeps atmospheric customer surface */
-.portal-shell body,
-body.portal-mode {
-  background: #141210;
-  color: var(--rutr-chalk);
 }
