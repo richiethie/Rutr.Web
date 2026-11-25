@@ -28,7 +28,7 @@ export default async function JobDetailPage({
       <div className="mb-3">
         <Link
           href="/jobs"
-          className="text-[12px] font-medium text-[var(--console-muted)] hover:text-[var(--console-accent)]"
+          className="text-[12px] font-semibold text-[var(--console-muted)] transition-colors hover:text-[var(--console-accent)]"
         >
           ← Jobs
         </Link>
@@ -58,24 +58,29 @@ export default async function JobDetailPage({
         }
       />
 
-      <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <section className="console-panel p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Evidence</h2>
-            <p className="text-[11px] text-[var(--console-muted)]">
+      <div className="stagger-1 grid gap-4 xl:grid-cols-[1.4fr_1fr]">
+        <section className="console-panel p-5">
+          <div className="mb-3.5 flex items-center justify-between">
+            <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+              Evidence
+            </h2>
+            <p className="text-[11px] font-medium text-[var(--console-muted)]">
               {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {job.photos.map((photo) => (
-              <figure key={photo.id} className="overflow-hidden rounded-md border border-[var(--console-border)]">
+              <figure
+                key={photo.id}
+                className="photo-lift overflow-hidden rounded-[var(--console-radius-sm)] border border-[var(--console-border)]"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photo.imageUrl}
                   alt={photo.caption}
                   className="aspect-[16/10] w-full object-cover"
                 />
-                <figcaption className="border-t border-[var(--console-border)] bg-[#fafbfc] px-3 py-2 text-[12px] text-[var(--console-muted)]">
+                <figcaption className="border-t border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-white px-3 py-2.5 text-[12px] text-[var(--console-muted)]">
                   {photo.caption}
                   <span className="ml-2 font-semibold text-[var(--console-text)]">
                     {photo.customerVisible ? "Customer visible" : "Staff only"}
@@ -90,8 +95,10 @@ export default async function JobDetailPage({
         </section>
 
         <section className="console-panel overflow-hidden">
-          <div className="border-b border-[var(--console-border)] bg-[#f8f9fb] px-4 py-2.5">
-            <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Message drafts</h2>
+          <div className="border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">
+            <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+              Message drafts
+            </h2>
           </div>
           <ul className="divide-y divide-[var(--console-border)]">
             {job.drafts.map((draft) => (
@@ -125,9 +132,11 @@ export default async function JobDetailPage({
         </section>
       </div>
 
-      <section className="console-panel mt-4 overflow-hidden">
-        <div className="border-b border-[var(--console-border)] bg-[#f8f9fb] px-4 py-2.5">
-          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Audit trail</h2>
+      <section className="stagger-2 console-panel mt-4 overflow-hidden">
+        <div className="border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">
+          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+            Audit trail
+          </h2>
         </div>
         {audit.data.length === 0 ? (
           <p className="px-4 py-6 text-[13px] text-[var(--console-muted)]">

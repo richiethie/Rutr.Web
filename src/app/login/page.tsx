@@ -27,22 +27,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--console-bg)] px-4">
-      <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <p className="brand-mark text-2xl text-[var(--console-text)]">RUTR</p>
-          <p className="mt-1 text-[13px] text-[var(--console-muted)]">Connect staff console</p>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
+      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-[var(--console-accent)] opacity-[0.12] blur-3xl" />
+      <div className="pointer-events-none absolute -right-16 bottom-8 h-64 w-64 rounded-full bg-[var(--console-success)] opacity-[0.08] blur-3xl" />
+      <div className="page-enter relative w-full max-w-md">
+        <div className="mb-7 text-center">
+          <p className="brand-mark text-[28px] text-[var(--console-text)]">RUTR</p>
+          <p className="mt-2 text-[13px] text-[var(--console-muted)]">Connect staff console</p>
         </div>
-        <div className="console-panel p-6 shadow-sm">
-          <h1 className="text-[18px] font-semibold text-[var(--console-text)]">Sign in</h1>
-          <p className="mt-1 text-[13px] text-[var(--console-muted)]">
+        <div className="console-panel p-7 shadow-[var(--console-shadow-lg)]">
+          <h1 className="display-title text-[22px] font-semibold text-[var(--console-text)]">
+            Sign in
+          </h1>
+          <p className="mt-1.5 text-[13px] text-[var(--console-muted)]">
             Demo: pm@rutters.demo / rutters-demo
           </p>
-          <form onSubmit={onSubmit} className="mt-5 space-y-3">
+          <form onSubmit={onSubmit} className="mt-6 space-y-3.5">
             <label className="block text-[12px] font-semibold text-[var(--console-muted)]">
               Email
               <input
-                className="mt-1 h-9 w-full rounded-[5px] border border-[var(--console-border)] bg-white px-3 text-[13px] text-[var(--console-text)] outline-none focus:border-[var(--console-accent)]"
+                className="console-input mt-1.5"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -53,7 +57,7 @@ export default function LoginPage() {
             <label className="block text-[12px] font-semibold text-[var(--console-muted)]">
               Password
               <input
-                className="mt-1 h-9 w-full rounded-[5px] border border-[var(--console-border)] bg-white px-3 text-[13px] text-[var(--console-text)] outline-none focus:border-[var(--console-accent)]"
+                className="console-input mt-1.5"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -62,13 +66,13 @@ export default function LoginPage() {
               />
             </label>
             {error ? <p className="text-[12px] text-[var(--console-danger)]">{error}</p> : null}
-            <button type="submit" disabled={busy} className="console-btn console-btn-primary w-full">
+            <button type="submit" disabled={busy} className="console-btn console-btn-primary mt-1 w-full">
               {busy ? "Signing in…" : "Sign in"}
             </button>
           </form>
         </div>
-        <p className="mt-4 text-center text-[12px] text-[var(--console-muted)]">
-          <Link href="/jobs" className="font-medium text-[var(--console-accent)] hover:underline">
+        <p className="mt-5 text-center text-[12px] text-[var(--console-muted)]">
+          <Link href="/jobs" className="font-semibold text-[var(--console-accent)] hover:underline">
             Continue with demo header
           </Link>
         </p>

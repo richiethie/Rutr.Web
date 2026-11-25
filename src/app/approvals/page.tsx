@@ -30,9 +30,9 @@ export default async function ApprovalsPage() {
         }
       />
 
-      <div className="console-panel overflow-hidden">
+      <div className="stagger-1 console-panel overflow-hidden">
         {withPortal.length === 0 ? (
-          <p className="px-4 py-10 text-center text-[13px] text-[var(--console-muted)]">
+          <p className="px-4 py-12 text-center text-[13px] text-[var(--console-muted)]">
             Queue is clear. Run a mock sync from Integrations or wait for CompanyCam activity.
           </p>
         ) : (
@@ -52,11 +52,13 @@ export default async function ApprovalsPage() {
                   <td>
                     <Link
                       href={`/jobs/${item.jobId}`}
-                      className="font-semibold hover:text-[var(--console-accent)]"
+                      className="font-semibold tracking-tight transition-colors hover:text-[var(--console-accent)]"
                     >
                       {item.addressLine1}
                     </Link>
-                    <p className="text-[12px] text-[var(--console-muted)]">{item.homeownerName}</p>
+                    <p className="mt-0.5 text-[12px] text-[var(--console-muted)]">
+                      {item.homeownerName}
+                    </p>
                   </td>
                   <td>
                     <span className="console-badge">{item.channel}</span>

@@ -56,7 +56,7 @@ export default async function IntegrationsPage() {
         actions={<SyncButton />}
       />
 
-      <div className="console-panel overflow-hidden">
+      <div className="stagger-1 console-panel overflow-hidden">
         <table className="console-table">
           <thead>
             <tr>

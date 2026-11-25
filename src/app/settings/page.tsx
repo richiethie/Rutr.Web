@@ -16,9 +16,11 @@ export default async function SettingsPage() {
         description="Org and messaging defaults for the Rutters Connect pilot."
       />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <section className="console-panel p-4">
-          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Organization</h2>
+      <div className="stagger-1 grid gap-4 lg:grid-cols-2">
+        <section className="console-panel p-5">
+          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+            Organization
+          </h2>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
@@ -53,8 +55,8 @@ export default async function SettingsPage() {
           </dl>
         </section>
 
-        <section className="console-panel p-4">
-          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">
+        <section className="console-panel p-5">
+          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
             SMS consent &amp; quiet hours
           </h2>
           <p className="mt-2 text-[13px] text-[var(--console-muted)]">
@@ -87,8 +89,10 @@ export default async function SettingsPage() {
           </dl>
         </section>
 
-        <section className="console-panel p-4">
-          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Webhook endpoints</h2>
+        <section className="console-panel p-5">
+          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+            Webhook endpoints
+          </h2>
           <p className="mt-2 text-[13px] text-[var(--console-muted)]">
             Point vendors at the API (not this Next app). Local base{" "}
             <span className="font-mono-data text-[var(--console-text)]">http://127.0.0.1:5188</span>.
@@ -100,8 +104,10 @@ export default async function SettingsPage() {
           </ul>
         </section>
 
-        <section className="console-panel p-4">
-          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Portal media</h2>
+        <section className="console-panel p-5">
+          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
+            Portal media
+          </h2>
           <p className="mt-2 text-[13px] text-[var(--console-muted)]">
             Only PM-approved photos become customer-visible. Production media will land in Cloudflare
             R2; the local slice uses seeded image URLs.

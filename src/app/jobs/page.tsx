@@ -21,7 +21,7 @@ export default async function JobsPage({
     <StaffChrome active="jobs" source={source}>
       <PageHeader
         title="Jobs"
-        description="JobNimbus work for Rutters with pending digest counts from CompanyCam evidence."
+        description="Live Rutters work from JobNimbus — digests wait when CompanyCam evidence needs a PM eye."
         meta={
           <>
             <span className="console-badge">
@@ -39,11 +39,11 @@ export default async function JobsPage({
         }
       />
 
-      <div className="mb-3">
+      <div className="stagger-1 mb-4">
         <JobsStageFilter active={stage} />
       </div>
 
-      <div className="console-panel overflow-hidden">
+      <div className="stagger-2 console-panel overflow-hidden">
         <table className="console-table">
           <thead>
             <tr>
@@ -61,11 +61,11 @@ export default async function JobsPage({
                 <td>
                   <Link
                     href={`/jobs/${job.id}`}
-                    className="font-semibold text-[var(--console-text)] hover:text-[var(--console-accent)]"
+                    className="font-semibold tracking-tight text-[var(--console-text)] transition-colors hover:text-[var(--console-accent)]"
                   >
                     {job.addressLine1}
                   </Link>
-                  <p className="text-[12px] text-[var(--console-muted)]">
+                  <p className="mt-0.5 text-[12px] text-[var(--console-muted)]">
                     {job.city}, {job.state}
                   </p>
                 </td>
@@ -90,7 +90,7 @@ export default async function JobsPage({
             ))}
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-[var(--console-muted)]">
+                <td colSpan={6} className="py-12 text-center text-[var(--console-muted)]">
                   No jobs in this stage.
                 </td>
               </tr>
