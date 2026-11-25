@@ -47,10 +47,10 @@ export default async function PortalPage({
             <span className="console-badge">{portal.stage}</span>
             <span className="console-badge">{portal.status}</span>
           </div>
-          <h1 className="display-title mt-3 text-[26px] font-semibold text-[var(--console-text)] sm:text-[28px]">
+          <h1 className="display-title mt-3 text-[30px] text-[var(--text)] sm:text-[34px]">
             {portal.addressLine1}
           </h1>
-          <p className="mt-1.5 text-[14px] text-[var(--console-muted)]">
+          <p className="mt-2 text-[15px] text-[var(--muted)]">
             {portal.city}, {portal.state} · Hi {portal.homeownerName}
           </p>
         </div>

@@ -43,7 +43,7 @@ export default async function JobsPage({
             </span>
             {waiting > 0 ? (
               <span className="console-badge console-badge-accent">
-                <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--console-accent)]" />
+                <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--signal)]" />
                 {waiting} digests waiting
               </span>
             ) : (

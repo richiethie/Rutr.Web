@@ -29,7 +29,7 @@ export function StaffSession() {
           {user.role}
         </p>
       </div>
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[var(--console-accent-soft)] to-[#f0d4c0] text-[11px] font-bold text-[var(--console-accent)] ring-2 ring-white shadow-sm">
+      <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-gradient-to-br from-[var(--signal)] to-[var(--signal-deep)] text-[11px] font-bold text-white shadow-[0_8px_18px_rgba(212,65,8,0.35)]">
         {user.displayName
           .split(" ")
           .map((p) => p[0])

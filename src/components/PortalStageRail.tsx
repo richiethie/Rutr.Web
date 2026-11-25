@@ -14,17 +14,17 @@ export function PortalStageRail({ stage }: { stage: string }) {
             <div
               className={
                 reached
-                  ? "h-1.5 rounded-full bg-gradient-to-r from-[var(--console-accent)] to-[#e07a35]"
-                  : "h-1.5 rounded-full bg-[var(--console-border)]"
+                  ? "h-2 rounded-full bg-gradient-to-r from-[var(--signal)] to-[var(--flare)] shadow-[0_0_12px_var(--signal-glow)]"
+                  : "h-2 rounded-full bg-[var(--line)]"
               }
             />
             <p
               className={
                 isCurrent
-                  ? "mt-2.5 truncate text-[11px] font-semibold text-[var(--console-accent)] sm:text-[12px]"
+                  ? "mt-2.5 truncate text-[11px] font-bold text-[var(--signal-deep)] sm:text-[12px]"
                   : reached
-                    ? "mt-2.5 truncate text-[11px] font-medium text-[var(--console-text)] sm:text-[12px]"
-                    : "mt-2.5 truncate text-[11px] text-[var(--console-muted)] sm:text-[12px]"
+                    ? "mt-2.5 truncate text-[11px] font-semibold text-[var(--text)] sm:text-[12px]"
+                    : "mt-2.5 truncate text-[11px] text-[var(--muted)] sm:text-[12px]"
               }
             >
               {label}
