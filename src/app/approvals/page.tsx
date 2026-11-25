@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DraftActions } from "@/components/DraftActions";
-import { StaffChrome } from "@/components/StaffChrome";
+import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchApprovals, fetchJob } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -20,53 +20,70 @@ export default async function ApprovalsPage() {
 
   return (
     <StaffChrome active="approvals" source={source}>
-      <div className="fade-up mb-8">
-        <h1 className="text-3xl font-semibold text-[var(--rutr-chalk)]">Approval queue</h1>
-        <p className="mt-2 max-w-2xl text-[var(--rutr-mist)]">
-          Digests wait here until a PM verifies evidence. Approve → send (mock SMS/email) marks the
-          audit trail and unlocks portal updates.
-        </p>
-      </div>
+      <PageHeader
+        title="Approvals"
+        description="Digests wait here until a PM verifies evidence. Approve → send marks audit and unlocks portal updates."
+        meta={
+          <span className={withPortal.length ? "console-badge console-badge-accent" : "console-badge console-badge-success"}>
+            {withPortal.length} in queue
+          </span>
+        }
+      />
 
-      {withPortal.length === 0 ? (
-        <p className="fade-up-delay border-y border-[var(--rutr-line)] py-10 text-[var(--rutr-sage)]">
-          Queue is clear. Run a mock sync from Integrations or wait for CompanyCam activity.
-        </p>
-      ) : (
-        <ul className="fade-up-delay space-y-8">
-          {withPortal.map((item) => (
-            <li
-              key={item.draftId}
-              className="border-t border-[var(--rutr-line)] pt-6 first:border-t-0 first:pt-0"
-            >
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                <div className="max-w-2xl">
-                  <Link
-                    href={`/jobs/${item.jobId}`}
-                    className="text-xl text-[var(--rutr-chalk)] hover:text-[var(--rutr-copper-hot)]"
-                  >
-                    {item.addressLine1}
-                  </Link>
-                  <p className="mt-1 text-sm text-[var(--rutr-mist)]">
-                    {item.homeownerName} · {item.channel}
-                  </p>
-                  <p className="mt-4 text-lg text-[var(--rutr-chalk)]">{item.subject}</p>
-                  <p className="mt-2 text-[var(--rutr-mist)]">{item.body}</p>
-                  <p className="mt-3 text-xs uppercase tracking-[0.12em] text-[var(--rutr-sage)]">
-                    Evidence · {item.evidenceSummary}
-                  </p>
-                </div>
-                <DraftActions
-                  draftId={item.draftId}
-                  status="PendingApproval"
-                  channel={item.channel}
-                  portalHref={item.portalToken ? `/p/${item.portalToken}` : null}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="console-panel overflow-hidden">
+        {withPortal.length === 0 ? (
+          <p className="px-4 py-10 text-center text-[13px] text-[var(--console-muted)]">
+            Queue is clear. Run a mock sync from Integrations or wait for CompanyCam activity.
+          </p>
+        ) : (
+          <table className="console-table">
+            <thead>
+              <tr>
+                <th>Job</th>
+                <th>Channel</th>
+                <th>Digest</th>
+                <th>Evidence</th>
+                <th className="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {withPortal.map((item) => (
+                <tr key={item.draftId}>
+                  <td>
+                    <Link
+                      href={`/jobs/${item.jobId}`}
+                      className="font-semibold hover:text-[var(--console-accent)]"
+                    >
+                      {item.addressLine1}
+                    </Link>
+                    <p className="text-[12px] text-[var(--console-muted)]">{item.homeownerName}</p>
+                  </td>
+                  <td>
+                    <span className="console-badge">{item.channel}</span>
+                  </td>
+                  <td className="max-w-md">
+                    <p className="text-[13px] font-semibold">{item.subject}</p>
+                    <p className="mt-0.5 line-clamp-2 text-[12px] text-[var(--console-muted)]">
+                      {item.body}
+                    </p>
+                  </td>
+                  <td className="font-mono-data max-w-[12rem] text-[11px] text-[var(--console-muted)]">
+                    {item.evidenceSummary}
+                  </td>
+                  <td className="text-right">
+                    <DraftActions
+                      draftId={item.draftId}
+                      status="PendingApproval"
+                      channel={item.channel}
+                      portalHref={item.portalToken ? `/p/${item.portalToken}` : null}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </StaffChrome>
   );
 }

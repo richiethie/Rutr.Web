@@ -27,51 +27,48 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center px-5 py-16">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(197,106,45,0.18),_transparent_55%)]" />
-      <div className="relative z-10 w-full max-w-md">
-        <Link href="/" className="brand-mark text-4xl text-[var(--rutr-chalk)]">
-          RUTR
-        </Link>
-        <h1 className="mt-6 text-2xl font-semibold text-[var(--rutr-chalk)]">Staff sign-in</h1>
-        <p className="mt-2 text-sm text-[var(--rutr-mist)]">
-          Demo: pm@rutters.demo / rutters-demo. JWT is stored for approve actions; SSR still falls
-          back to demo auth when the API is reachable.
-        </p>
-        <form onSubmit={onSubmit} className="mt-8 space-y-4 border-y border-[var(--rutr-line)] py-8">
-          <label className="block text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)]">
-            Email
-            <input
-              className="mt-2 w-full border border-[var(--rutr-line)] bg-[var(--rutr-asphalt)] px-3 py-3 text-base text-[var(--rutr-chalk)] outline-none focus:border-[var(--rutr-copper)]"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="username"
-              required
-            />
-          </label>
-          <label className="block text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)]">
-            Password
-            <input
-              className="mt-2 w-full border border-[var(--rutr-line)] bg-[var(--rutr-asphalt)] px-3 py-3 text-base text-[var(--rutr-chalk)] outline-none focus:border-[var(--rutr-copper)]"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-            />
-          </label>
-          {error ? <p className="text-sm text-[var(--rutr-copper-hot)]">{error}</p> : null}
-          <button
-            type="submit"
-            disabled={busy}
-            className="approve-btn w-full bg-[var(--rutr-copper)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--rutr-ink)] hover:bg-[var(--rutr-copper-hot)] disabled:opacity-60"
-          >
-            {busy ? "Signing in…" : "Sign in"}
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-[var(--rutr-mist)]">
-          <Link href="/jobs" className="underline-offset-4 hover:text-[var(--rutr-chalk)] hover:underline">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--console-bg)] px-4">
+      <div className="w-full max-w-md">
+        <div className="mb-6 text-center">
+          <p className="brand-mark text-2xl text-[var(--console-text)]">RUTR</p>
+          <p className="mt-1 text-[13px] text-[var(--console-muted)]">Connect staff console</p>
+        </div>
+        <div className="console-panel p-6 shadow-sm">
+          <h1 className="text-[18px] font-semibold text-[var(--console-text)]">Sign in</h1>
+          <p className="mt-1 text-[13px] text-[var(--console-muted)]">
+            Demo: pm@rutters.demo / rutters-demo
+          </p>
+          <form onSubmit={onSubmit} className="mt-5 space-y-3">
+            <label className="block text-[12px] font-semibold text-[var(--console-muted)]">
+              Email
+              <input
+                className="mt-1 h-9 w-full rounded-[5px] border border-[var(--console-border)] bg-white px-3 text-[13px] text-[var(--console-text)] outline-none focus:border-[var(--console-accent)]"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
+                required
+              />
+            </label>
+            <label className="block text-[12px] font-semibold text-[var(--console-muted)]">
+              Password
+              <input
+                className="mt-1 h-9 w-full rounded-[5px] border border-[var(--console-border)] bg-white px-3 text-[13px] text-[var(--console-text)] outline-none focus:border-[var(--console-accent)]"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </label>
+            {error ? <p className="text-[12px] text-[var(--console-danger)]">{error}</p> : null}
+            <button type="submit" disabled={busy} className="console-btn console-btn-primary w-full">
+              {busy ? "Signing in…" : "Sign in"}
+            </button>
+          </form>
+        </div>
+        <p className="mt-4 text-center text-[12px] text-[var(--console-muted)]">
+          <Link href="/jobs" className="font-medium text-[var(--console-accent)] hover:underline">
             Continue with demo header
           </Link>
         </p>

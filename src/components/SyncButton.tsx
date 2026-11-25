@@ -11,11 +11,11 @@ export function SyncButton() {
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col items-start gap-3">
+    <div className="flex flex-col items-end gap-2">
       <button
         type="button"
         disabled={pending}
-        className="approve-btn rounded-sm bg-[var(--rutr-copper)] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--rutr-ink)] hover:bg-[var(--rutr-copper-hot)] disabled:opacity-60"
+        className="console-btn console-btn-primary"
         onClick={() => {
           setError(null);
           startTransition(async () => {
@@ -32,13 +32,12 @@ export function SyncButton() {
         {pending ? "Syncing…" : "Run mock sync"}
       </button>
       {result ? (
-        <p className="max-w-xl text-sm text-[var(--rutr-mist)]">
+        <p className="max-w-md text-right text-[12px] text-[var(--console-muted)]">
           {result.message || "Sync complete."} · jobs {result.jobsUpserted} · photos{" "}
-          {result.photosAdded} · drafts {result.draftsCreated} · portals{" "}
-          {result.portalTokensEnsured}
+          {result.photosAdded} · drafts {result.draftsCreated}
         </p>
       ) : null}
-      {error ? <p className="text-xs text-red-300">{error}</p> : null}
+      {error ? <p className="text-[11px] text-[var(--console-danger)]">{error}</p> : null}
     </div>
   );
 }

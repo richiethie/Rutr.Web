@@ -1,4 +1,4 @@
-import { StaffChrome } from "@/components/StaffChrome";
+import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchIntegrationStatus, fetchStaffMe } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -11,100 +11,98 @@ export default async function SettingsPage() {
 
   return (
     <StaffChrome active="settings" source={source}>
-      <div className="fade-up mb-8">
-        <h1 className="text-3xl font-semibold text-[var(--rutr-chalk)]">Settings</h1>
-        <p className="mt-2 max-w-2xl text-[var(--rutr-mist)]">
-          Org and messaging defaults for the Rutters Connect pilot. Quiet hours / consent are
-          enforced on send; STOP lands on the Twilio webhook.
-        </p>
-      </div>
+      <PageHeader
+        title="Settings"
+        description="Org and messaging defaults for the Rutters Connect pilot."
+      />
 
-      <div className="fade-up-delay space-y-10">
-        <section className="border-y border-[var(--rutr-line)] py-8">
-          <h2 className="text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">Organization</h2>
-          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className="console-panel p-4">
+          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Organization</h2>
+          <dl className="mt-3 grid gap-3 sm:grid-cols-2">
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">Name</dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                Name
+              </dt>
+              <dd className="mt-1 text-[13px]">
                 {staff?.organizationName ?? "Rutters Roofing & Exteriors"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
                 OrganizationId
               </dt>
-              <dd className="mt-1 font-mono text-sm text-[var(--rutr-chalk)]">
+              <dd className="mt-1 font-mono-data text-[12px]">
                 {staff?.organizationId ?? "11111111-1111-1111-1111-111111111111"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
                 Signed-in staff
               </dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">
+              <dd className="mt-1 text-[13px]">
                 {staff ? `${staff.displayName} · ${staff.role}` : "Demo PM"}
               </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">Email</dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">{staff?.email ?? "pm@rutters.demo"}</dd>
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                Email
+              </dt>
+              <dd className="mt-1 text-[13px]">{staff?.email ?? "pm@rutters.demo"}</dd>
             </div>
           </dl>
         </section>
 
-        <section className="border-b border-[var(--rutr-line)] pb-8">
-          <h2 className="text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
+        <section className="console-panel p-4">
+          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">
             SMS consent &amp; quiet hours
           </h2>
-          <p className="mt-3 max-w-2xl text-sm text-[var(--rutr-mist)]">
-            Digests only send when the homeowner has SMS consent and the local clock is outside quiet
-            hours. Messaging mode:{" "}
-            <span className="text-[var(--rutr-copper-hot)]">
+          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
+            Digests only send with consent and outside quiet hours. Messaging mode:{" "}
+            <span className="font-semibold text-[var(--console-accent)]">
               {integrations.data.messaging}
               {integrations.data.useMocks ? " (UseMocks)" : ""}
             </span>
             .
           </p>
-          <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+          <dl className="mt-4 grid gap-3 sm:grid-cols-3">
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
                 Quiet hours
               </dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">8:00 PM – 8:00 AM CT</dd>
+              <dd className="mt-1 text-[13px]">8:00 PM – 8:00 AM CT</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
-                Default consent
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                Consent
               </dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">Required before first SMS</dd>
+              <dd className="mt-1 text-[13px]">Required before first SMS</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">Timezone</dt>
-              <dd className="mt-1 text-[var(--rutr-chalk)]">America/Chicago</dd>
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                Timezone
+              </dt>
+              <dd className="mt-1 text-[13px]">America/Chicago</dd>
             </div>
           </dl>
         </section>
 
-        <section className="border-b border-[var(--rutr-line)] pb-8">
-          <h2 className="text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
-            Webhook endpoints
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm text-[var(--rutr-mist)]">
+        <section className="console-panel p-4">
+          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Webhook endpoints</h2>
+          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
             Point vendors at the API (not this Next app). Local base{" "}
-            <span className="font-mono text-[var(--rutr-chalk)]">http://127.0.0.1:5188</span>.
+            <span className="font-mono-data text-[var(--console-text)]">http://127.0.0.1:5188</span>.
           </p>
-          <ul className="mt-4 space-y-2 font-mono text-xs text-[var(--rutr-mist)]">
+          <ul className="mt-3 space-y-1.5 font-mono-data text-[12px] text-[var(--console-muted)]">
             <li>POST /api/v1/webhooks/jobnimbus</li>
             <li>POST /api/v1/webhooks/companycam</li>
             <li>POST /api/v1/webhooks/twilio/sms</li>
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
-            Portal media
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm text-[var(--rutr-mist)]">
+        <section className="console-panel p-4">
+          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Portal media</h2>
+          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
             Only PM-approved photos become customer-visible. Production media will land in Cloudflare
             R2; the local slice uses seeded image URLs.
           </p>

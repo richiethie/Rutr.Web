@@ -23,7 +23,13 @@ export function DraftActions({
   const queryClient = useQueryClient();
   const [pending, startTransition] = useTransition();
   const [mode, setMode] = useState<Mode>(
-    status === "Sent" ? "sent" : status === "Approved" ? "approved" : status === "Rejected" ? "rejected" : "idle",
+    status === "Sent"
+      ? "sent"
+      : status === "Approved"
+        ? "approved"
+        : status === "Rejected"
+          ? "rejected"
+          : "idle",
   );
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<"api" | "sample" | null>(null);
@@ -34,15 +40,15 @@ export function DraftActions({
   }
 
   if (mode === "rejected") {
-    return <p className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">Rejected</p>;
+    return <span className="console-badge">Rejected</span>;
   }
 
   if (mode === "sent") {
     return (
-      <div className="flex min-w-[11rem] flex-col gap-2 text-xs text-[var(--rutr-sage)]">
-        <p className="uppercase tracking-[0.12em]">Sent via {channel}</p>
+      <div className="flex flex-col items-end gap-1">
+        <span className="console-badge console-badge-success">Sent · {channel}</span>
         {portalHref ? (
-          <Link href={portalHref} className="text-[var(--rutr-copper-hot)] hover:underline">
+          <Link href={portalHref} className="text-[12px] font-medium text-[var(--console-accent)] hover:underline">
             Open portal
           </Link>
         ) : null}
@@ -52,82 +58,85 @@ export function DraftActions({
 
   if (mode === "approved") {
     return (
-      <div className="flex min-w-[12rem] flex-col items-start gap-2">
-        <p className="text-xs text-[var(--rutr-sage)]">
-          Approved — photos customer-visible
-          {source === "sample" ? " (sample)" : ""}.
+      <div className="flex flex-col items-end gap-2">
+        <p className="text-[11px] text-[var(--console-muted)]">
+          Approved{source === "sample" ? " (sample)" : ""} · photos visible
         </p>
-        <button
-          type="button"
-          disabled={pending}
-          className="approve-btn rounded-sm bg-[var(--rutr-copper)] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--rutr-ink)] hover:bg-[var(--rutr-copper-hot)] disabled:opacity-60"
-          onClick={() => {
-            setError(null);
-            startTransition(async () => {
-              try {
-                await sendDraft(draftId);
-                setMode("sent");
-                await refresh();
-              } catch {
-                setError("Send failed — is messaging mock up on the API?");
-              }
-            });
-          }}
-        >
-          {pending ? "Sending…" : `Send ${channel}`}
-        </button>
-        {portalHref ? (
-          <Link href={portalHref} className="text-xs text-[var(--rutr-copper-hot)] hover:underline">
-            Preview portal
-          </Link>
-        ) : null}
-        {error ? <p className="text-xs text-red-300">{error}</p> : null}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            disabled={pending}
+            className="console-btn console-btn-primary"
+            onClick={() => {
+              setError(null);
+              startTransition(async () => {
+                try {
+                  await sendDraft(draftId);
+                  setMode("sent");
+                  await refresh();
+                } catch {
+                  setError("Send failed.");
+                }
+              });
+            }}
+          >
+            {pending ? "Sending…" : `Send ${channel}`}
+          </button>
+          {portalHref ? (
+            <Link href={portalHref} className="console-btn console-btn-secondary">
+              Portal
+            </Link>
+          ) : null}
+        </div>
+        {error ? <p className="text-[11px] text-[var(--console-danger)]">{error}</p> : null}
       </div>
     );
   }
 
   return (
-    <div className="flex min-w-[12rem] flex-col items-start gap-2">
-      <button
-        type="button"
-        disabled={pending}
-        className="approve-btn rounded-sm bg-[var(--rutr-copper)] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--rutr-ink)] hover:bg-[var(--rutr-copper-hot)] disabled:opacity-60"
-        onClick={() => {
-          setError(null);
-          startTransition(async () => {
-            try {
-              const result = await approveDraft(draftId);
-              setSource(result.source);
-              setMode("approved");
-              await refresh();
-            } catch {
-              setError("Could not approve.");
-            }
-          });
-        }}
-      >
-        {pending ? "Working…" : "Approve digest"}
-      </button>
-      <button
-        type="button"
-        disabled={pending}
-        className="rounded-sm border border-[var(--rutr-line)] px-4 py-2 text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)] hover:border-[var(--rutr-copper)] hover:text-[var(--rutr-chalk)] disabled:opacity-60"
-        onClick={() => {
-          setError(null);
-          startTransition(async () => {
-            try {
-              await rejectDraft(draftId, "Evidence incomplete");
-              setMode("rejected");
-              await refresh();
-            } catch {
-              setError("Could not reject.");
-            }
-          });
-        }}
-      >
-        Reject
-      </button>
-      {error ? <p className="text-xs text-red-300">{error}</p> : null}
+    <div className="flex flex-col items-end gap-2">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          disabled={pending}
+          className="console-btn console-btn-primary"
+          onClick={() => {
+            setError(null);
+            startTransition(async () => {
+              try {
+                const result = await approveDraft(draftId);
+                setSource(result.source);
+                setMode("approved");
+                await refresh();
+              } catch {
+                setError("Could not approve.");
+              }
+            });
+          }}
+        >
+          {pending ? "Working…" : "Approve"}
+        </button>
+        <button
+          type="button"
+          disabled={pending}
+          className="console-btn console-btn-secondary"
+          onClick={() => {
+            setError(null);
+            startTransition(async () => {
+              try {
+                await rejectDraft(draftId, "Evidence incomplete");
+                setMode("rejected");
+                await refresh();
+              } catch {
+                setError("Could not reject.");
+              }
+            });
+          }}
+        >
+          Reject
+        </button>
+      </div>
+      {error ? <p className="text-[11px] text-[var(--console-danger)]">{error}</p> : null}
     </div>
   );
 }

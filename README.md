@@ -37,9 +37,9 @@ Prefer `127.0.0.1` over `localhost` on Windows if IPv6 resolution is flaky. If t
 
 | Path | Purpose |
 |------|---------|
-| `/` | Brand home |
+| `/` | Redirects to `/jobs` (staff console) |
 | `/login` | Staff JWT login |
-| `/jobs` | Job list + stage filter |
+| `/jobs` | Dense job table + stage filters |
 | `/jobs/[id]` | Evidence, drafts, approve/reject/send, audit |
 | `/approvals` | PM approval queue |
 | `/integrations` | Status + mock sync |

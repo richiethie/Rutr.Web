@@ -3,17 +3,37 @@
 @tailwind utilities;
 
 :root {
+  /* Console chrome (HubSpot / Twilio Console–adjacent) */
+  --console-bg: #f3f5f8;
+  --console-surface: #ffffff;
+  --console-sidebar: #151b24;
+  --console-sidebar-muted: #8b97a8;
+  --console-sidebar-hover: #1e2633;
+  --console-border: #dfe3ea;
+  --console-border-strong: #c5ccd8;
+  --console-text: #152033;
+  --console-muted: #5a677a;
+  --console-accent: #c45c26;
+  --console-accent-hover: #a84b1c;
+  --console-accent-soft: #fdf0e8;
+  --console-success: #1b7a4c;
+  --console-success-soft: #e8f6ef;
+  --console-warning: #9a6700;
+  --console-danger: #b42318;
+  --console-row-hover: #f7f8fb;
+
+  /* Portal / marketing remnants (customer surfaces) */
   --rutr-ink: #141210;
   --rutr-asphalt: #1e1a16;
-  --rutr-panel: #2a241e;
   --rutr-chalk: #f3ebe0;
   --rutr-mist: #cfc3b2;
-  --rutr-copper: #c56a2d;
+  --rutr-copper: #c45c26;
   --rutr-copper-hot: #e07a35;
   --rutr-sage: #7f8f6b;
-  --rutr-line: rgba(243, 235, 224, 0.12);
-  --background: var(--rutr-ink);
-  --foreground: var(--rutr-chalk);
+  --rutr-line: rgba(243, 235, 224, 0.14);
+
+  --background: var(--console-bg);
+  --foreground: var(--console-text);
 }
 
 * {
@@ -27,26 +47,10 @@ body {
 
 body {
   color: var(--foreground);
-  background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(197, 106, 45, 0.22), transparent 55%),
-    radial-gradient(900px 500px at 90% 0%, rgba(127, 143, 107, 0.16), transparent 50%),
-    linear-gradient(165deg, #1a1612 0%, #12100e 45%, #1c1814 100%);
-  background-attachment: fixed;
-  font-family: var(--font-body), system-ui, sans-serif;
-}
-
-body::before {
-  content: "";
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(243, 235, 224, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(243, 235, 224, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-  opacity: 0.5;
-  z-index: 0;
+  background: var(--console-bg);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 a {
@@ -55,37 +59,150 @@ a {
 }
 
 .rutr-shell {
-  position: relative;
-  z-index: 1;
+  min-height: 100%;
+}
+
+.font-mono-data {
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 
 .brand-mark {
   font-family: var(--font-display), sans-serif;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.fade-up {
-  animation: fadeUp 0.55s ease-out both;
+/* Console primitives */
+.console-panel {
+  background: var(--console-surface);
+  border: 1px solid var(--console-border);
+  border-radius: 6px;
 }
 
-.fade-up-delay {
-  animation: fadeUp 0.7s ease-out 0.12s both;
+.console-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.fade-up-delay-2 {
-  animation: fadeUp 0.8s ease-out 0.22s both;
+.console-table th {
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--console-muted);
+  background: #f8f9fb;
+  border-bottom: 1px solid var(--console-border);
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.console-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--console-border);
+  vertical-align: middle;
+}
+
+.console-table tbody tr:hover td {
+  background: var(--console-row-hover);
+}
+
+.console-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--console-border);
+  color: var(--console-muted);
+  background: #fff;
+}
+
+.console-badge-accent {
+  border-color: #f0c9b0;
+  color: var(--console-accent);
+  background: var(--console-accent-soft);
+}
+
+.console-badge-success {
+  border-color: #b7e0c8;
+  color: var(--console-success);
+  background: var(--console-success-soft);
+}
+
+.console-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.console-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.console-btn-primary {
+  background: var(--console-accent);
+  color: #fff;
+}
+
+.console-btn-primary:hover:not(:disabled) {
+  background: var(--console-accent-hover);
+}
+
+.console-btn-secondary {
+  background: #fff;
+  border-color: var(--console-border-strong);
+  color: var(--console-text);
+}
+
+.console-btn-secondary:hover:not(:disabled) {
+  background: var(--console-row-hover);
+  border-color: var(--console-muted);
+}
+
+.console-btn-ghost {
+  background: transparent;
+  color: var(--console-muted);
+}
+
+.console-btn-ghost:hover:not(:disabled) {
+  color: var(--console-text);
+  background: var(--console-row-hover);
+}
+
+.console-filter {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--console-border);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--console-muted);
+}
+
+.console-filter:hover {
+  border-color: var(--console-border-strong);
+  color: var(--console-text);
+}
+
+.console-filter-active {
+  border-color: var(--console-accent);
+  background: var(--console-accent-soft);
+  color: var(--console-accent);
 }
 
 .pulse-dot {
@@ -99,11 +216,14 @@ a {
     opacity: 1;
   }
   50% {
-    transform: scale(1.35);
+    transform: scale(1.25);
     opacity: 0.55;
   }
 }
 
-.approve-btn:active {
-  transform: translateY(1px);
+/* Portal keeps atmospheric customer surface */
+.portal-shell body,
+body.portal-mode {
+  background: #141210;
+  color: var(--rutr-chalk);
 }

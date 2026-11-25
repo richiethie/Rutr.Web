@@ -1,23 +1,30 @@
 import type { Metadata } from "next";
-import { Archivo_Black, Source_Sans_3 } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Outfit } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 
-const display = Archivo_Black({
-  weight: "400",
+const display = Outfit({
   subsets: ["latin"],
   variable: "--font-display",
+  weight: ["600", "700"],
 });
 
-const body = Source_Sans_3({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: "RUTR — Contractor OS",
+  title: "RUTR Connect",
   description:
-    "Connect field evidence to homeowner updates. Staff approvals and live portal for Rutters Roofing & Exteriors.",
+    "Staff console for Rutters Connect — jobs, approvals, integrations, and homeowner portal.",
 };
 
 export default function RootLayout({
@@ -27,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${body.variable} antialiased rutr-shell`}>
+      <body className={`${display.variable} ${body.variable} ${mono.variable} antialiased rutr-shell`}>
         <Providers>{children}</Providers>
       </body>
     </html>

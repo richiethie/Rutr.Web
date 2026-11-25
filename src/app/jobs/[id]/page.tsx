@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DraftActions } from "@/components/DraftActions";
-import { StaffChrome } from "@/components/StaffChrome";
+import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchJob, fetchJobAudit } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -24,135 +24,142 @@ export default async function JobDetailPage({
   const staffOnlyPhotos = job.photos.filter((p) => !p.customerVisible);
 
   return (
-    <StaffChrome active="detail" source={source}>
-      <div className="fade-up mb-8">
+    <StaffChrome active="detail" source={source} title={job.addressLine1}>
+      <div className="mb-3">
         <Link
           href="/jobs"
-          className="text-xs uppercase tracking-[0.16em] text-[var(--rutr-mist)] hover:text-[var(--rutr-chalk)]"
+          className="text-[12px] font-medium text-[var(--console-muted)] hover:text-[var(--console-accent)]"
         >
-          ← All jobs
+          ← Jobs
         </Link>
-        <h1 className="mt-3 text-3xl font-semibold text-[var(--rutr-chalk)] sm:text-4xl">
-          {job.addressLine1}
-        </h1>
-        <p className="mt-2 text-[var(--rutr-mist)]">
-          {job.city}, {job.state} {job.postalCode} · {job.homeownerName}
-        </p>
-        <p className="mt-1 text-sm text-[var(--rutr-sage)]">
-          {job.homeownerEmail} · {job.homeownerPhone}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)]">
-          <span className="border border-[var(--rutr-line)] px-2 py-1">{job.stage}</span>
-          <span className="border border-[var(--rutr-line)] px-2 py-1">{job.status}</span>
-          <span>JN {job.externalJobNimbusId}</span>
-          {portalHref ? (
-            <Link href={portalHref} className="text-[var(--rutr-copper-hot)] hover:underline">
-              Homeowner portal
-            </Link>
-          ) : null}
-        </div>
       </div>
 
-      {pending.length > 0 ? (
-        <section className="fade-up-delay mb-10 border border-[var(--rutr-copper)]/40 bg-[rgba(197,106,45,0.08)] px-5 py-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--rutr-copper-hot)]">
-            Connect queue · {pending.length} digest{pending.length === 1 ? "" : "s"} waiting
-          </p>
-          <p className="mt-2 text-sm text-[var(--rutr-mist)]">
-            Approve only after you verify evidence, then send the mock digest. Portal photos stay
-            staff-only until approval.
-          </p>
-        </section>
-      ) : null}
+      <PageHeader
+        title={job.addressLine1}
+        description={`${job.city}, ${job.state} ${job.postalCode} · ${job.homeownerName} · ${job.homeownerEmail} · ${job.homeownerPhone}`}
+        meta={
+          <>
+            <span className="console-badge">{job.stage}</span>
+            <span className="console-badge">{job.status}</span>
+            <span className="console-badge font-mono-data">JN {job.externalJobNimbusId}</span>
+            {pending.length > 0 ? (
+              <span className="console-badge console-badge-accent">
+                {pending.length} digest{pending.length === 1 ? "" : "s"} waiting
+              </span>
+            ) : null}
+          </>
+        }
+        actions={
+          portalHref ? (
+            <Link href={portalHref} className="console-btn console-btn-secondary">
+              Open portal
+            </Link>
+          ) : null
+        }
+      />
 
-      <section className="fade-up-delay mb-12">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <h2 className="text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">Evidence</h2>
-          <p className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
-            {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {job.photos.map((photo) => (
-            <figure key={photo.id} className="overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo.imageUrl}
-                alt={photo.caption}
-                className="aspect-[16/10] w-full object-cover"
-              />
-              <figcaption className="mt-2 text-sm text-[var(--rutr-mist)]">
-                {photo.caption}
-                <span className="ml-2 text-xs uppercase tracking-wider text-[var(--rutr-sage)]">
-                  {photo.customerVisible ? "Customer visible" : "Staff only — pending approval"}
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-          {job.photos.length === 0 ? (
-            <p className="text-[var(--rutr-mist)]">No CompanyCam evidence yet.</p>
-          ) : null}
-        </div>
-      </section>
-
-      <section className="fade-up-delay-2 mb-12">
-        <h2 className="mb-4 text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
-          Message drafts
-        </h2>
-        <ul className="space-y-6">
-          {job.drafts.map((draft) => (
-            <li key={draft.id} className="border-t border-[var(--rutr-line)] pt-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="max-w-2xl">
-                  <p className="text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)]">
-                    {draft.channel} · {draft.status}
-                  </p>
-                  <p className="mt-1 text-lg text-[var(--rutr-chalk)]">{draft.subject}</p>
-                  <p className="mt-2 text-[var(--rutr-mist)]">{draft.body}</p>
-                  <p className="mt-2 text-xs text-[var(--rutr-sage)]">{draft.evidenceSummary}</p>
-                </div>
-                <DraftActions
-                  draftId={draft.id}
-                  status={draft.status}
-                  channel={draft.channel}
-                  portalHref={portalHref}
+      <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
+        <section className="console-panel p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Evidence</h2>
+            <p className="text-[11px] text-[var(--console-muted)]">
+              {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {job.photos.map((photo) => (
+              <figure key={photo.id} className="overflow-hidden rounded-md border border-[var(--console-border)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photo.imageUrl}
+                  alt={photo.caption}
+                  className="aspect-[16/10] w-full object-cover"
                 />
-              </div>
-            </li>
-          ))}
-          {job.drafts.length === 0 ? (
-            <li className="text-[var(--rutr-mist)]">No drafts for this job yet.</li>
-          ) : null}
-        </ul>
-      </section>
+                <figcaption className="border-t border-[var(--console-border)] bg-[#fafbfc] px-3 py-2 text-[12px] text-[var(--console-muted)]">
+                  {photo.caption}
+                  <span className="ml-2 font-semibold text-[var(--console-text)]">
+                    {photo.customerVisible ? "Customer visible" : "Staff only"}
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+            {job.photos.length === 0 ? (
+              <p className="text-[13px] text-[var(--console-muted)]">No CompanyCam evidence yet.</p>
+            ) : null}
+          </div>
+        </section>
 
-      <section className="fade-up-delay-2">
-        <h2 className="mb-4 text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
-          Audit trail
-        </h2>
+        <section className="console-panel overflow-hidden">
+          <div className="border-b border-[var(--console-border)] bg-[#f8f9fb] px-4 py-2.5">
+            <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Message drafts</h2>
+          </div>
+          <ul className="divide-y divide-[var(--console-border)]">
+            {job.drafts.map((draft) => (
+              <li key={draft.id} className="px-4 py-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                      {draft.channel} · {draft.status}
+                    </p>
+                    <p className="mt-1 text-[13px] font-semibold text-[var(--console-text)]">
+                      {draft.subject}
+                    </p>
+                    <p className="mt-1 text-[13px] text-[var(--console-muted)]">{draft.body}</p>
+                    <p className="mt-2 font-mono-data text-[11px] text-[var(--console-muted)]">
+                      {draft.evidenceSummary}
+                    </p>
+                  </div>
+                  <DraftActions
+                    draftId={draft.id}
+                    status={draft.status}
+                    channel={draft.channel}
+                    portalHref={portalHref}
+                  />
+                </div>
+              </li>
+            ))}
+            {job.drafts.length === 0 ? (
+              <li className="px-4 py-8 text-[13px] text-[var(--console-muted)]">No drafts yet.</li>
+            ) : null}
+          </ul>
+        </section>
+      </div>
+
+      <section className="console-panel mt-4 overflow-hidden">
+        <div className="border-b border-[var(--console-border)] bg-[#f8f9fb] px-4 py-2.5">
+          <h2 className="text-[13px] font-semibold text-[var(--console-text)]">Audit trail</h2>
+        </div>
         {audit.data.length === 0 ? (
-          <p className="border-y border-[var(--rutr-line)] py-6 text-sm text-[var(--rutr-mist)]">
+          <p className="px-4 py-6 text-[13px] text-[var(--console-muted)]">
             No audit events yet. Approve / reject / send will appear here.
           </p>
         ) : (
-          <ul className="divide-y divide-[var(--rutr-line)] border-y border-[var(--rutr-line)]">
-            {audit.data.map((event) => (
-              <li key={event.id} className="flex flex-col gap-1 py-4 sm:flex-row sm:justify-between">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.12em] text-[var(--rutr-copper-hot)]">
-                    {event.action}
-                  </p>
-                  <p className="mt-1 text-sm text-[var(--rutr-mist)]">{event.detail}</p>
-                </div>
-                <p className="text-xs text-[var(--rutr-sage)]">
-                  {new Date(event.createdAt).toLocaleString("en-US", {
-                    timeZone: "America/Chicago",
-                  })}{" "}
-                  CT
-                </p>
-              </li>
-            ))}
-          </ul>
+          <table className="console-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Detail</th>
+                <th>When (CT)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {audit.data.map((event) => (
+                <tr key={event.id}>
+                  <td>
+                    <span className="console-badge console-badge-accent font-mono-data">
+                      {event.action}
+                    </span>
+                  </td>
+                  <td className="text-[13px] text-[var(--console-muted)]">{event.detail}</td>
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--console-muted)]">
+                    {new Date(event.createdAt).toLocaleString("en-US", {
+                      timeZone: "America/Chicago",
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </section>
     </StaffChrome>

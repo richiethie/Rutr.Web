@@ -13,25 +13,29 @@ export function StaffSession() {
 
   if (!user) {
     return (
-      <Link
-        href="/login"
-        className="text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)] hover:text-[var(--rutr-chalk)]"
-      >
+      <Link href="/login" className="console-btn console-btn-secondary text-[12px]">
         Sign in
       </Link>
     );
   }
 
   return (
-    <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[var(--rutr-mist)]">
-      <span className="hidden sm:inline">
-        <span className="text-[var(--rutr-chalk)]">{user.displayName}</span>
-        <span className="mx-2 text-[var(--rutr-line)]">·</span>
-        {user.role}
-      </span>
+    <div className="flex items-center gap-2">
+      <div className="hidden text-right sm:block">
+        <p className="text-[12px] font-semibold text-[var(--console-text)]">{user.displayName}</p>
+        <p className="text-[11px] uppercase tracking-wide text-[var(--console-muted)]">{user.role}</p>
+      </div>
+      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--console-accent-soft)] text-[11px] font-bold text-[var(--console-accent)]">
+        {user.displayName
+          .split(" ")
+          .map((p) => p[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase()}
+      </div>
       <button
         type="button"
-        className="hover:text-[var(--rutr-copper-hot)]"
+        className="console-btn console-btn-ghost text-[12px]"
         onClick={() => {
           clearSession();
           setUser(null);
