@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { approveDraft, rejectDraft, sendDraft } from "@/lib/api";
+import { ApiError } from "@/lib/api/errors";
 
 type Mode = "idle" | "approved" | "sent" | "rejected";
 
@@ -32,11 +33,18 @@ export function DraftActions({
           : "idle",
   );
   const [error, setError] = useState<string | null>(null);
-  const [source, setSource] = useState<"api" | "sample" | null>(null);
 
   async function refresh() {
     await queryClient.invalidateQueries({ queryKey: ["approvals"] });
     router.refresh();
+  }
+
+  function errMsg(err: unknown) {
+    return err instanceof ApiError
+      ? err.message
+      : err instanceof Error
+        ? err.message
+        : "Request failed.";
   }
 
   if (mode === "rejected") {
@@ -48,7 +56,10 @@ export function DraftActions({
       <div className="flex flex-col items-end gap-1">
         <span className="console-badge console-badge-success">Sent · {channel}</span>
         {portalHref ? (
-          <Link href={portalHref} className="text-[12px] font-medium text-[var(--console-accent)] hover:underline">
+          <Link
+            href={portalHref}
+            className="text-[12px] font-medium text-[var(--console-accent)] hover:underline"
+          >
             Open portal
           </Link>
         ) : null}
@@ -59,9 +70,7 @@ export function DraftActions({
   if (mode === "approved") {
     return (
       <div className="flex flex-col items-end gap-2">
-        <p className="text-[11px] text-[var(--console-muted)]">
-          Approved{source === "sample" ? " (sample)" : ""} · photos visible
-        </p>
+        <p className="text-[11px] text-[var(--console-muted)]">Approved · photos visible</p>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -74,8 +83,8 @@ export function DraftActions({
                   await sendDraft(draftId);
                   setMode("sent");
                   await refresh();
-                } catch {
-                  setError("Send failed.");
+                } catch (err) {
+                  setError(errMsg(err));
                 }
               });
             }}
@@ -104,12 +113,11 @@ export function DraftActions({
             setError(null);
             startTransition(async () => {
               try {
-                const result = await approveDraft(draftId);
-                setSource(result.source);
+                await approveDraft(draftId);
                 setMode("approved");
                 await refresh();
-              } catch {
-                setError("Could not approve.");
+              } catch (err) {
+                setError(errMsg(err));
               }
             });
           }}
@@ -127,8 +135,8 @@ export function DraftActions({
                 await rejectDraft(draftId, "Evidence incomplete");
                 setMode("rejected");
                 await refresh();
-              } catch {
-                setError("Could not reject.");
+              } catch (err) {
+                setError(errMsg(err));
               }
             });
           }}

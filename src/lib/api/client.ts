@@ -5,7 +5,7 @@ import { clientAuthHeaders } from "@/lib/auth";
 const baseUrl =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://127.0.0.1:5188";
 
-/** Generated OpenAPI client. Prefer helpers in `@/lib/api` for SSR + sample fallback. */
+/** Generated OpenAPI client. Prefer helpers in `@/lib/api` for staff SSR/CRUD. */
 export function createRutrClient() {
   return createClient<paths>({
     baseUrl,

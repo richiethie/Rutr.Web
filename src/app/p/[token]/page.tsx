@@ -1,6 +1,8 @@
+import { ErrorState } from "@/components/ApiState";
 import { PortalShell } from "@/components/PortalShell";
 import { PortalStageRail } from "@/components/PortalStageRail";
 import { fetchPortal } from "@/lib/api";
+import { loadApi } from "@/lib/api/load";
 
 export const dynamic = "force-dynamic";
 
@@ -10,17 +12,23 @@ export default async function PortalPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const { data: portal, source } = await fetchPortal(token);
-  const heroPhoto = portal.photos[0];
+  const result = await loadApi(() => fetchPortal(token));
+
+  if (!result.ok) {
+    return (
+      <PortalShell organizationName="RUTR">
+        <ErrorState error={result.error} />
+      </PortalShell>
+    );
+  }
+
+  const portal = result.data;
+  const photos = portal.photos ?? [];
+  const milestones = portal.milestones ?? [];
+  const heroPhoto = photos[0];
 
   return (
     <PortalShell organizationName={portal.organizationName}>
-      {source === "sample" ? (
-        <p className="mb-4 rounded-[var(--console-radius-sm)] border border-[#f0c9b0] bg-[var(--console-accent-soft)] px-3.5 py-2.5 text-[12px] text-[var(--console-accent)]">
-          Sample portal data — live API not reachable in this session.
-        </p>
-      ) : null}
-
       <section className="console-panel overflow-hidden">
         {heroPhoto ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -57,6 +65,25 @@ export default async function PortalPage({
         </div>
       </section>
 
+      {milestones.length > 0 ? (
+        <section className="stagger-1 console-panel mt-4 p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
+            Milestones
+          </p>
+          <ul className="mt-3 space-y-2">
+            {milestones.map((m, i) => (
+              <li
+                key={`${m.name}-${i}`}
+                className="flex items-center justify-between gap-3 border-b border-[var(--line)] pb-2 last:border-0 last:pb-0"
+              >
+                <span className="text-[14px] font-semibold text-[var(--text)]">{m.name}</span>
+                <span className="console-badge">{m.status}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <section className="stagger-2 console-panel mt-4 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
           Latest update · {portal.stage}
@@ -74,17 +101,15 @@ export default async function PortalPage({
           <h2 className="display-title text-[17px] font-semibold text-[var(--console-text)]">
             Verified photos
           </h2>
-          <span className="text-[12px] text-[var(--console-muted)]">
-            {portal.photos.length} visible
-          </span>
+          <span className="text-[12px] text-[var(--console-muted)]">{photos.length} visible</span>
         </div>
-        {portal.photos.length === 0 ? (
+        {photos.length === 0 ? (
           <div className="console-panel px-4 py-10 text-center text-[13px] text-[var(--console-muted)]">
             No customer-visible photos yet. Check back after the next approved update.
           </div>
         ) : (
           <div className="space-y-3.5">
-            {portal.photos.map((photo) => (
+            {photos.map((photo) => (
               <figure key={photo.id} className="console-panel photo-lift overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photo.imageUrl} alt={photo.caption} className="w-full object-cover" />

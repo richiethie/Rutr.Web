@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { runIntegrationSync, type SyncResult } from "@/lib/api";
+import { ApiError } from "@/lib/api/errors";
 
 export function SyncButton() {
   const router = useRouter();
@@ -21,10 +22,16 @@ export function SyncButton() {
           startTransition(async () => {
             try {
               const res = await runIntegrationSync();
-              setResult(res.data);
+              setResult(res);
               router.refresh();
-            } catch {
-              setError("Sync failed.");
+            } catch (err) {
+              setError(
+                err instanceof ApiError
+                  ? err.message
+                  : err instanceof Error
+                    ? err.message
+                    : "Sync failed.",
+              );
             }
           });
         }}

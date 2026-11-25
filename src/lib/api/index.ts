@@ -1,413 +1,47 @@
-import { clientAuthHeaders } from "@/lib/auth";
+/**
+ * Staff/portal API client — API only, no sample/mock fallbacks.
+ * Paths match Rutr.Api controllers + CrmDtos REST conventions.
+ */
+import { apiFetch, API_URL } from "@/lib/api/http";
+import type {
+  ApprovalItem,
+  AuditEvent,
+  Consent,
+  ConsentWrite,
+  Contact,
+  ContactWrite,
+  DraftWrite,
+  Evidence,
+  EvidenceWrite,
+  IntegrationConnection,
+  IntegrationStatus,
+  JobDetail,
+  JobListItem,
+  JobWrite,
+  MessageDraft,
+  Milestone,
+  MilestoneWrite,
+  Note,
+  NoteWrite,
+  Organization,
+  OrganizationWrite,
+  Photo,
+  PortalJob,
+  Property,
+  PropertyWrite,
+  StaffMe,
+  StaffMember,
+  SyncResult,
+  TaskItem,
+  TaskWrite,
+} from "@/lib/api/types";
 
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://127.0.0.1:5188";
+export { API_URL } from "@/lib/api/http";
+export { ApiError, isNotFound } from "@/lib/api/errors";
+export type * from "@/lib/api/types";
+export { JOB_STAGES } from "@/lib/api/types";
 
-export type JobListItem = {
-  id: string;
-  addressLine1: string;
-  city: string;
-  state: string;
-  homeownerName: string;
-  status: string;
-  stage: string;
-  pendingApprovals: number;
-  photoCount: number;
-  updatedAt: string;
-};
-
-export type Photo = {
-  id: string;
-  caption: string;
-  imageUrl: string;
-  customerVisible: boolean;
-  capturedAt: string;
-};
-
-export type MessageDraft = {
-  id: string;
-  channel: string;
-  subject: string;
-  body: string;
-  status: string;
-  evidenceSummary: string;
-  createdAt: string;
-  approvedAt: string | null;
-};
-
-export type JobDetail = {
-  id: string;
-  addressLine1: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  homeownerName: string;
-  homeownerEmail: string;
-  homeownerPhone: string;
-  status: string;
-  stage: string;
-  externalJobNimbusId: string;
-  updatedAt: string;
-  photos: Photo[];
-  drafts: MessageDraft[];
-  portalToken: string | null;
-};
-
-export type ApprovalItem = {
-  draftId: string;
-  jobId: string;
-  addressLine1: string;
-  homeownerName: string;
-  channel: string;
-  subject: string;
-  body: string;
-  evidenceSummary: string;
-  createdAt: string;
-};
-
-export type PortalJob = {
-  organizationName: string;
-  addressLine1: string;
-  city: string;
-  state: string;
-  homeownerName: string;
-  status: string;
-  stage: string;
-  latestUpdate: string;
-  photos: Photo[];
-};
-
-export type IntegrationStatus = {
-  useMocks: boolean;
-  jobNimbus: string;
-  companyCam: string;
-  messaging: string;
-};
-
-export type SyncResult = {
-  useMocks: boolean;
-  jobsUpserted: number;
-  photosAdded: number;
-  draftsCreated: number;
-  portalTokensEnsured: number;
-  message: string;
-};
-
-export type AuditEvent = {
-  id: string;
-  jobId: string | null;
-  draftId: string | null;
-  action: string;
-  detail: string;
-  createdAt: string;
-};
-
-export type FetchResult<T> = {
-  data: T;
-  source: "api" | "sample";
-};
-
-const SAMPLE_JOBS: JobListItem[] = [
-  {
-    id: "33333333-3333-3333-3333-333333333331",
-    addressLine1: "1428 Maple Ridge Dr",
-    city: "Cedar Falls",
-    state: "IA",
-    homeownerName: "Dana & Chris Keller",
-    status: "InProgress",
-    stage: "Build",
-    pendingApprovals: 1,
-    photoCount: 2,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333332",
-    addressLine1: "88 Prairie View Ct",
-    city: "Waterloo",
-    state: "IA",
-    homeownerName: "Morgan Ellis",
-    status: "InProgress",
-    stage: "Prepare",
-    pendingApprovals: 1,
-    photoCount: 1,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "33333333-3333-3333-3333-333333333333",
-    addressLine1: "409 Oak Street",
-    city: "Waverly",
-    state: "IA",
-    homeownerName: "Pat Nguyen",
-    status: "Complete",
-    stage: "Complete",
-    pendingApprovals: 0,
-    photoCount: 1,
-    updatedAt: new Date().toISOString(),
-  },
-];
-
-const SAMPLE_APPROVALS: ApprovalItem[] = [
-  {
-    draftId: "55555555-5555-5555-5555-555555555551",
-    jobId: SAMPLE_JOBS[0].id,
-    addressLine1: SAMPLE_JOBS[0].addressLine1,
-    homeownerName: SAMPLE_JOBS[0].homeownerName,
-    channel: "Sms",
-    subject: "Progress update",
-    body: "Hi Dana & Chris — tear-off on the north slope is finished and underlayment is going down.",
-    evidenceSummary: "CompanyCam cc-9001, cc-9002",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    draftId: "55555555-5555-5555-5555-555555555552",
-    jobId: SAMPLE_JOBS[1].id,
-    addressLine1: SAMPLE_JOBS[1].addressLine1,
-    homeownerName: SAMPLE_JOBS[1].homeownerName,
-    channel: "Email",
-    subject: "Materials on site — install starts tomorrow",
-    body: "Morgan, your shingles and ridge vent are staged. Crew arrives tomorrow morning weather permitting.",
-    evidenceSummary: "CompanyCam cc-9101",
-    createdAt: new Date().toISOString(),
-  },
-];
-
-function sampleJobDetail(id: string): JobDetail {
-  const base = SAMPLE_JOBS.find((j) => j.id === id) ?? SAMPLE_JOBS[0];
-  return {
-    ...base,
-    postalCode: "50613",
-    homeownerEmail: "homeowner@example.com",
-    homeownerPhone: "+13195550100",
-    externalJobNimbusId: "jn-demo",
-    photos: [
-      {
-        id: "photo-1",
-        caption: "Field progress (sample)",
-        imageUrl:
-          "https://images.unsplash.com/photo-1632759145351-1d592919f540?w=1200&q=80",
-        customerVisible: false,
-        capturedAt: new Date().toISOString(),
-      },
-    ],
-    drafts: SAMPLE_APPROVALS.filter((a) => a.jobId === base.id).map((a) => ({
-      id: a.draftId,
-      channel: a.channel,
-      subject: a.subject,
-      body: a.body,
-      status: "PendingApproval",
-      evidenceSummary: a.evidenceSummary,
-      createdAt: a.createdAt,
-      approvedAt: null,
-    })),
-    portalToken: "keller-maple-demo",
-  };
-}
-
-const SAMPLE_PORTAL: PortalJob = {
-  organizationName: "Rutters Roofing & Exteriors",
-  addressLine1: "1428 Maple Ridge Dr",
-  city: "Cedar Falls",
-  state: "IA",
-  homeownerName: "Dana & Chris Keller",
-  status: "InProgress",
-  stage: "Build",
-  latestUpdate:
-    "Tear-off on the north slope is finished and underlayment is going down. New verified photos appear here after your PM approves them.",
-  photos: [
-    {
-      id: "portal-photo-1",
-      caption: "Tear-off complete — north slope clear",
-      imageUrl:
-        "https://images.unsplash.com/photo-1632759145351-1d592919f540?w=1200&q=80",
-      customerVisible: true,
-      capturedAt: new Date().toISOString(),
-    },
-  ],
-};
-
-const SAMPLE_INTEGRATIONS: IntegrationStatus = {
-  useMocks: true,
-  jobNimbus: "mock",
-  companyCam: "mock",
-  messaging: "mock",
-};
-
-/** Stages shown in staff + portal Connect MVP. */
-export const JOB_STAGES = ["Lead", "Prepare", "Build", "Complete"] as const;
-
-async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const auth =
-    typeof window === "undefined"
-      ? { "X-Demo-Auth": "pm" }
-      : clientAuthHeaders();
-
-  const res = await fetch(`${API_URL}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...auth,
-      ...(init?.headers || {}),
-    },
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error(`API ${res.status}`);
-  }
-  if (res.status === 204) {
-    return undefined as T;
-  }
-  return res.json() as Promise<T>;
-}
-
-export async function fetchJobs(): Promise<FetchResult<JobListItem[]>> {
-  try {
-    const data = await apiFetch<JobListItem[]>("/api/v1/jobs");
-    return { data, source: "api" };
-  } catch {
-    return { data: SAMPLE_JOBS, source: "sample" };
-  }
-}
-
-export async function fetchJob(id: string): Promise<FetchResult<JobDetail | null>> {
-  try {
-    const data = await apiFetch<JobDetail>(`/api/v1/jobs/${id}`);
-    return { data, source: "api" };
-  } catch {
-    if (SAMPLE_JOBS.some((j) => j.id === id) || id.startsWith("3333")) {
-      return { data: sampleJobDetail(id), source: "sample" };
-    }
-    return { data: null, source: "sample" };
-  }
-}
-
-export async function fetchApprovals(): Promise<FetchResult<ApprovalItem[]>> {
-  try {
-    const data = await apiFetch<ApprovalItem[]>("/api/v1/approvals");
-    return { data, source: "api" };
-  } catch {
-    return { data: SAMPLE_APPROVALS, source: "sample" };
-  }
-}
-
-export async function approveDraft(
-  draftId: string,
-): Promise<FetchResult<MessageDraft | { ok: true }>> {
-  try {
-    const data = await apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/approve`, {
-      method: "POST",
-      body: "{}",
-    });
-    return { data, source: "api" };
-  } catch {
-    return { data: { ok: true }, source: "sample" };
-  }
-}
-
-export async function rejectDraft(
-  draftId: string,
-  reason?: string,
-): Promise<FetchResult<MessageDraft | { ok: true }>> {
-  try {
-    const data = await apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/reject`, {
-      method: "POST",
-      body: JSON.stringify({ reason: reason ?? null }),
-    });
-    return { data, source: "api" };
-  } catch {
-    return { data: { ok: true }, source: "sample" };
-  }
-}
-
-export async function sendDraft(
-  draftId: string,
-): Promise<FetchResult<MessageDraft | { ok: true }>> {
-  try {
-    const data = await apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/send`, {
-      method: "POST",
-      body: "{}",
-    });
-    return { data, source: "api" };
-  } catch (err) {
-    throw err instanceof Error ? err : new Error("Send failed");
-  }
-}
-
-export async function fetchPortal(token: string): Promise<FetchResult<PortalJob>> {
-  try {
-    const data = await apiFetch<PortalJob>(`/api/v1/portal/${token}`);
-    return { data, source: "api" };
-  } catch {
-    return { data: { ...SAMPLE_PORTAL }, source: "sample" };
-  }
-}
-
-export async function fetchIntegrationStatus(): Promise<FetchResult<IntegrationStatus>> {
-  try {
-    const data = await apiFetch<IntegrationStatus>("/api/v1/integrations/status");
-    return { data, source: "api" };
-  } catch {
-    return { data: SAMPLE_INTEGRATIONS, source: "sample" };
-  }
-}
-
-export async function runIntegrationSync(): Promise<FetchResult<SyncResult>> {
-  try {
-    const data = await apiFetch<SyncResult>("/api/v1/integrations/sync", {
-      method: "POST",
-      body: "{}",
-    });
-    return { data, source: "api" };
-  } catch {
-    return {
-      data: {
-        useMocks: true,
-        jobsUpserted: 0,
-        photosAdded: 0,
-        draftsCreated: 0,
-        portalTokensEnsured: 0,
-        message: "Sync unavailable — API offline or endpoint missing.",
-      },
-      source: "sample",
-    };
-  }
-}
-
-export async function fetchJobAudit(jobId: string): Promise<FetchResult<AuditEvent[]>> {
-  try {
-    const data = await apiFetch<AuditEvent[]>(`/api/v1/jobs/${jobId}/audit`);
-    return { data, source: "api" };
-  } catch {
-    return { data: [], source: "sample" };
-  }
-}
-
-export async function setPhotoVisibility(
-  jobId: string,
-  photoId: string,
-  customerVisible: boolean,
-): Promise<FetchResult<Photo | { ok: true }>> {
-  try {
-    const data = await apiFetch<Photo>(
-      `/api/v1/jobs/${jobId}/photos/${photoId}/visibility`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({ customerVisible }),
-      },
-    );
-    return { data, source: "api" };
-  } catch {
-    return { data: { ok: true }, source: "sample" };
-  }
-}
-
-export type StaffMe = {
-  id: string;
-  email: string;
-  displayName: string;
-  role: string;
-  organizationId: string;
-  organizationName: string;
-};
+// ── Auth ──────────────────────────────────────────────────────────────────
 
 export async function loginStaff(
   email: string,
@@ -429,21 +63,365 @@ export async function loginStaff(
   }>;
 }
 
-export async function fetchStaffMe(): Promise<FetchResult<StaffMe | null>> {
-  try {
-    const data = await apiFetch<StaffMe>("/api/v1/auth/me");
-    return { data, source: "api" };
-  } catch {
-    return {
-      data: {
-        id: "22222222-2222-2222-2222-222222222222",
-        email: "pm@rutters.demo",
-        displayName: "Alex Rivera",
-        role: "Pm",
-        organizationId: "11111111-1111-1111-1111-111111111111",
-        organizationName: "Rutters Roofing & Exteriors",
-      },
-      source: "sample",
-    };
-  }
+export async function fetchStaffMe(): Promise<StaffMe> {
+  return apiFetch<StaffMe>("/api/v1/auth/me");
+}
+
+// ── Jobs ──────────────────────────────────────────────────────────────────
+
+export async function fetchJobs(): Promise<JobListItem[]> {
+  return apiFetch<JobListItem[]>("/api/v1/jobs");
+}
+
+export async function fetchJob(id: string): Promise<JobDetail> {
+  return apiFetch<JobDetail>(`/api/v1/jobs/${id}`);
+}
+
+export async function createJob(body: JobWrite): Promise<JobDetail> {
+  return apiFetch<JobDetail>("/api/v1/jobs", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateJob(id: string, body: JobWrite): Promise<JobDetail> {
+  return apiFetch<JobDetail>(`/api/v1/jobs/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateJobStatus(
+  id: string,
+  status: string,
+  stage?: string | null,
+): Promise<JobDetail> {
+  return apiFetch<JobDetail>(`/api/v1/jobs/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status, stage: stage ?? null }),
+  });
+}
+
+export async function deleteJob(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/jobs/${id}`, { method: "DELETE" });
+}
+
+export async function fetchJobAudit(jobId: string): Promise<AuditEvent[]> {
+  return apiFetch<AuditEvent[]>(`/api/v1/jobs/${jobId}/audit`);
+}
+
+// ── Contacts ──────────────────────────────────────────────────────────────
+
+export async function fetchContacts(): Promise<Contact[]> {
+  return apiFetch<Contact[]>("/api/v1/contacts");
+}
+
+export async function fetchContact(id: string): Promise<Contact> {
+  return apiFetch<Contact>(`/api/v1/contacts/${id}`);
+}
+
+export async function createContact(body: ContactWrite): Promise<Contact> {
+  return apiFetch<Contact>("/api/v1/contacts", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateContact(id: string, body: ContactWrite): Promise<Contact> {
+  return apiFetch<Contact>(`/api/v1/contacts/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteContact(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/contacts/${id}`, { method: "DELETE" });
+}
+
+// ── Properties ────────────────────────────────────────────────────────────
+
+export async function fetchProperties(): Promise<Property[]> {
+  return apiFetch<Property[]>("/api/v1/properties");
+}
+
+export async function fetchProperty(id: string): Promise<Property> {
+  return apiFetch<Property>(`/api/v1/properties/${id}`);
+}
+
+export async function createProperty(body: PropertyWrite): Promise<Property> {
+  return apiFetch<Property>("/api/v1/properties", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateProperty(id: string, body: PropertyWrite): Promise<Property> {
+  return apiFetch<Property>(`/api/v1/properties/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteProperty(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/properties/${id}`, { method: "DELETE" });
+}
+
+// ── Notes ─────────────────────────────────────────────────────────────────
+
+export async function fetchNotes(params?: {
+  jobId?: string;
+  contactId?: string;
+}): Promise<Note[]> {
+  const q = new URLSearchParams();
+  if (params?.jobId) q.set("jobId", params.jobId);
+  if (params?.contactId) q.set("contactId", params.contactId);
+  const qs = q.toString();
+  return apiFetch<Note[]>(`/api/v1/notes${qs ? `?${qs}` : ""}`);
+}
+
+export async function createNote(body: NoteWrite): Promise<Note> {
+  return apiFetch<Note>("/api/v1/notes", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateNote(id: string, body: NoteWrite): Promise<Note> {
+  return apiFetch<Note>(`/api/v1/notes/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteNote(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/notes/${id}`, { method: "DELETE" });
+}
+
+// ── Tasks ─────────────────────────────────────────────────────────────────
+
+export async function fetchTasks(params?: { jobId?: string }): Promise<TaskItem[]> {
+  const q = new URLSearchParams();
+  if (params?.jobId) q.set("jobId", params.jobId);
+  const qs = q.toString();
+  return apiFetch<TaskItem[]>(`/api/v1/tasks${qs ? `?${qs}` : ""}`);
+}
+
+export async function createTask(body: TaskWrite): Promise<TaskItem> {
+  return apiFetch<TaskItem>("/api/v1/tasks", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateTask(id: string, body: TaskWrite): Promise<TaskItem> {
+  return apiFetch<TaskItem>(`/api/v1/tasks/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteTask(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/tasks/${id}`, { method: "DELETE" });
+}
+
+// ── Milestones ────────────────────────────────────────────────────────────
+
+export async function fetchMilestones(params?: { jobId?: string }): Promise<Milestone[]> {
+  const q = new URLSearchParams();
+  if (params?.jobId) q.set("jobId", params.jobId);
+  const qs = q.toString();
+  return apiFetch<Milestone[]>(`/api/v1/milestones${qs ? `?${qs}` : ""}`);
+}
+
+export async function createMilestone(body: MilestoneWrite): Promise<Milestone> {
+  return apiFetch<Milestone>("/api/v1/milestones", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateMilestone(id: string, body: MilestoneWrite): Promise<Milestone> {
+  return apiFetch<Milestone>(`/api/v1/milestones/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteMilestone(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/milestones/${id}`, { method: "DELETE" });
+}
+
+// ── Evidence ──────────────────────────────────────────────────────────────
+
+export async function fetchEvidence(params?: { jobId?: string }): Promise<Evidence[]> {
+  const q = new URLSearchParams();
+  if (params?.jobId) q.set("jobId", params.jobId);
+  const qs = q.toString();
+  return apiFetch<Evidence[]>(`/api/v1/evidence${qs ? `?${qs}` : ""}`);
+}
+
+export async function createEvidence(body: EvidenceWrite): Promise<Evidence> {
+  return apiFetch<Evidence>("/api/v1/evidence", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateEvidenceVisibility(
+  id: string,
+  customerVisible: boolean,
+): Promise<Evidence> {
+  return apiFetch<Evidence>(`/api/v1/evidence/${id}/visibility`, {
+    method: "PATCH",
+    body: JSON.stringify({ customerVisible }),
+  });
+}
+
+/** Soft-delete evidence photo. */
+export async function deleteEvidence(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/evidence/${id}`, { method: "DELETE" });
+}
+
+export async function setPhotoVisibility(
+  jobId: string,
+  photoId: string,
+  customerVisible: boolean,
+): Promise<Photo> {
+  return apiFetch<Photo>(`/api/v1/jobs/${jobId}/photos/${photoId}/visibility`, {
+    method: "PATCH",
+    body: JSON.stringify({ customerVisible }),
+  });
+}
+
+// ── Drafts / Approvals ────────────────────────────────────────────────────
+
+export async function fetchApprovals(): Promise<ApprovalItem[]> {
+  return apiFetch<ApprovalItem[]>("/api/v1/approvals");
+}
+
+export async function createDraft(body: DraftWrite): Promise<MessageDraft> {
+  return apiFetch<MessageDraft>("/api/v1/drafts", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateDraft(id: string, body: DraftWrite): Promise<MessageDraft> {
+  return apiFetch<MessageDraft>(`/api/v1/drafts/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteDraft(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/drafts/${id}`, { method: "DELETE" });
+}
+
+export async function approveDraft(draftId: string): Promise<MessageDraft> {
+  return apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/approve`, {
+    method: "POST",
+    body: "{}",
+  });
+}
+
+export async function rejectDraft(draftId: string, reason?: string): Promise<MessageDraft> {
+  return apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/reject`, {
+    method: "POST",
+    body: JSON.stringify({ reason: reason ?? null }),
+  });
+}
+
+export async function sendDraft(draftId: string): Promise<MessageDraft> {
+  return apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/send`, {
+    method: "POST",
+    body: "{}",
+  });
+}
+
+// ── Consents ──────────────────────────────────────────────────────────────
+
+export async function fetchConsents(params?: { jobId?: string }): Promise<Consent[]> {
+  const q = new URLSearchParams();
+  if (params?.jobId) q.set("jobId", params.jobId);
+  const qs = q.toString();
+  return apiFetch<Consent[]>(`/api/v1/consents${qs ? `?${qs}` : ""}`);
+}
+
+export async function createConsent(body: ConsentWrite): Promise<Consent> {
+  return apiFetch<Consent>("/api/v1/consents", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateConsent(id: string, body: ConsentWrite): Promise<Consent> {
+  return apiFetch<Consent>(`/api/v1/consents/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteConsent(id: string): Promise<void> {
+  await apiFetch<void>(`/api/v1/consents/${id}`, { method: "DELETE" });
+}
+
+// ── Integrations ──────────────────────────────────────────────────────────
+
+export async function fetchIntegrationStatus(): Promise<IntegrationStatus> {
+  return apiFetch<IntegrationStatus>("/api/v1/integrations/status");
+}
+
+export async function runIntegrationSync(): Promise<SyncResult> {
+  return apiFetch<SyncResult>("/api/v1/integrations/sync", {
+    method: "POST",
+    body: "{}",
+  });
+}
+
+export async function fetchIntegrationConnections(): Promise<IntegrationConnection[]> {
+  return apiFetch<IntegrationConnection[]>("/api/v1/integrations/connections");
+}
+
+export async function connectIntegration(provider: string): Promise<IntegrationConnection> {
+  return apiFetch<IntegrationConnection>(
+    `/api/v1/integrations/connections/${provider}/connect`,
+    { method: "POST", body: "{}" },
+  );
+}
+
+export async function disconnectIntegration(provider: string): Promise<IntegrationConnection> {
+  return apiFetch<IntegrationConnection>(
+    `/api/v1/integrations/connections/${provider}/disconnect`,
+    { method: "POST", body: "{}" },
+  );
+}
+
+// ── Organizations / members ───────────────────────────────────────────────
+
+export async function fetchOrganization(): Promise<Organization> {
+  return apiFetch<Organization>("/api/v1/organizations/current");
+}
+
+export async function updateOrganization(body: OrganizationWrite): Promise<Organization> {
+  return apiFetch<Organization>("/api/v1/organizations/current", {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function fetchOrgMembers(): Promise<StaffMember[]> {
+  return apiFetch<StaffMember[]>("/api/v1/organizations/current/members");
+}
+
+export async function updateMemberRole(staffId: string, role: string): Promise<StaffMember> {
+  return apiFetch<StaffMember>(`/api/v1/organizations/current/members/${staffId}/role`, {
+    method: "PATCH",
+    body: JSON.stringify({ role }),
+  });
+}
+
+// ── Portal (read-only) ────────────────────────────────────────────────────
+
+export async function fetchPortal(token: string): Promise<PortalJob> {
+  return apiFetch<PortalJob>(`/api/v1/portal/${token}`);
 }

@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { EmptyState, ErrorState } from "@/components/ApiState";
 import { DraftActions } from "@/components/DraftActions";
+import { DraftCreate, DraftEdit } from "@/components/DraftCrud";
+import { EvidenceActions, EvidenceCreate } from "@/components/EvidenceCrud";
+import { JobEdit } from "@/components/JobCrud";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchJob, fetchJobAudit } from "@/lib/api";
+import { isNotFound } from "@/lib/api/errors";
+import { loadApi } from "@/lib/api/load";
 
 export const dynamic = "force-dynamic";
 
@@ -12,19 +17,40 @@ export default async function JobDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { data: job, source } = await fetchJob(id);
-  if (!job) {
-    notFound();
+  const result = await loadApi(() => fetchJob(id));
+
+  if (!result.ok) {
+    return (
+      <StaffChrome active="detail" title="Job">
+        <div className="mb-3">
+          <Link
+            href="/jobs"
+            className="text-[12px] font-semibold text-[var(--muted)] hover:text-[var(--signal)]"
+          >
+            ← Jobs
+          </Link>
+        </div>
+        {isNotFound(result.error) ? (
+          <EmptyState title="Job not found" description="This id is not in the API." />
+        ) : (
+          <ErrorState error={result.error} />
+        )}
+      </StaffChrome>
+    );
   }
 
-  const audit = await fetchJobAudit(id);
+  const job = result.data;
+  const photos = job.photos ?? [];
+  const drafts = job.drafts ?? [];
+  const auditResult = await loadApi(() => fetchJobAudit(id));
+  const audit = auditResult.ok ? auditResult.data : [];
   const portalHref = job.portalToken ? `/p/${job.portalToken}` : null;
-  const pending = job.drafts.filter((d) => d.status === "PendingApproval");
-  const visiblePhotos = job.photos.filter((p) => p.customerVisible);
-  const staffOnlyPhotos = job.photos.filter((p) => !p.customerVisible);
+  const pending = drafts.filter((d) => d.status === "PendingApproval");
+  const visiblePhotos = photos.filter((p) => p.customerVisible);
+  const staffOnlyPhotos = photos.filter((p) => !p.customerVisible);
 
   return (
-    <StaffChrome active="detail" source={source} title={job.addressLine1}>
+    <StaffChrome active="detail" live title={job.addressLine1}>
       <div className="mb-3">
         <Link
           href="/jobs"
@@ -41,6 +67,7 @@ export default async function JobDetailPage({
           <>
             <span className="console-badge">{job.stage}</span>
             <span className="console-badge">{job.status}</span>
+            {job.jobType ? <span className="console-badge">{job.jobType}</span> : null}
             <span className="console-badge font-mono-data">JN {job.externalJobNimbusId}</span>
             {pending.length > 0 ? (
               <span className="console-badge console-badge-accent">
@@ -60,16 +87,19 @@ export default async function JobDetailPage({
 
       <div className="stagger-1 grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <section className="console-panel p-5">
-          <div className="mb-3.5 flex items-center justify-between">
+          <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
             <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
               Evidence
             </h2>
-            <p className="text-[11px] font-medium text-[var(--console-muted)]">
-              {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-[11px] font-medium text-[var(--console-muted)]">
+                {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
+              </p>
+              <EvidenceCreate jobId={job.id} />
+            </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {job.photos.map((photo) => (
+            {photos.map((photo) => (
               <figure
                 key={photo.id}
                 className="photo-lift overflow-hidden rounded-[var(--console-radius-sm)] border border-[var(--console-border)]"
@@ -85,23 +115,25 @@ export default async function JobDetailPage({
                   <span className="ml-2 font-semibold text-[var(--console-text)]">
                     {photo.customerVisible ? "Customer visible" : "Staff only"}
                   </span>
+                  <EvidenceActions jobId={job.id} photo={photo} />
                 </figcaption>
               </figure>
             ))}
-            {job.photos.length === 0 ? (
-              <p className="text-[13px] text-[var(--console-muted)]">No CompanyCam evidence yet.</p>
+            {photos.length === 0 ? (
+              <p className="text-[13px] text-[var(--console-muted)]">No evidence yet.</p>
             ) : null}
           </div>
         </section>
 
         <section className="console-panel overflow-hidden">
-          <div className="border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">
+          <div className="flex items-center justify-between border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">
             <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
               Message drafts
             </h2>
+            <DraftCreate jobId={job.id} />
           </div>
           <ul className="divide-y divide-[var(--console-border)]">
-            {job.drafts.map((draft) => (
+            {drafts.map((draft) => (
               <li key={draft.id} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -115,6 +147,9 @@ export default async function JobDetailPage({
                     <p className="mt-2 font-mono-data text-[11px] text-[var(--console-muted)]">
                       {draft.evidenceSummary}
                     </p>
+                    <div className="mt-2">
+                      <DraftEdit jobId={job.id} draft={draft} />
+                    </div>
                   </div>
                   <DraftActions
                     draftId={draft.id}
@@ -125,12 +160,17 @@ export default async function JobDetailPage({
                 </div>
               </li>
             ))}
-            {job.drafts.length === 0 ? (
+            {drafts.length === 0 ? (
               <li className="px-4 py-8 text-[13px] text-[var(--console-muted)]">No drafts yet.</li>
             ) : null}
           </ul>
         </section>
       </div>
+
+      <section className="stagger-2 console-panel mt-4 p-5">
+        <h2 className="display-title mb-3 text-[15px] font-semibold">Edit job</h2>
+        <JobEdit job={job} />
+      </section>
 
       <section className="stagger-2 console-panel mt-4 overflow-hidden">
         <div className="border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">
@@ -138,7 +178,11 @@ export default async function JobDetailPage({
             Audit trail
           </h2>
         </div>
-        {audit.data.length === 0 ? (
+        {!auditResult.ok ? (
+          <div className="p-4">
+            <ErrorState error={auditResult.error} />
+          </div>
+        ) : audit.length === 0 ? (
           <p className="px-4 py-6 text-[13px] text-[var(--console-muted)]">
             No audit events yet. Approve / reject / send will appear here.
           </p>
@@ -152,7 +196,7 @@ export default async function JobDetailPage({
               </tr>
             </thead>
             <tbody>
-              {audit.data.map((event) => (
+              {audit.map((event) => (
                 <tr key={event.id}>
                   <td>
                     <span className="console-badge console-badge-accent font-mono-data">

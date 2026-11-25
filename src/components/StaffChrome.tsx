@@ -1,9 +1,22 @@
 import Link from "next/link";
 import { StaffSession } from "@/components/StaffSession";
 
-const links = [
+const fieldOps = [
   { href: "/jobs", label: "Jobs", keys: ["jobs", "detail"] as const },
   { href: "/approvals", label: "Approvals", keys: ["approvals"] as const },
+  { href: "/evidence", label: "Evidence", keys: ["evidence"] as const },
+  { href: "/tasks", label: "Tasks", keys: ["tasks"] as const },
+  { href: "/notes", label: "Notes", keys: ["notes"] as const },
+  { href: "/milestones", label: "Milestones", keys: ["milestones"] as const },
+];
+
+const crm = [
+  { href: "/contacts", label: "Contacts", keys: ["contacts"] as const },
+  { href: "/properties", label: "Properties", keys: ["properties"] as const },
+  { href: "/consents", label: "Consents", keys: ["consents"] as const },
+];
+
+const system = [
   { href: "/integrations", label: "Integrations", keys: ["integrations"] as const },
   { href: "/settings", label: "Settings", keys: ["settings"] as const },
 ];
@@ -12,6 +25,13 @@ export type StaffNav =
   | "jobs"
   | "approvals"
   | "detail"
+  | "evidence"
+  | "contacts"
+  | "properties"
+  | "notes"
+  | "tasks"
+  | "milestones"
+  | "consents"
   | "integrations"
   | "settings";
 
@@ -19,21 +39,59 @@ const titles: Record<StaffNav, string> = {
   jobs: "Jobs",
   detail: "Job detail",
   approvals: "Approvals",
+  evidence: "Evidence",
+  contacts: "Contacts",
+  properties: "Properties",
+  notes: "Notes",
+  tasks: "Tasks",
+  milestones: "Milestones",
+  consents: "Consents",
   integrations: "Integrations",
   settings: "Settings",
 };
 
+function NavGroup({
+  label,
+  links,
+  active,
+}: {
+  label: string;
+  links: { href: string; label: string; keys: readonly string[] }[];
+  active: StaffNav;
+}) {
+  return (
+    <>
+      <p className="px-3 pb-2 pt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/30">
+        {label}
+      </p>
+      {links.map((link) => {
+        const isActive = link.keys.includes(active);
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={isActive ? "nav-link nav-link-active" : "nav-link"}
+          >
+            <span className="nav-dot" />
+            {link.label}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 export function StaffChrome({
   children,
   active,
-  source,
+  live,
   title,
 }: {
   children: React.ReactNode;
   active: StaffNav;
-  source?: "api" | "sample";
+  /** True when this page successfully talked to the API. */
+  live?: boolean;
   title?: string;
-  actions?: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen text-[var(--text)]">
@@ -50,41 +108,26 @@ export function StaffChrome({
           <div className="signal-rule mt-4" />
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 px-3 pb-3">
-          <p className="px-3 pb-2 pt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white/30">
-            Field ops
-          </p>
-          {links.map((link) => {
-            const isActive = (link.keys as readonly string[]).includes(active);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={isActive ? "nav-link nav-link-active" : "nav-link"}
-              >
-                <span className="nav-dot" />
-                {link.label}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 pb-3">
+          <NavGroup label="Field ops" links={fieldOps} active={active} />
+          <NavGroup label="CRM" links={crm} active={active} />
+          <NavGroup label="System" links={system} active={active} />
         </nav>
 
         <div className="mx-3 mb-3 rounded-[12px] border border-white/10 bg-white/[0.04] px-3.5 py-3 text-[11px] text-white/55">
           <p className="font-semibold tracking-wide text-white/75">Rutters</p>
           <p className="mt-1 text-white/45">Roofing &amp; Exteriors</p>
           <div className="mt-3">
-            {source === "sample" ? (
-              <span className="inline-flex items-center gap-2 text-[#ffb070]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#ffb070]" />
-                Sample · API offline
-              </span>
-            ) : source === "api" ? (
+            {live ? (
               <span className="inline-flex items-center gap-2 text-[#7ddeb0]">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-[#7ddeb0]" />
                 Live signal · :5188
               </span>
             ) : (
-              <span>Staff console</span>
+              <span className="inline-flex items-center gap-2 text-white/45">
+                <span className="h-1.5 w-1.5 rounded-full bg-white/35" />
+                Staff console
+              </span>
             )}
           </div>
         </div>

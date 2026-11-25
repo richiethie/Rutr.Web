@@ -1,19 +1,43 @@
+import { ErrorState } from "@/components/ApiState";
+import { MemberRoleSelect, OrgEditForm } from "@/components/OrgSettings";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
-import { fetchIntegrationStatus, fetchStaffMe } from "@/lib/api";
+import {
+  fetchIntegrationStatus,
+  fetchOrganization,
+  fetchOrgMembers,
+  fetchStaffMe,
+} from "@/lib/api";
+import { loadApi } from "@/lib/api/load";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const me = await fetchStaffMe();
-  const integrations = await fetchIntegrationStatus();
-  const source = me.source === "api" || integrations.source === "api" ? "api" : "sample";
-  const staff = me.data;
+  const me = await loadApi(fetchStaffMe);
+  const org = await loadApi(fetchOrganization);
+  const members = await loadApi(fetchOrgMembers);
+  const integrations = await loadApi(fetchIntegrationStatus);
+
+  if (!me.ok && !org.ok) {
+    return (
+      <StaffChrome active="settings">
+        <PageHeader
+          title="Settings"
+          description="Org and messaging defaults for the Rutters Connect pilot."
+        />
+        <ErrorState error={me.ok ? org.error : me.error} />
+      </StaffChrome>
+    );
+  }
+
+  const staff = me.ok ? me.data : null;
+  const messaging = integrations.ok ? integrations.data.messaging : "unknown";
+  const useMocks = integrations.ok ? integrations.data.useMocks : true;
 
   return (
-    <StaffChrome active="settings" source={source}>
+    <StaffChrome active="settings" live={me.ok || org.ok}>
       <PageHeader
         title="Settings"
-        description="Org and messaging defaults for the Rutters Connect pilot."
+        description="Org name, quiet hours, branding light, and staff roles (Admin / Pm / Sales)."
       />
 
       <div className="stagger-1 grid gap-4 lg:grid-cols-2">
@@ -21,97 +45,89 @@ export default async function SettingsPage() {
           <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
             Organization
           </h2>
-          <dl className="mt-3 grid gap-3 sm:grid-cols-2">
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Name
-              </dt>
-              <dd className="mt-1 text-[13px]">
-                {staff?.organizationName ?? "Rutters Roofing & Exteriors"}
-              </dd>
+          {!org.ok ? (
+            <div className="mt-3">
+              <ErrorState error={org.error} />
             </div>
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                OrganizationId
-              </dt>
-              <dd className="mt-1 font-mono-data text-[12px]">
-                {staff?.organizationId ?? "11111111-1111-1111-1111-111111111111"}
-              </dd>
+          ) : (
+            <div className="mt-3">
+              <p className="mb-3 font-mono-data text-[11px] text-[var(--muted)]">
+                slug · {org.data.slug} · id · {org.data.id}
+              </p>
+              <OrgEditForm org={org.data} />
             </div>
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Signed-in staff
-              </dt>
-              <dd className="mt-1 text-[13px]">
-                {staff ? `${staff.displayName} · ${staff.role}` : "Demo PM"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Email
-              </dt>
-              <dd className="mt-1 text-[13px]">{staff?.email ?? "pm@rutters.demo"}</dd>
-            </div>
-          </dl>
+          )}
         </section>
 
         <section className="console-panel p-5">
           <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
-            SMS consent &amp; quiet hours
+            Signed-in staff
           </h2>
-          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
-            Digests only send with consent and outside quiet hours. Messaging mode:{" "}
-            <span className="font-semibold text-[var(--console-accent)]">
-              {integrations.data.messaging}
-              {integrations.data.useMocks ? " (UseMocks)" : ""}
+          {!me.ok ? (
+            <div className="mt-3">
+              <ErrorState error={me.error} />
+            </div>
+          ) : (
+            <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                  Name
+                </dt>
+                <dd className="mt-1 text-[13px]">
+                  {staff!.displayName} · {staff!.role}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                  Email
+                </dt>
+                <dd className="mt-1 text-[13px]">{staff!.email}</dd>
+              </div>
+            </dl>
+          )}
+          <p className="mt-4 text-[13px] text-[var(--muted)]">
+            Messaging mode:{" "}
+            <span className="font-semibold text-[var(--signal)]">
+              {messaging}
+              {useMocks ? " (UseMocks)" : ""}
             </span>
-            .
           </p>
-          <dl className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Quiet hours
-              </dt>
-              <dd className="mt-1 text-[13px]">8:00 PM – 8:00 AM CT</dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Consent
-              </dt>
-              <dd className="mt-1 text-[13px]">Required before first SMS</dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
-                Timezone
-              </dt>
-              <dd className="mt-1 text-[13px]">America/Chicago</dd>
-            </div>
-          </dl>
         </section>
 
-        <section className="console-panel p-5">
-          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
-            Webhook endpoints
-          </h2>
-          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
-            Point vendors at the API (not this Next app). Local base{" "}
-            <span className="font-mono-data text-[var(--console-text)]">http://127.0.0.1:5188</span>.
-          </p>
-          <ul className="mt-3 space-y-1.5 font-mono-data text-[12px] text-[var(--console-muted)]">
-            <li>POST /api/v1/webhooks/jobnimbus</li>
-            <li>POST /api/v1/webhooks/companycam</li>
-            <li>POST /api/v1/webhooks/twilio/sms</li>
-          </ul>
-        </section>
-
-        <section className="console-panel p-5">
-          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
-            Portal media
-          </h2>
-          <p className="mt-2 text-[13px] text-[var(--console-muted)]">
-            Only PM-approved photos become customer-visible. Production media will land in Cloudflare
-            R2; the local slice uses seeded image URLs.
-          </p>
+        <section className="console-panel overflow-hidden lg:col-span-2">
+          <div className="border-b border-[var(--line)] px-5 py-3">
+            <h2 className="display-title text-[15px] font-semibold">Members &amp; roles</h2>
+          </div>
+          {!members.ok ? (
+            <div className="p-5">
+              <ErrorState error={members.error} />
+            </div>
+          ) : (
+            <table className="console-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th className="text-right">Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                {members.data.map((m) => (
+                  <tr key={m.id}>
+                    <td className="font-semibold">{m.displayName}</td>
+                    <td className="text-[13px]">{m.email}</td>
+                    <td>
+                      <span className="console-badge">{m.role}</span>
+                    </td>
+                    <td className="text-right">
+                      <MemberRoleSelect member={m} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </section>
       </div>
     </StaffChrome>
