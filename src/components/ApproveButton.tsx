@@ -1,17 +1,27 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { approveDraft } from "@/lib/api";
 
-export function ApproveButton({ draftId }: { draftId: string }) {
+export function ApproveButton({
+  draftId,
+  portalHref,
+}: {
+  draftId: string;
+  portalHref?: string | null;
+}) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [pending, startTransition] = useTransition();
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [source, setSource] = useState<"api" | "sample" | null>(null);
 
   return (
-    <div className="flex flex-col items-start gap-2">
+    <div className="flex min-w-[11rem] flex-col items-start gap-2">
       <button
         type="button"
         disabled={pending || done}
@@ -20,8 +30,10 @@ export function ApproveButton({ draftId }: { draftId: string }) {
           setError(null);
           startTransition(async () => {
             try {
-              await approveDraft(draftId);
+              const result = await approveDraft(draftId);
+              setSource(result.source);
               setDone(true);
+              await queryClient.invalidateQueries({ queryKey: ["approvals"] });
               router.refresh();
             } catch {
               setError("Could not approve. Try again.");
@@ -31,6 +43,20 @@ export function ApproveButton({ draftId }: { draftId: string }) {
       >
         {done ? "Approved" : pending ? "Approving…" : "Approve digest"}
       </button>
+      {done ? (
+        <p className="max-w-[16rem] text-xs leading-relaxed text-[var(--rutr-sage)]">
+          Photos marked customer-visible
+          {source === "sample" ? " (sample mode)" : ""}.
+          {portalHref ? (
+            <>
+              {" "}
+              <Link href={portalHref} className="text-[var(--rutr-copper-hot)] hover:underline">
+                Open portal
+              </Link>
+            </>
+          ) : null}
+        </p>
+      ) : null}
       {error ? <p className="text-xs text-red-300">{error}</p> : null}
     </div>
   );

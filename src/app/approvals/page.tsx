@@ -1,12 +1,22 @@
 import Link from "next/link";
-import { StaffChrome } from "@/components/StaffChrome";
 import { ApproveButton } from "@/components/ApproveButton";
-import { fetchApprovals } from "@/lib/api";
+import { StaffChrome } from "@/components/StaffChrome";
+import { fetchApprovals, fetchJob } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
 export default async function ApprovalsPage() {
   const { data: items, source } = await fetchApprovals();
+
+  const withPortal = await Promise.all(
+    items.map(async (item) => {
+      const job = await fetchJob(item.jobId);
+      return {
+        ...item,
+        portalToken: job.data?.portalToken ?? null,
+      };
+    }),
+  );
 
   return (
     <StaffChrome active="approvals" source={source}>
@@ -18,13 +28,13 @@ export default async function ApprovalsPage() {
         </p>
       </div>
 
-      {items.length === 0 ? (
+      {withPortal.length === 0 ? (
         <p className="fade-up-delay border-y border-[var(--rutr-line)] py-10 text-[var(--rutr-sage)]">
           Queue is clear. New CompanyCam activity will draft the next digest.
         </p>
       ) : (
         <ul className="fade-up-delay space-y-8">
-          {items.map((item) => (
+          {withPortal.map((item) => (
             <li
               key={item.draftId}
               className="border-t border-[var(--rutr-line)] pt-6 first:border-t-0 first:pt-0"
@@ -46,7 +56,10 @@ export default async function ApprovalsPage() {
                     Evidence · {item.evidenceSummary}
                   </p>
                 </div>
-                <ApproveButton draftId={item.draftId} />
+                <ApproveButton
+                  draftId={item.draftId}
+                  portalHref={item.portalToken ? `/p/${item.portalToken}` : null}
+                />
               </div>
             </li>
           ))}

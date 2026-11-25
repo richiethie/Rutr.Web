@@ -1,3 +1,5 @@
+import { clientAuthHeaders } from "@/lib/auth";
+
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:5188";
 
@@ -198,12 +200,20 @@ const SAMPLE_PORTAL: PortalJob = {
   ],
 };
 
+/** Stages shown in staff + portal Connect MVP. */
+export const JOB_STAGES = ["Lead", "Prepare", "Build", "Complete"] as const;
+
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const auth =
+    typeof window === "undefined"
+      ? { "X-Demo-Auth": "pm" }
+      : clientAuthHeaders();
+
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
-      "X-Demo-Auth": "pm",
+      ...auth,
       ...(init?.headers || {}),
     },
     cache: "no-store",
@@ -223,12 +233,15 @@ export async function fetchJobs(): Promise<FetchResult<JobListItem[]>> {
   }
 }
 
-export async function fetchJob(id: string): Promise<FetchResult<JobDetail>> {
+export async function fetchJob(id: string): Promise<FetchResult<JobDetail | null>> {
   try {
     const data = await apiFetch<JobDetail>(`/api/v1/jobs/${id}`);
     return { data, source: "api" };
   } catch {
-    return { data: sampleJobDetail(id), source: "sample" };
+    if (SAMPLE_JOBS.some((j) => j.id === id) || id.startsWith("3333")) {
+      return { data: sampleJobDetail(id), source: "sample" };
+    }
+    return { data: null, source: "sample" };
   }
 }
 
@@ -241,7 +254,9 @@ export async function fetchApprovals(): Promise<FetchResult<ApprovalItem[]>> {
   }
 }
 
-export async function approveDraft(draftId: string): Promise<FetchResult<MessageDraft | { ok: true }>> {
+export async function approveDraft(
+  draftId: string,
+): Promise<FetchResult<MessageDraft | { ok: true }>> {
   try {
     const data = await apiFetch<MessageDraft>(`/api/v1/approvals/${draftId}/approve`, {
       method: "POST",
@@ -260,4 +275,19 @@ export async function fetchPortal(token: string): Promise<FetchResult<PortalJob>
   } catch {
     return { data: { ...SAMPLE_PORTAL }, source: "sample" };
   }
+}
+
+export async function loginStaff(
+  email: string,
+  password: string,
+): Promise<{ token: string; displayName: string; role: string }> {
+  const res = await fetch(`${API_URL}/api/v1/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    throw new Error("Invalid email or password.");
+  }
+  return res.json() as Promise<{ token: string; displayName: string; role: string }>;
 }

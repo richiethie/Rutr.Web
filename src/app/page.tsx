@@ -29,16 +29,10 @@ export default function HomePage() {
             Staff login
           </Link>
           <Link
-            href="/jobs"
+            href="/approvals"
             className="rounded-sm border border-[var(--rutr-line)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--rutr-chalk)] hover:border-[var(--rutr-copper)]"
           >
-            Open jobs
-          </Link>
-          <Link
-            href="/approvals"
-            className="rounded-sm px-5 py-3 text-sm uppercase tracking-[0.14em] text-[var(--rutr-mist)] underline-offset-4 hover:text-[var(--rutr-chalk)] hover:underline"
-          >
-            Approvals queue
+            Approval queue
           </Link>
           <Link
             href="/p/keller-maple-demo"

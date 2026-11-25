@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo_Black, Source_Sans_3 } from "next/font/google";
+import { Providers } from "@/components/Providers";
 import "./globals.css";
 
 const display = Archivo_Black({
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable} antialiased rutr-shell`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

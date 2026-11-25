@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { API_URL } from "@/lib/api";
+import { loginStaff } from "@/lib/api";
+import { persistSession } from "@/lib/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("pm@rutters.demo");
@@ -15,17 +16,8 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/api/v1/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        throw new Error("Invalid email or password.");
-      }
-      const data = (await res.json()) as { token: string; displayName: string; role: string };
-      localStorage.setItem("rutr_token", data.token);
-      localStorage.setItem("rutr_user", JSON.stringify({ displayName: data.displayName, role: data.role }));
+      const data = await loginStaff(email, password);
+      persistSession(data.token, { displayName: data.displayName, role: data.role });
       window.location.href = "/jobs";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed — is the API on :5188?");
@@ -43,8 +35,8 @@ export default function LoginPage() {
         </Link>
         <h1 className="mt-6 text-2xl font-semibold text-[var(--rutr-chalk)]">Staff sign-in</h1>
         <p className="mt-2 text-sm text-[var(--rutr-mist)]">
-          Demo: pm@rutters.demo / rutters-demo. Staff pages also accept the X-Demo-Auth header when the
-          API is reachable.
+          Demo: pm@rutters.demo / rutters-demo. JWT is stored for approve actions; SSR still falls
+          back to demo auth when the API is reachable.
         </p>
         <form onSubmit={onSubmit} className="mt-8 space-y-4 border-y border-[var(--rutr-line)] py-8">
           <label className="block text-xs uppercase tracking-[0.14em] text-[var(--rutr-mist)]">
@@ -80,9 +72,8 @@ export default function LoginPage() {
         </form>
         <p className="mt-4 text-sm text-[var(--rutr-mist)]">
           <Link href="/jobs" className="underline-offset-4 hover:text-[var(--rutr-chalk)] hover:underline">
-            Skip to jobs
-          </Link>{" "}
-          (demo auth header)
+            Continue with demo header
+          </Link>
         </p>
       </div>
     </div>

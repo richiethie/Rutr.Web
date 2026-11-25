@@ -1,29 +1,47 @@
 import Link from "next/link";
+import { JobsStageFilter } from "@/components/JobsStageFilter";
 import { StaffChrome } from "@/components/StaffChrome";
 import { fetchJobs } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
-export default async function JobsPage() {
+export default async function JobsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ stage?: string }>;
+}) {
+  const { stage } = await searchParams;
   const { data: jobs, source } = await fetchJobs();
+  const filtered = stage
+    ? jobs.filter((j) => j.stage.toLowerCase() === stage.toLowerCase())
+    : jobs;
+  const waiting = jobs.reduce((sum, j) => sum + j.pendingApprovals, 0);
 
   return (
     <StaffChrome active="jobs" source={source}>
-      <div className="fade-up mb-8 flex items-end justify-between gap-4">
+      <div className="fade-up mb-6 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold text-[var(--rutr-chalk)]">Active jobs</h1>
           <p className="mt-2 max-w-xl text-[var(--rutr-mist)]">
-            Live Rutters work pulled from JobNimbus with pending digest counts from CompanyCam
-            evidence.
+            JobNimbus work for Rutters with pending digest counts from CompanyCam evidence.
           </p>
         </div>
-        <p className="hidden text-xs uppercase tracking-[0.16em] text-[var(--rutr-sage)] sm:block">
-          {jobs.length} jobs
-        </p>
+        <div className="text-xs uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
+          <p>
+            {filtered.length} shown · {jobs.length} total
+          </p>
+          {waiting > 0 ? (
+            <p className="mt-1 text-[var(--rutr-copper-hot)]">{waiting} digests waiting</p>
+          ) : null}
+        </div>
       </div>
 
-      <ul className="fade-up-delay divide-y divide-[var(--rutr-line)] border-y border-[var(--rutr-line)]">
-        {jobs.map((job) => (
+      <div className="fade-up-delay mb-8">
+        <JobsStageFilter active={stage} />
+      </div>
+
+      <ul className="fade-up-delay-2 divide-y divide-[var(--rutr-line)] border-y border-[var(--rutr-line)]">
+        {filtered.map((job) => (
           <li key={job.id}>
             <Link
               href={`/jobs/${job.id}`}
@@ -42,6 +60,7 @@ export default async function JobsPage() {
                   {job.stage}
                 </span>
                 <span>{job.status}</span>
+                <span className="text-[var(--rutr-sage)]">{job.photoCount} photos</span>
                 {job.pendingApprovals > 0 ? (
                   <span className="inline-flex items-center gap-2 text-[var(--rutr-copper-hot)]">
                     <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-[var(--rutr-copper)]" />
@@ -54,6 +73,9 @@ export default async function JobsPage() {
             </Link>
           </li>
         ))}
+        {filtered.length === 0 ? (
+          <li className="py-10 text-[var(--rutr-mist)]">No jobs in this stage.</li>
+        ) : null}
       </ul>
     </StaffChrome>
   );
