@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ApproveButton } from "@/components/ApproveButton";
+import { DraftActions } from "@/components/DraftActions";
 import { StaffChrome } from "@/components/StaffChrome";
 import { fetchApprovals, fetchJob } from "@/lib/api";
 
@@ -23,14 +23,14 @@ export default async function ApprovalsPage() {
       <div className="fade-up mb-8">
         <h1 className="text-3xl font-semibold text-[var(--rutr-chalk)]">Approval queue</h1>
         <p className="mt-2 max-w-2xl text-[var(--rutr-mist)]">
-          Digests wait here until a PM verifies the evidence. Approving marks related photos
-          customer-visible and unlocks the homeowner portal update.
+          Digests wait here until a PM verifies evidence. Approve → send (mock SMS/email) marks the
+          audit trail and unlocks portal updates.
         </p>
       </div>
 
       {withPortal.length === 0 ? (
         <p className="fade-up-delay border-y border-[var(--rutr-line)] py-10 text-[var(--rutr-sage)]">
-          Queue is clear. New CompanyCam activity will draft the next digest.
+          Queue is clear. Run a mock sync from Integrations or wait for CompanyCam activity.
         </p>
       ) : (
         <ul className="fade-up-delay space-y-8">
@@ -56,8 +56,10 @@ export default async function ApprovalsPage() {
                     Evidence · {item.evidenceSummary}
                   </p>
                 </div>
-                <ApproveButton
+                <DraftActions
                   draftId={item.draftId}
+                  status="PendingApproval"
+                  channel={item.channel}
                   portalHref={item.portalToken ? `/p/${item.portalToken}` : null}
                 />
               </div>

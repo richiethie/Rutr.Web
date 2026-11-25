@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ApproveButton } from "@/components/ApproveButton";
+import { DraftActions } from "@/components/DraftActions";
 import { StaffChrome } from "@/components/StaffChrome";
-import { fetchJob } from "@/lib/api";
+import { fetchJob, fetchJobAudit } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +17,7 @@ export default async function JobDetailPage({
     notFound();
   }
 
+  const audit = await fetchJobAudit(id);
   const portalHref = job.portalToken ? `/p/${job.portalToken}` : null;
   const pending = job.drafts.filter((d) => d.status === "PendingApproval");
   const visiblePhotos = job.photos.filter((p) => p.customerVisible);
@@ -58,8 +59,8 @@ export default async function JobDetailPage({
             Connect queue · {pending.length} digest{pending.length === 1 ? "" : "s"} waiting
           </p>
           <p className="mt-2 text-sm text-[var(--rutr-mist)]">
-            Approve only after you verify the evidence. Approving marks linked photos
-            customer-visible on the portal.
+            Approve only after you verify evidence, then send the mock digest. Portal photos stay
+            staff-only until approval.
           </p>
         </section>
       ) : null}
@@ -94,7 +95,7 @@ export default async function JobDetailPage({
         </div>
       </section>
 
-      <section className="fade-up-delay-2">
+      <section className="fade-up-delay-2 mb-12">
         <h2 className="mb-4 text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
           Message drafts
         </h2>
@@ -110,13 +111,12 @@ export default async function JobDetailPage({
                   <p className="mt-2 text-[var(--rutr-mist)]">{draft.body}</p>
                   <p className="mt-2 text-xs text-[var(--rutr-sage)]">{draft.evidenceSummary}</p>
                 </div>
-                {draft.status === "PendingApproval" ? (
-                  <ApproveButton draftId={draft.id} portalHref={portalHref} />
-                ) : draft.approvedAt ? (
-                  <p className="text-xs uppercase tracking-[0.12em] text-[var(--rutr-sage)]">
-                    Approved
-                  </p>
-                ) : null}
+                <DraftActions
+                  draftId={draft.id}
+                  status={draft.status}
+                  channel={draft.channel}
+                  portalHref={portalHref}
+                />
               </div>
             </li>
           ))}
@@ -124,6 +124,36 @@ export default async function JobDetailPage({
             <li className="text-[var(--rutr-mist)]">No drafts for this job yet.</li>
           ) : null}
         </ul>
+      </section>
+
+      <section className="fade-up-delay-2">
+        <h2 className="mb-4 text-sm uppercase tracking-[0.16em] text-[var(--rutr-sage)]">
+          Audit trail
+        </h2>
+        {audit.data.length === 0 ? (
+          <p className="border-y border-[var(--rutr-line)] py-6 text-sm text-[var(--rutr-mist)]">
+            No audit events yet. Approve / reject / send will appear here.
+          </p>
+        ) : (
+          <ul className="divide-y divide-[var(--rutr-line)] border-y border-[var(--rutr-line)]">
+            {audit.data.map((event) => (
+              <li key={event.id} className="flex flex-col gap-1 py-4 sm:flex-row sm:justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.12em] text-[var(--rutr-copper-hot)]">
+                    {event.action}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--rutr-mist)]">{event.detail}</p>
+                </div>
+                <p className="text-xs text-[var(--rutr-sage)]">
+                  {new Date(event.createdAt).toLocaleString("en-US", {
+                    timeZone: "America/Chicago",
+                  })}{" "}
+                  CT
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </StaffChrome>
   );
