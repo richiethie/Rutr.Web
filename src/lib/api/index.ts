@@ -4,7 +4,7 @@
  */
 import { apiFetch, publicApiFetch, API_URL } from "@/lib/api/http";
 import { ApiError } from "@/lib/api/errors";
-import { clientAuthHeaders } from "@/lib/auth";
+import { authHeaders } from "@/lib/auth";
 import type {
   AcceptInviteRequest,
   AddStaffMemberRequest,
@@ -313,10 +313,7 @@ export async function createEvidenceUpload(input: {
   form.append("customerVisible", String(Boolean(input.customerVisible)));
 
   // Do not set Content-Type — browser sets multipart boundary.
-  const auth =
-    typeof window === "undefined"
-      ? { "X-Demo-Auth": "pm" }
-      : clientAuthHeaders();
+  const auth = await authHeaders();
 
   let res: Response;
   try {

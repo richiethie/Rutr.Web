@@ -1,4 +1,4 @@
-import { clientAuthHeaders } from "@/lib/auth";
+import { authHeaders } from "@/lib/auth";
 import { ApiError } from "@/lib/api/errors";
 
 export const API_URL =
@@ -40,12 +40,9 @@ async function parseApiResponse<T>(res: Response, path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-/** Authenticated staff fetch (JWT or demo header). */
+/** Authenticated staff fetch (JWT cookie/localStorage, else demo header). */
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const auth =
-    typeof window === "undefined"
-      ? { "X-Demo-Auth": "pm" }
-      : clientAuthHeaders();
+  const auth = await authHeaders();
 
   let res: Response;
   try {

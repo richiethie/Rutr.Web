@@ -38,7 +38,7 @@ export default async function JobsPage({
     <StaffChrome active="jobs" live>
       <PageHeader
         title="Jobs"
-        description="Live Rutters work from JobNimbus — digests wait when CompanyCam evidence needs a PM eye."
+        description="Job-centric CRM from your org’s API data — digests wait when evidence needs a PM eye."
         actions={<JobCreate />}
       />
 
