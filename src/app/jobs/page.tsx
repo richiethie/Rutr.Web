@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EmptyState, ErrorState } from "@/components/ApiState";
 import { JobCreate } from "@/components/JobCrud";
+import { JobsEmptyCopy } from "@/components/JobsEmptyCopy";
 import { JobsStageFilter } from "@/components/JobsStageFilter";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { PageToolbar, StatCards } from "@/components/StatCards";
@@ -12,9 +13,14 @@ export const dynamic = "force-dynamic";
 export default async function JobsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ stage?: string }>;
+  searchParams: Promise<{
+    stage?: string;
+    onboarding?: string;
+    jobs?: string;
+    via?: string;
+  }>;
 }) {
-  const { stage } = await searchParams;
+  const { stage, onboarding, jobs: importedJobs, via } = await searchParams;
   const result = await loadApi(fetchJobs);
 
   if (!result.ok) {
@@ -76,11 +82,20 @@ export default async function JobsPage({
 
       {filtered.length === 0 ? (
         <EmptyState
-          title="No jobs yet"
+          title={
+            onboarding === "imported" && Number(importedJobs ?? 0) > 0
+              ? "Jobs not listed yet"
+              : onboarding === "empty"
+                ? "Starting empty"
+                : "No jobs yet"
+          }
           description={
-            stage
-              ? `No jobs in the ${stage} stage from the API.`
-              : "Empty from the API — create a job, or finish onboarding import/seed."
+            <JobsEmptyCopy
+              stage={stage}
+              onboarding={onboarding}
+              importedJobs={importedJobs}
+              via={via}
+            />
           }
           action={
             <div className="flex flex-wrap items-center justify-center gap-2">

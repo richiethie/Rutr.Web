@@ -15,14 +15,16 @@ export function EmptyState({
   action,
 }: {
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   action?: React.ReactNode;
 }) {
   return (
     <div className="rounded-lg border border-dashed border-border bg-card px-6 py-16 text-center">
       <p className="text-[15px] font-medium text-foreground">{title}</p>
       {description ? (
-        <p className="mx-auto mt-2 max-w-md text-[13px] text-muted-foreground">{description}</p>
+        <div className="mx-auto mt-2 max-w-md text-[13px] text-muted-foreground">
+          {description}
+        </div>
       ) : null}
       {action ? <div className="mt-5 flex justify-center">{action}</div> : null}
     </div>

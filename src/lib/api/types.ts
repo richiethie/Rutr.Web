@@ -397,6 +397,8 @@ export type OnboardingSeedResult = {
 export type OnboardingImportRequest = {
   source: "jobnimbus" | "csv" | string;
   csvContent?: string | null;
+  /** When API supports it (default false). Preview counts without writes. */
+  dryRun?: boolean;
 };
 
 export type OnboardingImportResult = {
@@ -407,6 +409,8 @@ export type OnboardingImportResult = {
   skipped: number;
   warnings: string[];
   message: string;
+  /** Present once Api ships dry-run; may be omitted on older builds. */
+  dryRun?: boolean;
 };
 
 export const JOB_STAGES = ["Lead", "Prepare", "Build", "Complete"] as const;

@@ -24,7 +24,7 @@ export default async function IntegrationsPage() {
       <StaffChrome active="integrations">
         <PageHeader
           title="Integrations"
-          description="Mock JobNimbus + CompanyCam connect / disconnect."
+          description="Connect digests + evidence. JobNimbus CRM migration is a one-shot import — not forever sync."
           actions={<SyncButton />}
         />
         <ErrorState error={statusResult.error} />
@@ -42,12 +42,12 @@ export default async function IntegrationsPage() {
     {
       name: "JobNimbus",
       provider: "jobnimbus",
-      role: "Jobs, stages, homeowner contacts",
+      role: "One-shot CRM import (migration)",
       status: status.jobNimbus,
       detail: status.useMocks
-        ? "Mock client upserts Rutters jobs on sync."
-        : "Live JobNimbus credentials configured.",
-      webhook: "POST /api/v1/webhooks/jobnimbus",
+        ? "Import mock JN / CSV from Onboarding — not ongoing dual-write SoR sync."
+        : "Credentials may exist for Connect helpers; book-of-business moves via onboarding import.",
+      webhook: "POST /api/v1/onboarding/import",
     },
     {
       name: "CompanyCam",
@@ -71,7 +71,7 @@ export default async function IntegrationsPage() {
     <StaffChrome active="integrations" live>
       <PageHeader
         title="Integrations"
-        description="Connect pulls JobNimbus work and CompanyCam evidence into the approval queue. Connect/disconnect is mock-only."
+        description="Connect sync is for digests/evidence. Move the JN book of business once via Onboarding import — not forever dual-write."
         meta={
           <>
             <span className="console-badge">
@@ -80,6 +80,12 @@ export default async function IntegrationsPage() {
             <span className="console-badge">{jobs.length} jobs</span>
             <Link href="/approvals" className="console-badge console-badge-accent hover:underline">
               {approvals.length} in queue · {waiting} pending
+            </Link>
+            <Link
+              href="/onboarding/import"
+              className="console-badge console-badge-accent hover:underline"
+            >
+              Import / migrate
             </Link>
           </>
         }
