@@ -249,6 +249,102 @@
         }
       }
     },
+    "/api/v1/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/accept-invite": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInviteRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInviteRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInviteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/me": {
       "get": {
         "tags": [
@@ -1128,6 +1224,80 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/evidence/upload": {
+      "post": {
+        "tags": [
+          "Evidence"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "JobId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "Caption": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "ExternalCompanyCamId": {
+                    "type": "string"
+                  },
+                  "CustomerVisible": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "encoding": {
+                "JobId": {
+                  "style": "form"
+                },
+                "Caption": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                },
+                "ExternalCompanyCamId": {
+                  "style": "form"
+                },
+                "CustomerVisible": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceDto"
+                }
+              }
+            }
           }
         }
       }
@@ -2253,6 +2423,102 @@
         }
       }
     },
+    "/api/v1/onboarding/seed": {
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingSeedRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingSeedRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingSeedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingSeedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingSeedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingSeedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboarding/import": {
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingImportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingImportRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingImportResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingImportResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingImportResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/organizations/current": {
       "get": {
         "tags": [
@@ -2364,6 +2630,52 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStaffMemberRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStaffMemberRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStaffMemberRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberDto"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/organizations/current/members/{staffId}/role": {
@@ -2418,6 +2730,90 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StaffMemberDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/current/invites": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InviteDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InviteDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InviteDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteStaffRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteStaffRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteStaffRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteDto"
                 }
               }
             }
@@ -2988,6 +3384,46 @@
   },
   "components": {
     "schemas": {
+      "AcceptInviteRequest": {
+        "type": "object",
+        "properties": {
+          "inviteToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddStaffMemberRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "temporaryPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ApprovalQueueItemDto": {
         "type": "object",
         "properties": {
@@ -3373,6 +3809,62 @@
             "nullable": true
           },
           "messaging": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InviteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InviteStaffRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
             "type": "string",
             "nullable": true
           }
@@ -3825,6 +4317,93 @@
         },
         "additionalProperties": false
       },
+      "OnboardingImportRequest": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "csvContent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnboardingImportResult": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactsCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "propertiesCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobsCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skipped": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnboardingSeedRequest": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnboardingSeedResult": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactsCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "propertiesCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobsCreated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OrganizationDto": {
         "type": "object",
         "properties": {
@@ -4080,6 +4659,75 @@
         "properties": {
           "customerVisible": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignupRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "brandPrimaryColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "quietHoursStartLocal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quietHoursEndLocal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "timeZoneId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignupResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "staffUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/OrganizationDto"
           }
         },
         "additionalProperties": false

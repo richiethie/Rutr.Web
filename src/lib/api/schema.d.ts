@@ -213,6 +213,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["SignupRequest"];
+                    "text/json": components["schemas"]["SignupRequest"];
+                    "application/*+json": components["schemas"]["SignupRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SignupResponse"];
+                        "application/json": components["schemas"]["SignupResponse"];
+                        "text/json": components["schemas"]["SignupResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/accept-invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["AcceptInviteRequest"];
+                    "text/json": components["schemas"]["AcceptInviteRequest"];
+                    "application/*+json": components["schemas"]["AcceptInviteRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SignupResponse"];
+                        "application/json": components["schemas"]["SignupResponse"];
+                        "text/json": components["schemas"]["SignupResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/me": {
         parameters: {
             query?: never;
@@ -857,6 +943,55 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/evidence/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        /** Format: uuid */
+                        JobId?: string;
+                        Caption?: string;
+                        /** Format: binary */
+                        File?: string;
+                        ExternalCompanyCamId?: string;
+                        CustomerVisible?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EvidenceDto"];
+                        "application/json": components["schemas"]["EvidenceDto"];
+                        "text/json": components["schemas"]["EvidenceDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1762,6 +1897,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/onboarding/seed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["OnboardingSeedRequest"];
+                    "text/json": components["schemas"]["OnboardingSeedRequest"];
+                    "application/*+json": components["schemas"]["OnboardingSeedRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OnboardingSeedResult"];
+                        "application/json": components["schemas"]["OnboardingSeedResult"];
+                        "text/json": components["schemas"]["OnboardingSeedResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["OnboardingImportRequest"];
+                    "text/json": components["schemas"]["OnboardingImportRequest"];
+                    "application/*+json": components["schemas"]["OnboardingImportRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OnboardingImportResult"];
+                        "application/json": components["schemas"]["OnboardingImportResult"];
+                        "text/json": components["schemas"]["OnboardingImportResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/organizations/current": {
         parameters: {
             query?: never;
@@ -1856,7 +2077,34 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["AddStaffMemberRequest"];
+                    "text/json": components["schemas"]["AddStaffMemberRequest"];
+                    "application/*+json": components["schemas"]["AddStaffMemberRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StaffMemberDto"];
+                        "application/json": components["schemas"]["StaffMemberDto"];
+                        "text/json": components["schemas"]["StaffMemberDto"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1906,6 +2154,70 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/api/v1/organizations/current/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["InviteDto"][];
+                        "application/json": components["schemas"]["InviteDto"][];
+                        "text/json": components["schemas"]["InviteDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["InviteStaffRequest"];
+                    "text/json": components["schemas"]["InviteStaffRequest"];
+                    "application/*+json": components["schemas"]["InviteStaffRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["InviteDto"];
+                        "application/json": components["schemas"]["InviteDto"];
+                        "text/json": components["schemas"]["InviteDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/portal/{token}": {
@@ -2407,6 +2719,17 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AcceptInviteRequest: {
+            inviteToken?: string | null;
+            password?: string | null;
+            displayName?: string | null;
+        };
+        AddStaffMemberRequest: {
+            email?: string | null;
+            displayName?: string | null;
+            role?: string | null;
+            temporaryPassword?: string | null;
+        };
         ApprovalQueueItemDto: {
             /** Format: uuid */
             draftId?: string;
@@ -2535,6 +2858,24 @@ export interface components {
             jobNimbus?: string | null;
             companyCam?: string | null;
             messaging?: string | null;
+        };
+        InviteDto: {
+            /** Format: uuid */
+            id?: string;
+            email?: string | null;
+            displayName?: string | null;
+            role?: string | null;
+            status?: string | null;
+            inviteToken?: string | null;
+            /** Format: date-time */
+            expiresAt?: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        InviteStaffRequest: {
+            email?: string | null;
+            displayName?: string | null;
+            role?: string | null;
         };
         JobDetailDto: {
             /** Format: uuid */
@@ -2683,6 +3024,36 @@ export interface components {
             contactId?: string | null;
             body?: string | null;
         };
+        OnboardingImportRequest: {
+            source?: string | null;
+            csvContent?: string | null;
+        };
+        OnboardingImportResult: {
+            source?: string | null;
+            /** Format: int32 */
+            contactsCreated?: number;
+            /** Format: int32 */
+            propertiesCreated?: number;
+            /** Format: int32 */
+            jobsCreated?: number;
+            /** Format: int32 */
+            skipped?: number;
+            warnings?: string[] | null;
+            message?: string | null;
+        };
+        OnboardingSeedRequest: {
+            mode?: string | null;
+        };
+        OnboardingSeedResult: {
+            mode?: string | null;
+            /** Format: int32 */
+            contactsCreated?: number;
+            /** Format: int32 */
+            propertiesCreated?: number;
+            /** Format: int32 */
+            jobsCreated?: number;
+            message?: string | null;
+        };
         OrganizationDto: {
             /** Format: uuid */
             id?: string;
@@ -2762,6 +3133,28 @@ export interface components {
         };
         SetPhotoVisibilityRequest: {
             customerVisible?: boolean;
+        };
+        SignupRequest: {
+            email?: string | null;
+            password?: string | null;
+            displayName?: string | null;
+            organizationName?: string | null;
+            brandPrimaryColor?: string | null;
+            /** Format: int32 */
+            quietHoursStartLocal?: number | null;
+            /** Format: int32 */
+            quietHoursEndLocal?: number | null;
+            timeZoneId?: string | null;
+        };
+        SignupResponse: {
+            token?: string | null;
+            /** Format: uuid */
+            staffUserId?: string;
+            displayName?: string | null;
+            role?: string | null;
+            /** Format: uuid */
+            organizationId?: string;
+            organization?: components["schemas"]["OrganizationDto"];
         };
         StaffMeDto: {
             /** Format: uuid */
