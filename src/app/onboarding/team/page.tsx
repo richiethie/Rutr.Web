@@ -12,9 +12,10 @@ import {
   type Invite,
   type StaffMember,
 } from "@/lib/api";
+import { TemporaryPasswordField } from "@/components/PasswordFields";
 import { ApiError } from "@/lib/api/errors";
 import { readToken } from "@/lib/auth";
-import { STAFF_PASSWORD_MIN, staffPasswordError } from "@/lib/password";
+import { staffPasswordError } from "@/lib/password";
 
 type Mode = "invite" | "add";
 
@@ -25,6 +26,7 @@ export default function OnboardingTeamPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [tempPassword, setTempPassword] = useState("");
   const [pending, startTransition] = useTransition();
   const [booting, setBooting] = useState(true);
 
@@ -64,12 +66,11 @@ export default function OnboardingTeamPage() {
     const email = String(form.get("email") ?? "").trim();
     const displayName = String(form.get("displayName") ?? "").trim();
     const role = String(form.get("role") ?? "Pm");
-    const temporaryPassword = String(form.get("temporaryPassword") ?? "");
 
     setFormError(null);
     setNotice(null);
     if (mode === "add") {
-      const pwErr = staffPasswordError(temporaryPassword);
+      const pwErr = staffPasswordError(tempPassword);
       if (pwErr) {
         setFormError(pwErr);
         return;
@@ -82,9 +83,10 @@ export default function OnboardingTeamPage() {
             email,
             displayName,
             role,
-            temporaryPassword,
+            temporaryPassword: tempPassword,
           });
           setNotice(`Added ${member.displayName} as ${member.role}.`);
+          setTempPassword("");
           e.currentTarget.reset();
         } else {
           const invite = await createOrgInvite({
@@ -221,19 +223,7 @@ export default function OnboardingTeamPage() {
             </select>
           </label>
           {mode === "add" ? (
-            <label className="block text-[12px] font-medium text-foreground">
-              Temporary password
-              <input
-                className="console-input mt-1.5"
-                name="temporaryPassword"
-                type="password"
-                minLength={STAFF_PASSWORD_MIN}
-                required
-              />
-              <span className="mt-1.5 block text-[11px] font-normal text-muted-foreground">
-                At least {STAFF_PASSWORD_MIN} characters, with a letter and a number.
-              </span>
-            </label>
+            <TemporaryPasswordField value={tempPassword} onChange={setTempPassword} />
           ) : null}
           {formError ? <p className="text-[12px] text-destructive">{formError}</p> : null}
           {notice ? (
