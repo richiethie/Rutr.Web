@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 :root {
-  /* shadcn blocks / new-york zinc — light */
+  /*
+   * Surface ladder (light) — blocks-style depth:
+   * canvas < sidebar ≈ muted wells < inset/main < raised cards
+   */
+  --canvas: #ececef;
   --background: #ffffff;
   --foreground: #09090b;
   --card: #ffffff;
@@ -21,11 +25,12 @@
   --destructive: #dc2626;
   --destructive-foreground: #fafafa;
   --border: #e4e4e7;
+  --border-strong: #d4d4d8;
   --input: #e4e4e7;
   --ring: #18181b;
   --radius: 0.75rem;
 
-  /* Subtle brand — sky, not purple */
+  /* Subtle accents — used sparingly on badges / live / trends */
   --brand: #0284c7;
   --brand-foreground: #f0f9ff;
   --brand-soft: #e0f2fe;
@@ -37,15 +42,16 @@
   --warn: #d97706;
   --warn-foreground: #fffbeb;
   --warn-soft: #fffbeb;
+  --danger-soft: #fef2f2;
   --info: #0284c7;
   --info-soft: #e0f2fe;
 
-  /* Sidebar (light) — blocks inset */
-  --sidebar: #fafafa;
+  /* Sidebar (light) — soft gray vs white inset */
+  --sidebar: #f7f7f8;
   --sidebar-foreground: #09090b;
   --sidebar-muted: #71717a;
   --sidebar-border: #e4e4e7;
-  --sidebar-accent: #f4f4f5;
+  --sidebar-accent: #ececef;
   --sidebar-accent-foreground: #09090b;
   --sidebar-primary: #18181b;
   --sidebar-primary-foreground: #fafafa;
@@ -53,8 +59,8 @@
   /* App aliases */
   --ink: #09090b;
   --ink-elevated: #18181b;
-  --paper: #fafafa;
-  --paper-deep: #f4f4f5;
+  --paper: #f4f4f5;
+  --paper-deep: #ececef;
   --chalk: #ffffff;
   --line: #e4e4e7;
   --line-strong: #a1a1aa;
@@ -97,11 +103,16 @@
 }
 
 .dark {
+  /*
+   * Surface ladder (dark) — matches blocks dashboard:
+   * near-black canvas → inset panel → raised zinc cards → muted wells
+   */
+  --canvas: #000000;
   --background: #09090b;
   --foreground: #fafafa;
-  --card: #09090b;
+  --card: #121214;
   --card-foreground: #fafafa;
-  --popover: #09090b;
+  --popover: #121214;
   --popover-foreground: #fafafa;
   --primary: #fafafa;
   --primary-foreground: #18181b;
@@ -114,28 +125,30 @@
   --destructive: #ef4444;
   --destructive-foreground: #fafafa;
   --border: #27272a;
+  --border-strong: #3f3f46;
   --input: #27272a;
   --ring: #d4d4d8;
 
   --brand: #38bdf8;
   --brand-foreground: #082f49;
-  --brand-soft: rgba(56, 189, 248, 0.12);
+  --brand-soft: rgba(56, 189, 248, 0.14);
   --brand-ring: rgba(56, 189, 248, 0.22);
 
   --ok: #34d399;
   --ok-foreground: #022c22;
-  --ok-soft: rgba(52, 211, 153, 0.12);
+  --ok-soft: rgba(52, 211, 153, 0.14);
   --warn: #fbbf24;
   --warn-foreground: #422006;
-  --warn-soft: rgba(251, 191, 36, 0.12);
+  --warn-soft: rgba(251, 191, 36, 0.14);
+  --danger-soft: rgba(239, 68, 68, 0.14);
   --info: #38bdf8;
-  --info-soft: rgba(56, 189, 248, 0.12);
+  --info-soft: rgba(56, 189, 248, 0.14);
 
-  --sidebar: #18181b;
+  --sidebar: #0c0c0e;
   --sidebar-foreground: #fafafa;
   --sidebar-muted: #a1a1aa;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-accent: #27272a;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-accent: #1c1c1f;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-primary: #fafafa;
   --sidebar-primary-foreground: #18181b;
@@ -143,8 +156,8 @@
   --ink: #fafafa;
   --ink-elevated: #f4f4f5;
   --paper: #09090b;
-  --paper-deep: #18181b;
-  --chalk: #09090b;
+  --paper-deep: #000000;
+  --chalk: #121214;
   --line: #27272a;
   --line-strong: #3f3f46;
   --text: #fafafa;
@@ -155,8 +168,8 @@
   --signal-glow: var(--brand-ring);
   --flare: #d4d4d8;
   --danger: #ef4444;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
 
   --console-row-hover: #18181b;
   --console-accent-hover: #7dd3fc;
@@ -164,6 +177,7 @@
 
 /* Homeowner portal stays light even if staff chose dark. */
 .portal-shell {
+  --canvas: #f4f4f5;
   --background: #ffffff;
   --foreground: #09090b;
   --card: #ffffff;
@@ -171,6 +185,7 @@
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
   --border: #e4e4e7;
+  --border-strong: #d4d4d8;
   --primary: #18181b;
   --primary-foreground: #fafafa;
   --secondary: #f4f4f5;
@@ -258,14 +273,20 @@ a {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
 .dark .console-panel {
   background: var(--card);
-  border-color: var(--border);
+  border-color: var(--border-strong);
   box-shadow: none;
+}
+
+.console-panel-muted {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 .console-table {
@@ -281,7 +302,7 @@ a {
   letter-spacing: 0;
   text-transform: none;
   color: var(--muted-foreground);
-  background: color-mix(in srgb, var(--muted) 55%, transparent);
+  background: var(--muted);
   border-bottom: 1px solid var(--border);
 }
 
@@ -290,6 +311,7 @@ a {
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
   font-size: 13px;
+  background: var(--card);
   transition: background 0.12s ease;
 }
 
@@ -298,7 +320,7 @@ a {
 }
 
 .console-table tbody tr:hover td {
-  background: var(--muted);
+  background: color-mix(in srgb, var(--muted) 70%, var(--card));
 }
 
 .console-badge {
@@ -312,25 +334,31 @@ a {
   letter-spacing: 0;
   border: 1px solid var(--border);
   color: var(--foreground);
-  background: var(--background);
+  background: var(--muted);
 }
 
 .console-badge-accent {
-  border-color: transparent;
+  border-color: color-mix(in srgb, var(--brand) 28%, transparent);
   color: var(--brand);
   background: var(--brand-soft);
 }
 
 .console-badge-success {
-  border-color: transparent;
+  border-color: color-mix(in srgb, var(--ok) 28%, transparent);
   color: var(--ok);
   background: var(--ok-soft);
 }
 
 .console-badge-warn {
-  border-color: transparent;
+  border-color: color-mix(in srgb, var(--warn) 28%, transparent);
   color: var(--warn);
   background: var(--warn-soft);
+}
+
+.console-badge-danger {
+  border-color: color-mix(in srgb, var(--destructive) 28%, transparent);
+  color: var(--destructive);
+  background: var(--danger-soft);
 }
 
 .console-btn {
@@ -367,13 +395,14 @@ a {
 }
 
 .console-btn-secondary {
-  background: var(--background);
+  background: var(--card);
   border-color: var(--border);
   color: var(--foreground);
 }
 
 .console-btn-secondary:hover:not(:disabled) {
   background: var(--muted);
+  border-color: var(--border-strong);
 }
 
 .console-btn-ghost {
@@ -406,15 +435,15 @@ a {
 }
 
 .console-filter-active {
-  border-color: var(--border);
-  background: var(--background);
+  border-color: transparent;
+  background: var(--card);
   color: var(--foreground);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow);
 }
 
 .dark .console-filter-active {
-  background: var(--secondary);
-  border-color: transparent;
+  background: var(--primary);
+  color: var(--primary-foreground);
   box-shadow: none;
 }
 
@@ -433,7 +462,7 @@ a {
   width: 100%;
   border-radius: calc(var(--radius) - 2px);
   border: 1px solid var(--input);
-  background: var(--background);
+  background: var(--card);
   padding: 0 12px;
   font-size: 13px;
   color: var(--foreground);

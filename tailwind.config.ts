@@ -41,8 +41,10 @@ export default {
           foreground: "var(--destructive-foreground)",
         },
         border: "var(--border)",
+        "border-strong": "var(--border-strong)",
         input: "var(--input)",
         ring: "var(--ring)",
+        canvas: "var(--canvas)",
         brand: {
           DEFAULT: "var(--brand)",
           foreground: "var(--brand-foreground)",

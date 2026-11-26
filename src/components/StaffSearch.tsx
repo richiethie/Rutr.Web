@@ -190,7 +190,7 @@ export function StaffSearch() {
       <button
         type="button"
         onClick={openPalette}
-        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-input bg-muted/40 px-3 text-left text-[12px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
+        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-border bg-background px-3 text-left text-[12px] text-muted-foreground shadow-sm transition-colors hover:bg-card hover:text-foreground dark:bg-card md:flex"
         aria-label="Search"
       >
         <span className="truncate">Search…</span>

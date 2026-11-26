@@ -42,74 +42,70 @@ export default async function SettingsPage() {
       />
 
       <div className="stagger-1 grid gap-4 lg:grid-cols-2">
-        <section className="console-panel p-5 lg:col-span-2">
-          <h2 className="display-title text-[15px] font-semibold text-foreground">
-            Appearance
-          </h2>
-          <p className="mt-1 text-[13px] text-muted-foreground">
-            Switch between light and dark. System follows your OS preference.
-          </p>
-          <div className="mt-4">
+        <section className="console-panel overflow-hidden lg:col-span-2">
+          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+            <h2 className="text-[14px] font-semibold text-foreground">Appearance</h2>
+            <p className="mt-0.5 text-[12px] text-muted-foreground">
+              Light, dark, or match your OS — surfaces stay layered either way.
+            </p>
+          </div>
+          <div className="p-5">
             <ThemeToggle />
           </div>
         </section>
 
-        <section className="console-panel p-5">
-          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
-            Organization
-          </h2>
-          {!org.ok ? (
-            <div className="mt-3">
+        <section className="console-panel overflow-hidden">
+          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+            <h2 className="text-[14px] font-semibold text-foreground">Organization</h2>
+          </div>
+          <div className="p-5">
+            {!org.ok ? (
               <ErrorState error={org.error} />
-            </div>
-          ) : (
-            <div className="mt-3">
-              <p className="mb-3 font-mono-data text-[11px] text-muted-foreground">
-                slug · {org.data.slug} · id · {org.data.id}
-              </p>
-              <OrgEditForm org={org.data} />
-            </div>
-          )}
+            ) : (
+              <>
+                <p className="mb-3 font-mono-data text-[11px] text-muted-foreground">
+                  slug · {org.data.slug} · id · {org.data.id}
+                </p>
+                <OrgEditForm org={org.data} />
+              </>
+            )}
+          </div>
         </section>
 
-        <section className="console-panel p-5">
-          <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
-            Signed-in staff
-          </h2>
-          {!me.ok ? (
-            <div className="mt-3">
+        <section className="console-panel overflow-hidden">
+          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+            <h2 className="text-[14px] font-semibold text-foreground">Signed-in staff</h2>
+          </div>
+          <div className="p-5">
+            {!me.ok ? (
               <ErrorState error={me.error} />
-            </div>
-          ) : (
-            <dl className="mt-3 grid gap-3 sm:grid-cols-2">
-              <div>
-                <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  Name
-                </dt>
-                <dd className="mt-1 text-[13px]">
-                  {staff!.displayName} · {staff!.role}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  Email
-                </dt>
-                <dd className="mt-1 text-[13px]">{staff!.email}</dd>
-              </div>
-            </dl>
-          )}
-          <p className="mt-4 text-[13px] text-muted-foreground">
-            Messaging mode:{" "}
-            <span className="font-semibold text-[var(--signal)]">
-              {messaging}
-              {useMocks ? " (UseMocks)" : ""}
-            </span>
-          </p>
+            ) : (
+              <dl className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-lg border border-border bg-muted/40 p-3 dark:bg-muted/30">
+                  <dt className="text-[11px] font-medium text-muted-foreground">Name</dt>
+                  <dd className="mt-1 text-[13px] font-medium">
+                    {staff!.displayName} · {staff!.role}
+                  </dd>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/40 p-3 dark:bg-muted/30">
+                  <dt className="text-[11px] font-medium text-muted-foreground">Email</dt>
+                  <dd className="mt-1 text-[13px] font-medium">{staff!.email}</dd>
+                </div>
+              </dl>
+            )}
+            <p className="mt-4 text-[13px] text-muted-foreground">
+              Messaging mode:{" "}
+              <span className="font-semibold text-brand">
+                {messaging}
+                {useMocks ? " (UseMocks)" : ""}
+              </span>
+            </p>
+          </div>
         </section>
 
         <section className="console-panel overflow-hidden lg:col-span-2">
-          <div className="border-b border-[var(--line)] px-5 py-3">
-            <h2 className="display-title text-[15px] font-semibold">Members &amp; roles</h2>
+          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+            <h2 className="text-[14px] font-semibold text-foreground">Members &amp; roles</h2>
           </div>
           {!members.ok ? (
             <div className="p-5">
