@@ -397,8 +397,15 @@ export type OnboardingSeedResult = {
 export type OnboardingImportRequest = {
   source: "jobnimbus" | "csv" | string;
   csvContent?: string | null;
-  /** When API supports it (default false). Preview counts without writes. */
+  /** Preview counts without writes (Api a7ecd9a+). Default false. */
   dryRun?: boolean;
+};
+
+export type OnboardingImportError = {
+  rowNumber?: number | null;
+  externalId?: string | null;
+  code?: string | null;
+  message?: string | null;
 };
 
 export type OnboardingImportResult = {
@@ -408,8 +415,9 @@ export type OnboardingImportResult = {
   jobsCreated: number;
   skipped: number;
   warnings: string[];
+  errors?: OnboardingImportError[] | null;
+  idempotencyRule?: string | null;
   message: string;
-  /** Present once Api ships dry-run; may be omitted on older builds. */
   dryRun?: boolean;
 };
 

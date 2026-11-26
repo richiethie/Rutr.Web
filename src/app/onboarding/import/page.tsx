@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useMemo, useState, useTransition } from "react";
 import { AuthCard, AuthShell } from "@/components/AuthShell";
 import { Dialog } from "@/components/ui/dialog";
 import { importOnboarding, seedOnboarding } from "@/lib/api";
+import type { OnboardingImportError, OnboardingImportResult } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/errors";
 import { readToken } from "@/lib/auth";
 import {
@@ -26,6 +27,8 @@ type Summary = {
   jobsCreated: number;
   skipped: number;
   warnings: string[];
+  errors: OnboardingImportError[];
+  idempotencyRule: string | null;
   dryRun: boolean;
 };
 
@@ -50,14 +53,23 @@ export default function OnboardingImportPage() {
     }
   }, []);
 
-  function applyResult(kind: OnboardingOutcomeKind, res: {
-    message: string;
-    contactsCreated: number;
-    propertiesCreated: number;
-    jobsCreated: number;
-    skipped?: number;
-    warnings?: string[] | null;
-  }, wasDryRun: boolean) {
+  function applyResult(
+    kind: OnboardingOutcomeKind,
+    res: Pick<
+      OnboardingImportResult,
+      | "message"
+      | "contactsCreated"
+      | "propertiesCreated"
+      | "jobsCreated"
+      | "skipped"
+      | "warnings"
+      | "errors"
+      | "idempotencyRule"
+      | "dryRun"
+    >,
+    requestedDryRun: boolean,
+  ) {
+    const wasDryRun = Boolean(res.dryRun ?? requestedDryRun);
     const next: Summary = {
       kind,
       message: res.message,
@@ -66,6 +78,8 @@ export default function OnboardingImportPage() {
       jobsCreated: res.jobsCreated,
       skipped: res.skipped ?? 0,
       warnings: res.warnings ?? [],
+      errors: res.errors ?? [],
+      idempotencyRule: res.idempotencyRule ?? null,
       dryRun: wasDryRun,
     };
     setSummary(next);
@@ -89,7 +103,11 @@ export default function OnboardingImportPage() {
       try {
         if (choice === "empty" || choice === "sample") {
           const res = await seedOnboarding({ mode: choice });
-          applyResult(choice, { ...res, skipped: 0, warnings: [] }, false);
+          applyResult(
+            choice,
+            { ...res, skipped: 0, warnings: [], errors: [], idempotencyRule: null, dryRun: false },
+            false,
+          );
         } else if (choice === "jobnimbus") {
           const res = await importOnboarding({
             source: "jobnimbus",
@@ -173,6 +191,35 @@ export default function OnboardingImportPage() {
                   </dd>
                 </div>
               </dl>
+              {summary.idempotencyRule ? (
+                <p className="mt-3 text-[11px] text-muted-foreground">
+                  Idempotency: {summary.idempotencyRule}
+                </p>
+              ) : null}
+              {summary.errors.length > 0 ? (
+                <div className="mt-3">
+                  <p className="text-[12px] font-medium text-destructive">
+                    Errors ({summary.errors.length})
+                  </p>
+                  <ul className="mt-1 max-h-40 space-y-1 overflow-y-auto text-[12px] text-muted-foreground">
+                    {summary.errors.map((err, i) => (
+                      <li
+                        key={`${err.rowNumber ?? "r"}-${err.externalId ?? ""}-${err.code ?? i}`}
+                        className="rounded border border-destructive/30 bg-background/80 px-2 py-1.5"
+                      >
+                        <span className="font-medium text-foreground">
+                          {err.rowNumber != null ? `Row ${err.rowNumber}` : "Row ?"}
+                          {err.externalId ? ` · ${err.externalId}` : ""}
+                          {err.code ? ` · ${err.code}` : ""}
+                        </span>
+                        {err.message ? (
+                          <span className="mt-0.5 block">{err.message}</span>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
               {summary.warnings.length > 0 ? (
                 <div className="mt-3">
                   <p className="text-[12px] font-medium text-foreground">
@@ -186,12 +233,12 @@ export default function OnboardingImportPage() {
                     ))}
                   </ul>
                 </div>
-              ) : (
-                <p className="mt-3 text-[12px] text-muted-foreground">No warnings.</p>
-              )}
+              ) : summary.errors.length === 0 ? (
+                <p className="mt-3 text-[12px] text-muted-foreground">No warnings or row errors.</p>
+              ) : null}
               {summary.dryRun ? (
                 <p className="mt-3 text-[12px] text-muted-foreground">
-                  Nothing was written. Turn off dry-run and apply again to import for real.
+                  Dry-run — nothing was written. Turn off dry-run and apply again to import for real.
                 </p>
               ) : null}
             </div>
@@ -324,7 +371,7 @@ export default function OnboardingImportPage() {
                   onChange={(e) => setDryRun(e.target.checked)}
                   className="h-4 w-4 rounded border-input accent-foreground"
                 />
-                Dry-run (preview counts; no writes when API supports it)
+                Dry-run (preview counts — no writes)
               </label>
             ) : null}
 
@@ -356,10 +403,10 @@ export default function OnboardingImportPage() {
         description={
           choice === "csv"
             ? dryRun
-              ? `API will validate about ${csvPreview?.dataRows ?? 0} CSV rows without writing (when dry-run is live).`
+              ? `API will validate about ${csvPreview?.dataRows ?? 0} CSV rows without writing.`
               : `Creates contacts, properties, and jobs from ${csvPreview?.dataRows ?? 0} CSV rows. Existing externalId values are skipped.`
             : dryRun
-              ? "Mock JobNimbus snapshot preview — no writes when dry-run is live."
+              ? "Mock JobNimbus snapshot preview — no writes."
               : "Loads the mock JobNimbus snapshot once. Re-import skips matching external IDs."
         }
       >
