@@ -13,6 +13,7 @@ import {
   Settings,
   ShieldCheck,
 } from "lucide-react";
+import { StaffBrandScope, StaffOrgMark } from "@/components/StaffOrgBrand";
 import { StaffSearch } from "@/components/StaffSearch";
 import { StaffSession } from "@/components/StaffSession";
 import type { LucideIcon } from "lucide-react";
@@ -119,22 +120,11 @@ export function StaffChrome({
   const pageTitle = title ?? titles[active];
 
   return (
-    <div className="flex min-h-svh w-full bg-canvas text-foreground">
+    <StaffBrandScope>
       {/* Inset sidebar — softer surface than canvas + inset */}
       <aside className="sticky top-0 z-30 m-2 mr-0 hidden h-[calc(100svh-1rem)] w-[16rem] shrink-0 flex-col rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
         <div className="flex h-14 items-center gap-2 px-3 pt-1">
-          <Link
-            href="/jobs"
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1.5 hover:bg-sidebar-accent"
-          >
-            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-[11px] font-semibold text-sidebar-primary-foreground">
-              R
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-[14px] font-semibold tracking-tight">RUTR Connect</p>
-              <p className="truncate text-[11px] text-sidebar-muted">Rutters Roofing</p>
-            </div>
-          </Link>
+          <StaffOrgMark />
         </div>
 
         <div className="px-3 pb-2">
@@ -203,7 +193,7 @@ export function StaffChrome({
           <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">{children}</div>
         </main>
       </div>
-    </div>
+    </StaffBrandScope>
   );
 }
 

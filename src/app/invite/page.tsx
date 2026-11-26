@@ -57,6 +57,9 @@ function AcceptInviteForm() {
       persistSession(data.token, {
         displayName: data.displayName,
         role: data.role,
+        organizationId: data.organizationId,
+        organizationName: data.organization.name,
+        brandPrimaryColor: data.organization.brandPrimaryColor,
       });
       window.location.href = "/jobs";
     } catch (err) {

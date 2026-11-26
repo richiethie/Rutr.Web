@@ -5,6 +5,9 @@ export const TOKEN_COOKIE = "rutr_token";
 export type StaffUser = {
   displayName: string;
   role: string;
+  organizationId?: string;
+  organizationName?: string;
+  brandPrimaryColor?: string | null;
 };
 
 export function readStaffUser(): StaffUser | null {

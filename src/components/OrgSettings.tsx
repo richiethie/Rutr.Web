@@ -21,7 +21,7 @@ export function OrgEditForm({ org }: { org: Organization }) {
           name: "brandPrimaryColor",
           label: "Brand color",
           defaultValue: org.brandPrimaryColor,
-          placeholder: "#E05A1A",
+          placeholder: "#0369a1",
         },
         {
           name: "quietHoursStartLocal",

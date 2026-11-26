@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { AuthCard, AuthShell } from "@/components/AuthShell";
-import { loginStaff } from "@/lib/api";
+import { fetchOrganization, loginStaff } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
 import { persistSession } from "@/lib/auth";
 
@@ -19,7 +19,28 @@ export default function LoginPage() {
     setError(null);
     try {
       const data = await loginStaff(email, password);
-      persistSession(data.token, { displayName: data.displayName, role: data.role });
+      // Persist token first so org fetch uses JWT (not demo header).
+      persistSession(data.token, {
+        displayName: data.displayName,
+        role: data.role,
+        organizationId: data.organizationId,
+      });
+      let organizationName: string | undefined;
+      let brandPrimaryColor: string | null | undefined;
+      try {
+        const org = await fetchOrganization();
+        organizationName = org.name;
+        brandPrimaryColor = org.brandPrimaryColor;
+        persistSession(data.token, {
+          displayName: data.displayName,
+          role: data.role,
+          organizationId: data.organizationId ?? org.id,
+          organizationName,
+          brandPrimaryColor,
+        });
+      } catch {
+        /* shell will refresh org from API */
+      }
       window.location.href = "/jobs";
     } catch (err) {
       setError(

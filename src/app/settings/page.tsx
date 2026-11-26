@@ -23,7 +23,7 @@ export default async function SettingsPage() {
       <StaffChrome active="settings">
         <PageHeader
           title="Settings"
-          description="Org and messaging defaults for the Rutters Connect pilot."
+          description="Organization name, branding accents, quiet hours, and staff roles."
         />
         <ErrorState error={me.ok ? org.error : me.error} />
       </StaffChrome>
@@ -65,6 +65,10 @@ export default async function SettingsPage() {
               <>
                 <p className="mb-3 font-mono-data text-[11px] text-muted-foreground">
                   slug · {org.data.slug} · id · {org.data.id}
+                </p>
+                <p className="mb-3 text-[12px] text-muted-foreground">
+                  Brand color drives sidebar mark / New job button, active nav accent,
+                  focus rings, and key brand links — not the whole zinc surface system.
                 </p>
                 <OrgEditForm org={org.data} />
               </>

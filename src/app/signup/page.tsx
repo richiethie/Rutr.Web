@@ -59,6 +59,9 @@ export default function SignupPage() {
       persistSession(data.token, {
         displayName: data.displayName,
         role: data.role,
+        organizationId: data.organizationId,
+        organizationName: data.organization.name,
+        brandPrimaryColor: data.organization.brandPrimaryColor,
       });
       window.location.href = "/onboarding/team";
     } catch (err) {
