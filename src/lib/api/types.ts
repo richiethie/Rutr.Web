@@ -330,4 +330,84 @@ export type StaffMe = {
   organizationName: string;
 };
 
+export type StaffRole = "Admin" | "Pm" | "Sales";
+
+export type SignupRequest = {
+  email: string;
+  password: string;
+  displayName: string;
+  organizationName: string;
+  brandPrimaryColor?: string | null;
+  quietHoursStartLocal?: number | null;
+  quietHoursEndLocal?: number | null;
+  timeZoneId?: string | null;
+};
+
+export type SignupResponse = {
+  token: string;
+  staffUserId: string;
+  displayName: string;
+  role: string;
+  organizationId: string;
+  organization: Organization;
+};
+
+export type AddStaffMemberRequest = {
+  email: string;
+  displayName: string;
+  role: StaffRole | string;
+  temporaryPassword: string;
+};
+
+export type InviteStaffRequest = {
+  email: string;
+  displayName?: string | null;
+  role: StaffRole | string;
+};
+
+export type Invite = {
+  id: string;
+  email: string;
+  displayName: string;
+  role: string;
+  status: string;
+  inviteToken: string;
+  expiresAt: string;
+  createdAt: string;
+};
+
+export type AcceptInviteRequest = {
+  inviteToken: string;
+  password: string;
+  displayName?: string | null;
+};
+
+export type OnboardingSeedRequest = {
+  mode: "empty" | "sample" | string;
+};
+
+export type OnboardingSeedResult = {
+  mode: string;
+  contactsCreated: number;
+  propertiesCreated: number;
+  jobsCreated: number;
+  message: string;
+};
+
+export type OnboardingImportRequest = {
+  source: "jobnimbus" | "csv" | string;
+  csvContent?: string | null;
+};
+
+export type OnboardingImportResult = {
+  source: string;
+  contactsCreated: number;
+  propertiesCreated: number;
+  jobsCreated: number;
+  skipped: number;
+  warnings: string[];
+  message: string;
+};
+
 export const JOB_STAGES = ["Lead", "Prepare", "Build", "Complete"] as const;
+export const STAFF_ROLES = ["Admin", "Pm", "Sales"] as const;

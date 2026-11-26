@@ -2,10 +2,12 @@
  * Staff/portal API client — API only, no sample/mock fallbacks.
  * Paths match Rutr.Api controllers + CrmDtos REST conventions.
  */
-import { apiFetch, API_URL } from "@/lib/api/http";
+import { apiFetch, publicApiFetch, API_URL } from "@/lib/api/http";
 import { ApiError } from "@/lib/api/errors";
 import { clientAuthHeaders } from "@/lib/auth";
 import type {
+  AcceptInviteRequest,
+  AddStaffMemberRequest,
   ApprovalItem,
   AuditEvent,
   Consent,
@@ -17,6 +19,8 @@ import type {
   EvidenceWrite,
   IntegrationConnection,
   IntegrationStatus,
+  Invite,
+  InviteStaffRequest,
   JobDetail,
   JobListItem,
   JobWrite,
@@ -25,12 +29,18 @@ import type {
   MilestoneWrite,
   Note,
   NoteWrite,
+  OnboardingImportRequest,
+  OnboardingImportResult,
+  OnboardingSeedRequest,
+  OnboardingSeedResult,
   Organization,
   OrganizationWrite,
   Photo,
   PortalJob,
   Property,
   PropertyWrite,
+  SignupRequest,
+  SignupResponse,
   StaffMe,
   StaffMember,
   SyncResult,
@@ -41,7 +51,7 @@ import type {
 export { API_URL } from "@/lib/api/http";
 export { ApiError, isNotFound } from "@/lib/api/errors";
 export type * from "@/lib/api/types";
-export { JOB_STAGES } from "@/lib/api/types";
+export { JOB_STAGES, STAFF_ROLES } from "@/lib/api/types";
 
 // ── Auth ──────────────────────────────────────────────────────────────────
 
@@ -49,20 +59,36 @@ export async function loginStaff(
   email: string,
   password: string,
 ): Promise<{ token: string; displayName: string; role: string; organizationId?: string }> {
-  const res = await fetch(`${API_URL}/api/v1/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!res.ok) {
-    throw new Error("Invalid email or password.");
+  try {
+    return await publicApiFetch<{
+      token: string;
+      displayName: string;
+      role: string;
+      organizationId?: string;
+    }>("/api/v1/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+  } catch (err) {
+    if (err instanceof ApiError && (err.status === 401 || err.status === 400)) {
+      throw new Error("Invalid email or password.");
+    }
+    throw err;
   }
-  return res.json() as Promise<{
-    token: string;
-    displayName: string;
-    role: string;
-    organizationId?: string;
-  }>;
+}
+
+export async function signupStaff(body: SignupRequest): Promise<SignupResponse> {
+  return publicApiFetch<SignupResponse>("/api/v1/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function acceptInvite(body: AcceptInviteRequest): Promise<SignupResponse> {
+  return publicApiFetch<SignupResponse>("/api/v1/auth/accept-invite", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 }
 
 export async function fetchStaffMe(): Promise<StaffMe> {
@@ -464,10 +490,48 @@ export async function fetchOrgMembers(): Promise<StaffMember[]> {
   return apiFetch<StaffMember[]>("/api/v1/organizations/current/members");
 }
 
+export async function addOrgMember(body: AddStaffMemberRequest): Promise<StaffMember> {
+  return apiFetch<StaffMember>("/api/v1/organizations/current/members", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
 export async function updateMemberRole(staffId: string, role: string): Promise<StaffMember> {
   return apiFetch<StaffMember>(`/api/v1/organizations/current/members/${staffId}/role`, {
     method: "PATCH",
     body: JSON.stringify({ role }),
+  });
+}
+
+export async function fetchOrgInvites(): Promise<Invite[]> {
+  return apiFetch<Invite[]>("/api/v1/organizations/current/invites");
+}
+
+export async function createOrgInvite(body: InviteStaffRequest): Promise<Invite> {
+  return apiFetch<Invite>("/api/v1/organizations/current/invites", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+// ── Onboarding seed / import ──────────────────────────────────────────────
+
+export async function seedOnboarding(
+  body: OnboardingSeedRequest = { mode: "empty" },
+): Promise<OnboardingSeedResult> {
+  return apiFetch<OnboardingSeedResult>("/api/v1/onboarding/seed", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function importOnboarding(
+  body: OnboardingImportRequest,
+): Promise<OnboardingImportResult> {
+  return apiFetch<OnboardingImportResult>("/api/v1/onboarding/import", {
+    method: "POST",
+    body: JSON.stringify(body),
   });
 }
 

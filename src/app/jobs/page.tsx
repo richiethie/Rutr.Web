@@ -79,10 +79,19 @@ export default async function JobsPage({
           title="No jobs yet"
           description={
             stage
-              ? "Nothing in this stage. Clear the filter or create a job."
-              : "Create a job or run a mock JobNimbus sync from Integrations."
+              ? `No jobs in the ${stage} stage from the API.`
+              : "Empty from the API — create a job, or finish onboarding import/seed."
           }
-          action={<JobCreate />}
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <JobCreate />
+              {!stage ? (
+                <Link href="/onboarding/import" className="console-btn console-btn-secondary">
+                  Import or seed
+                </Link>
+              ) : null}
+            </div>
+          }
         />
       ) : (
         <div className="console-panel overflow-hidden">
