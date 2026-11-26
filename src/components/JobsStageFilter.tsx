@@ -7,7 +7,7 @@ export function JobsStageFilter({ active }: { active?: string }) {
   const stages = ["All", ...JOB_STAGES];
 
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="console-filter-bar">
       {stages.map((stage) => {
         const href = stage === "All" ? "/jobs" : `/jobs?stage=${stage}`;
         const isActive =

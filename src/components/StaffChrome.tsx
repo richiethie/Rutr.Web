@@ -8,6 +8,7 @@ import {
   FileText,
   Flag,
   Home,
+  Plus,
   Plug,
   Settings,
   ShieldCheck,
@@ -82,10 +83,8 @@ function NavGroup({
   active: StaffNav;
 }) {
   return (
-    <div className="mb-5">
-      <p className="mb-1.5 px-2 text-[11px] font-medium uppercase tracking-wide text-sidebar-muted">
-        {label}
-      </p>
+    <div className="px-2 py-1">
+      <p className="mb-1 px-2 text-[12px] font-medium text-sidebar-muted">{label}</p>
       <div className="flex flex-col gap-0.5">
         {links.map((link) => {
           const isActive = link.keys.includes(active);
@@ -97,7 +96,7 @@ function NavGroup({
               className={isActive ? "nav-link nav-link-active" : "nav-link"}
             >
               <Icon className="nav-icon" strokeWidth={1.75} />
-              {link.label}
+              <span className="truncate">{link.label}</span>
             </Link>
           );
         })}
@@ -117,66 +116,90 @@ export function StaffChrome({
   live?: boolean;
   title?: string;
 }) {
-  return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <aside className="sticky top-0 z-30 flex h-screen w-[260px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
-        <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-4">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-sidebar-primary text-[11px] font-semibold text-sidebar-primary-foreground">
-            R
-          </div>
-          <div className="min-w-0">
-            <Link href="/jobs" className="brand-mark block truncate text-[14px] tracking-tight">
-              RUTR Connect
-            </Link>
-            <p className="truncate text-[11px] text-sidebar-muted">Rutters Roofing</p>
-          </div>
-        </div>
+  const pageTitle = title ?? titles[active];
 
-        <div className="border-b border-sidebar-border px-3 py-3">
+  return (
+    <div className="flex min-h-svh w-full bg-muted/50 text-foreground dark:bg-background">
+      {/* Inset sidebar — shadcn blocks dashboard-01 pattern */}
+      <aside className="sticky top-0 z-30 m-2 mr-0 hidden h-[calc(100svh-1rem)] w-[16rem] shrink-0 flex-col rounded-xl bg-sidebar text-sidebar-foreground md:flex">
+        <div className="flex h-14 items-center gap-2 px-3 pt-1">
           <Link
             href="/jobs"
-            className="flex h-9 w-full items-center justify-center gap-2 rounded-md bg-sidebar-primary text-[13px] font-medium text-sidebar-primary-foreground transition-opacity hover:opacity-90"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1.5 hover:bg-sidebar-accent"
           >
-            <span className="text-[15px] leading-none">+</span>
-            New job
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-[11px] font-semibold text-sidebar-primary-foreground">
+              R
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-[14px] font-semibold tracking-tight">RUTR Connect</p>
+              <p className="truncate text-[11px] text-sidebar-muted">Rutters Roofing</p>
+            </div>
           </Link>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
+        <div className="px-3 pb-2">
+          <div className="flex gap-2">
+            <Link
+              href="/jobs"
+              className="flex h-9 min-w-0 flex-1 items-center justify-center gap-2 rounded-md bg-sidebar-primary text-[13px] font-medium text-sidebar-primary-foreground transition-opacity hover:opacity-90"
+            >
+              <Plus className="size-4" strokeWidth={2} />
+              New job
+            </Link>
+            <Link
+              href="/approvals"
+              className="flex size-9 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent"
+              title="Approvals"
+              aria-label="Approvals"
+            >
+              <ClipboardCheck className="size-4" strokeWidth={1.75} />
+            </Link>
+          </div>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto px-1 py-2">
           <NavGroup label="Operations" links={fieldOps} active={active} />
           <NavGroup label="CRM" links={roster} active={active} />
           <NavGroup label="System" links={system} active={active} />
         </nav>
 
-        <div className="space-y-3 border-t border-sidebar-border px-3 py-3">
-          <p className="px-2 text-[11px] text-sidebar-muted">
+        <div className="mt-auto space-y-2 border-t border-sidebar-border p-3">
+          <p className="px-1 text-[11px] text-sidebar-muted">
             {live ? (
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                <span className="size-1.5 rounded-full bg-ok" />
                 <span className="text-ok">API connected</span>
-                <span className="text-sidebar-muted">· 5188</span>
+                <span>· 5188</span>
               </span>
             ) : (
-              <span>Staff console</span>
+              "Staff console"
             )}
           </p>
           <StaffSession variant="sidebar" />
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-4 border-b border-border bg-background/80 px-6 backdrop-blur-md">
-          <div className="flex min-w-0 items-center gap-3">
-            <p className="truncate text-[14px] font-medium text-foreground">
-              {title ?? titles[active]}
-            </p>
+      {/* Inset main panel */}
+      <div className="relative m-2 flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-4">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <h1 className="truncate text-[14px] font-medium text-foreground">{pageTitle}</h1>
+            {live ? (
+              <>
+                <span className="hidden h-4 w-px bg-border sm:block" />
+                <span className="hidden items-center gap-1.5 text-[12px] text-muted-foreground sm:inline-flex">
+                  <span className="size-1.5 rounded-full bg-ok" />
+                  Live
+                </span>
+              </>
+            ) : null}
           </div>
-          <div className="flex items-center gap-2">
-            <StaffSearch />
-          </div>
+          <StaffSearch />
         </header>
 
-        <main className="page-enter flex-1 px-6 py-6 md:px-8 md:py-8">{children}</main>
+        <main className="page-enter flex-1 overflow-auto">
+          <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">{children}</div>
+        </main>
       </div>
     </div>
   );
@@ -194,15 +217,15 @@ export function PageHeader({
   meta?: React.ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0 max-w-2xl">
-        <h1 className="display-title text-[26px] tracking-tight text-foreground sm:text-[30px]">
+        <h2 className="display-title text-[22px] tracking-tight text-foreground md:text-[24px]">
           {title}
-        </h1>
+        </h2>
         {description ? (
-          <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{description}</p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{description}</p>
         ) : null}
-        {meta ? <div className="mt-3 flex flex-wrap gap-2">{meta}</div> : null}
+        {meta ? <div className="mt-2.5 flex flex-wrap gap-2">{meta}</div> : null}
       </div>
       {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
     </div>

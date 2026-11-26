@@ -40,12 +40,12 @@ export function StaffSession({
 
   if (variant === "sidebar") {
     return (
-      <div className="flex items-center gap-2.5 rounded-lg border border-sidebar-border bg-sidebar-accent/40 px-2.5 py-2">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[11px] font-semibold text-brand">
+      <div className="flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-sidebar-accent">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-[11px] font-semibold text-brand">
           {initials}
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[12px] font-medium text-sidebar-foreground">
+        <div className="min-w-0 flex-1 text-left">
+          <p className="truncate text-[13px] font-medium text-sidebar-foreground">
             {user.displayName}
           </p>
           <p className="truncate text-[11px] text-sidebar-muted">{user.role}</p>
@@ -53,14 +53,14 @@ export function StaffSession({
         <button
           type="button"
           title="Sign out"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          className="flex size-7 shrink-0 items-center justify-center rounded-md text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
           onClick={() => {
             clearSession();
             setUser(null);
             window.location.href = "/login";
           }}
         >
-          <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <LogOut className="size-3.5" strokeWidth={1.75} />
         </button>
       </div>
     );

@@ -27,14 +27,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="page-enter w-full max-w-[380px]">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-[13px] font-semibold text-primary-foreground">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+      <div className="page-enter flex w-full max-w-sm flex-col gap-6">
+        <div className="flex items-center gap-2 self-center font-medium">
+          <div className="flex size-6 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-primary-foreground">
             R
           </div>
-          <p className="brand-mark text-[20px] text-foreground">RUTR Connect</p>
-          <p className="mt-2 text-[13px] text-muted-foreground">Staff console</p>
+          RUTR Connect
         </div>
 
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -77,7 +76,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="mt-6 text-center text-[12px] text-muted-foreground">
+        <p className="text-center text-[12px] text-muted-foreground">
           <Link href="/jobs" className="font-medium text-foreground underline-offset-4 hover:underline">
             Continue with demo header
           </Link>

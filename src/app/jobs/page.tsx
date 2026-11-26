@@ -3,6 +3,7 @@ import { EmptyState, ErrorState } from "@/components/ApiState";
 import { JobCreate } from "@/components/JobCrud";
 import { JobsStageFilter } from "@/components/JobsStageFilter";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
+import { PageToolbar, StatCards } from "@/components/StatCards";
 import { fetchJobs } from "@/lib/api";
 import { loadApi } from "@/lib/api/load";
 
@@ -30,36 +31,48 @@ export default async function JobsPage({
     ? jobs.filter((j) => j.stage.toLowerCase() === stage.toLowerCase())
     : jobs;
   const waiting = jobs.reduce((sum, j) => sum + j.pendingApprovals, 0);
+  const photos = jobs.reduce((sum, j) => sum + j.photoCount, 0);
+  const activeStages = new Set(jobs.map((j) => j.stage)).size;
 
   return (
     <StaffChrome active="jobs" live>
       <PageHeader
         title="Jobs"
         description="Live Rutters work from JobNimbus — digests wait when CompanyCam evidence needs a PM eye."
-        meta={
-          <>
-            <span className="console-badge">
-              {filtered.length} shown · {jobs.length} total
-            </span>
-            {waiting > 0 ? (
-              <span className="console-badge console-badge-warn">
-                <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-warn" />
-                {waiting} digests waiting
-              </span>
-            ) : (
-              <span className="console-badge console-badge-success">
-                <span className="h-1.5 w-1.5 rounded-full bg-ok" />
-                Queue clear
-              </span>
-            )}
-          </>
-        }
         actions={<JobCreate />}
       />
 
-      <div className="stagger-1 mb-4">
+      <StatCards
+        items={[
+          {
+            label: "Jobs shown",
+            value: filtered.length,
+            hint: `${jobs.length} total in Connect`,
+            tone: "brand",
+          },
+          {
+            label: "Digests waiting",
+            value: waiting,
+            hint: waiting ? "Needs PM review" : "Queue clear",
+            trend: waiting ? "Action" : "Clear",
+            tone: waiting ? "warn" : "ok",
+          },
+          {
+            label: "Evidence photos",
+            value: photos,
+            hint: "Across all jobs",
+          },
+          {
+            label: "Active stages",
+            value: activeStages,
+            hint: "Distinct pipeline stages",
+          },
+        ]}
+      />
+
+      <PageToolbar>
         <JobsStageFilter active={stage} />
-      </div>
+      </PageToolbar>
 
       {filtered.length === 0 ? (
         <EmptyState
@@ -72,58 +85,58 @@ export default async function JobsPage({
           action={<JobCreate />}
         />
       ) : (
-        <div className="stagger-2 console-panel overflow-hidden">
-          <table className="console-table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Homeowner</th>
-                <th>Stage</th>
-                <th>Status</th>
-                <th>Photos</th>
-                <th>Approvals</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((job) => (
-                <tr key={job.id}>
-                  <td>
-                    <Link
-                      href={`/jobs/${job.id}`}
-                      className="font-semibold tracking-tight text-[var(--console-text)] transition-colors hover:text-[var(--console-accent)]"
-                    >
-                      {job.addressLine1}
-                    </Link>
-                    <p className="mt-0.5 text-[12px] text-muted-foreground">
-                      {job.city}, {job.state}
-                      {job.title ? ` · ${job.title}` : ""}
-                    </p>
-                  </td>
-                  <td className="text-[13px]">{job.homeownerName}</td>
-                  <td>
-                    <span className="console-badge">{job.stage}</span>
-                  </td>
-                  <td className="text-[13px] text-muted-foreground">{job.status}</td>
-                  <td className="font-mono-data text-[12px] text-muted-foreground">
-                    {job.photoCount}
-                  </td>
-                  <td>
-                    {job.pendingApprovals > 0 ? (
-                      <span className="console-badge console-badge-warn">
-                        <span className="h-1.5 w-1.5 rounded-full bg-warn" />
-                        {job.pendingApprovals} waiting
-                      </span>
-                    ) : (
-                      <span className="console-badge console-badge-success">
-                        <span className="h-1.5 w-1.5 rounded-full bg-ok" />
-                        Clear
-                      </span>
-                    )}
-                  </td>
+        <div className="console-panel overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="console-table">
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Homeowner</th>
+                  <th>Stage</th>
+                  <th>Status</th>
+                  <th>Photos</th>
+                  <th>Approvals</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((job) => (
+                  <tr key={job.id}>
+                    <td>
+                      <Link
+                        href={`/jobs/${job.id}`}
+                        className="font-medium tracking-tight text-foreground transition-colors hover:text-brand"
+                      >
+                        {job.addressLine1}
+                      </Link>
+                      <p className="mt-0.5 text-[12px] text-muted-foreground">
+                        {job.city}, {job.state}
+                        {job.title ? ` · ${job.title}` : ""}
+                      </p>
+                    </td>
+                    <td>{job.homeownerName}</td>
+                    <td>
+                      <span className="console-badge">{job.stage}</span>
+                    </td>
+                    <td className="text-muted-foreground">{job.status}</td>
+                    <td className="font-mono-data text-muted-foreground">{job.photoCount}</td>
+                    <td>
+                      {job.pendingApprovals > 0 ? (
+                        <span className="console-badge console-badge-warn">
+                          <span className="size-1.5 rounded-full bg-warn" />
+                          {job.pendingApprovals} waiting
+                        </span>
+                      ) : (
+                        <span className="console-badge console-badge-success">
+                          <span className="size-1.5 rounded-full bg-ok" />
+                          Clear
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </StaffChrome>
