@@ -13,7 +13,7 @@ export function StaffSession() {
 
   if (!user) {
     return (
-      <Link href="/login" className="console-btn console-btn-secondary text-[12px]">
+      <Link href="/login" className="console-btn console-btn-secondary h-8 text-[12px]">
         Sign in
       </Link>
     );
@@ -22,14 +22,10 @@ export function StaffSession() {
   return (
     <div className="flex items-center gap-2.5">
       <div className="hidden text-right sm:block">
-        <p className="text-[12px] font-semibold tracking-tight text-[var(--console-text)]">
-          {user.displayName}
-        </p>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
-          {user.role}
-        </p>
+        <p className="text-[12px] font-medium text-foreground">{user.displayName}</p>
+        <p className="text-[11px] text-muted-foreground">{user.role}</p>
       </div>
-      <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-gradient-to-br from-[var(--signal)] to-[var(--signal-deep)] text-[11px] font-bold text-white shadow-[0_8px_18px_rgba(212,65,8,0.35)]">
+      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-secondary text-[11px] font-medium text-foreground">
         {user.displayName
           .split(" ")
           .map((p) => p[0])
@@ -39,7 +35,7 @@ export function StaffSession() {
       </div>
       <button
         type="button"
-        className="console-btn console-btn-ghost text-[12px]"
+        className="console-btn console-btn-ghost h-8 text-[12px]"
         onClick={() => {
           clearSession();
           setUser(null);

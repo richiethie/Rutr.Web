@@ -27,86 +27,58 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden">
-      <aside className="sidebar-grid relative hidden w-[44%] flex-col justify-between bg-[var(--ink)] px-10 py-12 text-white lg:flex">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(520px_320px_at_0%_0%,rgba(255,92,26,0.28),transparent_60%)]" />
-        <div className="brand-flare pointer-events-none absolute -right-16 bottom-10 h-56 w-56 rounded-full bg-[var(--signal)] blur-3xl" />
-        <div className="relative">
-          <p className="brand-mark text-[32px]">RUTR</p>
-          <p className="mt-3 text-[12px] font-semibold tracking-[0.22em] text-[var(--flare)]">
-            FIELD SIGNAL
-          </p>
-          <div className="signal-rule mt-6" />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="page-enter w-full max-w-[360px]">
+        <div className="mb-8 text-center">
+          <p className="brand-mark text-[20px] text-foreground">RUTR</p>
+          <p className="mt-2 text-[13px] text-muted-foreground">Connect staff console</p>
         </div>
-        <div className="relative max-w-sm">
-          <h1 className="display-title text-[42px] leading-[0.95] text-white">
-            Staff console for the job in the yard.
-          </h1>
-          <p className="mt-5 text-[15px] leading-relaxed text-white/55">
-            Approvals, evidence, and homeowner updates — one copper signal from field to portal.
-          </p>
-        </div>
-        <p className="relative text-[11px] tracking-[0.12em] text-white/35">
-          RUTTERS · ROOFING &amp; EXTERIORS
-        </p>
-      </aside>
 
-      <div className="relative flex flex-1 items-center justify-center px-5 py-12">
-        <div className="pointer-events-none absolute -right-20 top-10 h-72 w-72 rounded-full bg-[var(--signal)] opacity-[0.12] blur-3xl" />
-        <div className="page-enter relative w-full max-w-md">
-          <div className="mb-8 lg:hidden">
-            <p className="brand-mark text-[26px] text-[var(--text)]">RUTR</p>
-            <p className="mt-2 text-[11px] font-semibold tracking-[0.18em] text-[var(--signal)]">
-              FIELD SIGNAL
-            </p>
-          </div>
-          <div className="console-panel p-8 shadow-[var(--shadow-lg)]">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--muted)]">
-              Staff sign-in
-            </p>
-            <h2 className="display-title mt-2 text-[28px] text-[var(--text)]">Open the console</h2>
-            <p className="mt-2 text-[13px] text-[var(--muted)]">
-              Demo: pm@rutters.demo / rutters-demo
-            </p>
-            <form onSubmit={onSubmit} className="mt-7 space-y-4">
-              <label className="block text-[12px] font-bold text-[var(--muted)]">
-                Email
-                <input
-                  className="console-input mt-1.5"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="username"
-                  required
-                />
-              </label>
-              <label className="block text-[12px] font-bold text-[var(--muted)]">
-                Password
-                <input
-                  className="console-input mt-1.5"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-              </label>
-              {error ? <p className="text-[12px] text-[var(--danger)]">{error}</p> : null}
-              <button
-                type="submit"
-                disabled={busy}
-                className="console-btn console-btn-primary mt-1 w-full"
-              >
-                {busy ? "Signing in…" : "Sign in"}
-              </button>
-            </form>
-          </div>
-          <p className="mt-6 text-center text-[12px] text-[var(--muted)]">
-            <Link href="/jobs" className="font-bold text-[var(--signal)] hover:underline">
-              Continue with demo header
-            </Link>
+        <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h1 className="display-title text-[20px] text-foreground">Sign in</h1>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            Demo: pm@rutters.demo / rutters-demo
           </p>
+
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            <label className="block text-[12px] font-medium text-foreground">
+              Email
+              <input
+                className="console-input mt-1.5"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
+                required
+              />
+            </label>
+            <label className="block text-[12px] font-medium text-foreground">
+              Password
+              <input
+                className="console-input mt-1.5"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </label>
+            {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
+            <button
+              type="submit"
+              disabled={busy}
+              className="console-btn console-btn-primary mt-1 w-full"
+            >
+              {busy ? "Signing in…" : "Continue"}
+            </button>
+          </form>
         </div>
+
+        <p className="mt-6 text-center text-[12px] text-muted-foreground">
+          <Link href="/jobs" className="font-medium text-foreground underline-offset-4 hover:underline">
+            Continue with demo header
+          </Link>
+        </p>
       </div>
     </div>
   );

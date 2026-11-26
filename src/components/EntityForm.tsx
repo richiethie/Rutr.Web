@@ -14,6 +14,9 @@ export type FieldDef = {
   defaultValue?: string | number | boolean | null;
 };
 
+const fieldClass =
+  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/10";
+
 export function EntityForm({
   fields,
   submitLabel = "Save",
@@ -62,10 +65,10 @@ export function EntityForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {fields.map((field) => (
         <label key={field.name} className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+          <span className="text-[12px] font-medium text-foreground">
             {field.label}
             {field.required ? " *" : ""}
           </span>
@@ -80,15 +83,15 @@ export function EntityForm({
                   : String(field.defaultValue)
               }
               rows={4}
-              className="mt-1 w-full rounded-[10px] border border-[var(--line)] bg-white px-3 py-2 text-[13px] text-[var(--text)] outline-none focus:border-[var(--signal)]"
+              className={fieldClass}
             />
           ) : field.type === "checkbox" ? (
-            <span className="mt-2 flex items-center gap-2 text-[13px]">
+            <span className="mt-2 flex items-center gap-2 text-[13px] text-foreground">
               <input
                 type="checkbox"
                 name={field.name}
                 defaultChecked={Boolean(field.defaultValue)}
-                className="h-4 w-4 accent-[var(--signal)]"
+                className="h-4 w-4 rounded border-input accent-foreground"
               />
               {field.placeholder ?? field.label}
             </span>
@@ -101,7 +104,7 @@ export function EntityForm({
                   ? ""
                   : String(field.defaultValue)
               }
-              className="mt-1 w-full rounded-[10px] border border-[var(--line)] bg-white px-3 py-2 text-[13px] text-[var(--text)] outline-none focus:border-[var(--signal)]"
+              className={fieldClass}
             >
               {(field.options ?? []).map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -120,17 +123,21 @@ export function EntityForm({
                   ? ""
                   : String(field.defaultValue)
               }
-              className="mt-1 w-full rounded-[10px] border border-[var(--line)] bg-white px-3 py-2 text-[13px] text-[var(--text)] outline-none focus:border-[var(--signal)]"
+              className={fieldClass}
             />
           )}
         </label>
       ))}
-      {error ? <p className="text-[12px] text-[var(--danger)]">{error}</p> : null}
+      {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
       <div className="flex flex-wrap gap-2 pt-1">
         <button
           type="submit"
           disabled={pending}
-          className={danger ? "console-btn console-btn-secondary text-[var(--danger)]" : "console-btn console-btn-primary"}
+          className={
+            danger
+              ? "console-btn console-btn-secondary text-destructive"
+              : "console-btn console-btn-primary"
+          }
         >
           {pending ? "Saving…" : submitLabel}
         </button>
@@ -162,7 +169,7 @@ export function DeleteButton({
       <button
         type="button"
         disabled={pending}
-        className="console-btn console-btn-secondary text-[var(--danger)]"
+        className="console-btn console-btn-secondary text-destructive"
         onClick={() => {
           if (!window.confirm(confirm)) return;
           setError(null);
@@ -184,7 +191,7 @@ export function DeleteButton({
       >
         {pending ? "Deleting…" : label}
       </button>
-      {error ? <p className="mt-1 text-[12px] text-[var(--danger)]">{error}</p> : null}
+      {error ? <p className="mt-1 text-[12px] text-destructive">{error}</p> : null}
     </div>
   );
 }
@@ -213,8 +220,8 @@ export function CrudPanel({
           {triggerLabel}
         </button>
       ) : (
-        <div className="console-panel max-w-lg p-5">
-          <h2 className="display-title mb-3 text-[16px] font-semibold">{title}</h2>
+        <div className="max-w-lg rounded-lg border border-border bg-card p-5">
+          <h2 className="mb-4 text-[14px] font-medium text-foreground">{title}</h2>
           {children}
         </div>
       )}

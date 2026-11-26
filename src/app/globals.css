@@ -3,61 +3,78 @@
 @tailwind utilities;
 
 :root {
-  /* RUTR Field Signal — night ink, copper flare, cool blueprint paper */
-  --ink: #071018;
-  --ink-elevated: #0e1a28;
-  --ink-mid: #152536;
-  --paper: #eef2f7;
-  --paper-deep: #dde5f0;
-  --chalk: #fbfcfe;
-  --line: #c9d4e3;
-  --line-strong: #9aadc4;
-  --text: #08121f;
-  --muted: #4d6078;
-  --signal: #ff5c1a;
-  --signal-deep: #d44108;
-  --signal-soft: #ffe3d4;
-  --signal-glow: rgba(255, 92, 26, 0.38);
-  --flare: #ffb347;
-  --ok: #0b9b62;
-  --ok-soft: #d8f5e8;
-  --danger: #d12b2b;
-  --shadow: 0 1px 0 rgba(7, 16, 24, 0.04), 0 14px 36px rgba(7, 16, 24, 0.07);
-  --shadow-lg: 0 8px 16px rgba(7, 16, 24, 0.05), 0 32px 64px rgba(7, 16, 24, 0.12);
-  --radius: 16px;
-  --radius-sm: 10px;
+  /* Vercel / shadcn zinc — light */
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
+  --destructive-foreground: #fafafa;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #18181b;
+  --radius: 0.5rem;
+
+  /* App aliases (compat with existing console-* classes) */
+  --ink: #09090b;
+  --ink-elevated: #18181b;
+  --paper: #fafafa;
+  --paper-deep: #f4f4f5;
+  --chalk: #ffffff;
+  --line: #e4e4e7;
+  --line-strong: #d4d4d8;
+  --text: #09090b;
+  --signal: #18181b;
+  --signal-deep: #09090b;
+  --signal-soft: #f4f4f5;
+  --signal-glow: rgba(24, 24, 27, 0.12);
+  --flare: #52525b;
+  --ok: #16a34a;
+  --ok-soft: #f0fdf4;
+  --danger: #dc2626;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --radius-sm: 0.375rem;
 
   --console-bg: var(--paper);
   --console-bg-glow: var(--paper-deep);
   --console-surface: var(--chalk);
-  --console-sidebar: var(--ink);
-  --console-sidebar-elevated: var(--ink-elevated);
-  --console-sidebar-muted: #7f93ab;
-  --console-sidebar-hover: #173047;
-  --console-border: var(--line);
+  --console-sidebar: #09090b;
+  --console-sidebar-elevated: #18181b;
+  --console-sidebar-muted: #a1a1aa;
+  --console-sidebar-hover: #27272a;
+  --console-border: var(--border);
   --console-border-strong: var(--line-strong);
-  --console-text: var(--text);
-  --console-muted: var(--muted);
-  --console-accent: var(--signal);
-  --console-accent-hover: var(--signal-deep);
-  --console-accent-soft: var(--signal-soft);
+  --console-text: var(--foreground);
+  --console-muted: var(--muted-foreground);
+  --console-accent: var(--primary);
+  --console-accent-hover: #27272a;
+  --console-accent-soft: var(--secondary);
   --console-accent-ring: var(--signal-glow);
   --console-success: var(--ok);
   --console-success-soft: var(--ok-soft);
-  --console-warning: #a66b00;
-  --console-danger: var(--danger);
-  --console-row-hover: #f4f7fb;
+  --console-warning: #a16207;
+  --console-danger: var(--destructive);
+  --console-row-hover: #fafafa;
   --console-shadow: var(--shadow);
   --console-shadow-lg: var(--shadow-lg);
   --console-radius: var(--radius);
   --console-radius-sm: var(--radius-sm);
-
-  --background: var(--paper);
-  --foreground: var(--text);
 }
 
 * {
   box-sizing: border-box;
+  border-color: var(--border);
 }
 
 html,
@@ -67,27 +84,13 @@ body {
 
 body {
   color: var(--foreground);
-  background-color: var(--paper);
-  background-image:
-    radial-gradient(920px 480px at -8% -12%, rgba(255, 92, 26, 0.16), transparent 58%),
-    radial-gradient(760px 420px at 108% -8%, rgba(11, 155, 98, 0.08), transparent 52%),
-    radial-gradient(640px 360px at 70% 110%, rgba(21, 37, 54, 0.07), transparent 55%),
-    linear-gradient(rgba(7, 16, 24, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(7, 16, 24, 0.035) 1px, transparent 1px),
-    linear-gradient(168deg, #f7f9fc 0%, var(--paper) 42%, var(--paper-deep) 100%);
-  background-size:
-    auto,
-    auto,
-    auto,
-    48px 48px,
-    48px 48px,
-    auto;
-  background-attachment: fixed;
-  font-family: var(--font-body), "Segoe UI", sans-serif;
+  background: var(--background);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  letter-spacing: -0.014em;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -100,48 +103,48 @@ a {
 }
 
 .font-mono-data {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
   letter-spacing: 0;
 }
 
 .brand-mark {
-  font-family: var(--font-display), sans-serif;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 700;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.04em;
+  font-weight: 600;
 }
 
 .display-title {
-  font-family: var(--font-display), sans-serif;
-  letter-spacing: -0.055em;
-  font-weight: 700;
-  line-height: 0.98;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  line-height: 1.1;
 }
 
 .signal-rule {
-  height: 4px;
-  width: 56px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--signal), var(--flare));
-  box-shadow: 0 0 22px var(--signal-glow);
+  height: 1px;
+  width: 24px;
+  border-radius: 0;
+  background: var(--foreground);
+  box-shadow: none;
 }
 
 .page-enter {
-  animation: pageEnter 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: pageEnter 0.28s ease-out both;
 }
 
 .stagger-1 {
-  animation: pageEnter 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+  animation: pageEnter 0.32s ease-out 0.04s both;
 }
 
 .stagger-2 {
-  animation: pageEnter 0.56s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+  animation: pageEnter 0.36s ease-out 0.08s both;
 }
 
 @keyframes pageEnter {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -151,37 +154,16 @@ a {
 
 .console-panel {
   position: relative;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, var(--chalk) 100%);
-  border: 1px solid rgba(154, 173, 196, 0.55);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: none;
   overflow: hidden;
-  backdrop-filter: blur(8px);
 }
 
-.console-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    var(--signal) 0%,
-    var(--flare) 28%,
-    rgba(255, 92, 26, 0.12) 55%,
-    transparent 88%
-  );
-  pointer-events: none;
-}
-
+.console-panel::before,
 .console-panel::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 auto;
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle at 100% 100%, rgba(255, 92, 26, 0.06), transparent 68%);
-  pointer-events: none;
+  display: none;
 }
 
 .console-table {
@@ -190,23 +172,22 @@ a {
 }
 
 .console-table th {
-  padding: 13px 16px;
+  padding: 10px 16px;
   text-align: left;
-  font-family: var(--font-display), sans-serif;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  background: linear-gradient(180deg, #f8fafc 0%, #edf2f8 100%);
-  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted-foreground);
+  background: transparent;
+  border-bottom: 1px solid var(--border);
 }
 
 .console-table td {
-  padding: 15px 16px;
-  border-bottom: 1px solid rgba(201, 212, 227, 0.75);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.12s ease;
 }
 
 .console-table tbody tr:last-child td {
@@ -214,37 +195,37 @@ a {
 }
 
 .console-table tbody tr:hover td {
-  background: linear-gradient(90deg, var(--signal-soft), rgba(247, 249, 252, 0.4) 34%);
+  background: var(--muted);
 }
 
 .console-table tbody tr:hover td:first-child {
-  box-shadow: inset 4px 0 0 var(--signal);
+  box-shadow: none;
 }
 
 .console-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 11px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.92);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .console-badge-accent {
-  border-color: #ffc09a;
-  color: var(--signal-deep);
-  background: var(--signal-soft);
+  border-color: var(--border);
+  color: var(--foreground);
+  background: var(--secondary);
 }
 
 .console-badge-success {
-  border-color: #9adfc0;
-  color: var(--ok);
-  background: var(--ok-soft);
+  border-color: #bbf7d0;
+  color: #15803d;
+  background: #f0fdf4;
 }
 
 .console-btn {
@@ -252,185 +233,172 @@ a {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 38px;
-  padding: 0 16px;
-  border-radius: 10px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: calc(var(--radius) - 2px);
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   border: 1px solid transparent;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.12s ease;
+    background 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .console-btn:active:not(:disabled) {
-  transform: translateY(1px) scale(0.99);
+  transform: none;
 }
 
 .console-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .console-btn-primary {
-  background: linear-gradient(135deg, #ff8a4c 0%, var(--signal) 46%, var(--signal-deep) 100%);
-  color: #fff;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.28) inset,
-    0 10px 22px rgba(212, 65, 8, 0.32);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: none;
 }
 
 .console-btn-primary:hover:not(:disabled) {
-  filter: brightness(1.05);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.3) inset,
-    0 12px 26px rgba(212, 65, 8, 0.4);
+  filter: none;
+  background: #27272a;
+  box-shadow: none;
 }
 
 .console-btn-secondary {
-  background: #fff;
-  border-color: var(--line-strong);
-  color: var(--text);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  background: var(--background);
+  border-color: var(--border);
+  color: var(--foreground);
+  box-shadow: none;
 }
 
 .console-btn-secondary:hover:not(:disabled) {
-  border-color: var(--muted);
-  background: #f5f8fc;
+  background: var(--muted);
+  border-color: var(--border);
 }
 
 .console-btn-ghost {
   background: transparent;
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .console-btn-ghost:hover:not(:disabled) {
-  color: var(--text);
-  background: rgba(7, 16, 24, 0.045);
+  color: var(--foreground);
+  background: var(--muted);
 }
 
 .console-filter {
   display: inline-flex;
   align-items: center;
-  height: 34px;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.82);
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--background);
   font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  backdrop-filter: blur(8px);
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  backdrop-filter: none;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
 }
 
 .console-filter:hover {
   border-color: var(--line-strong);
-  color: var(--text);
+  color: var(--foreground);
 }
 
 .console-filter-active {
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--ink-mid), var(--ink));
-  color: #fff;
-  box-shadow: 0 0 0 3px var(--signal-glow);
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: none;
 }
 
 .console-input {
-  height: 42px;
+  height: 36px;
   width: 100%;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
-  background: #fff;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--input);
+  background: var(--background);
   padding: 0 12px;
   font-size: 13px;
-  color: var(--text);
+  color: var(--foreground);
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
 .console-input:focus {
-  border-color: var(--signal);
-  box-shadow: 0 0 0 4px var(--signal-glow);
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
 }
 
 .nav-link {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-radius: 12px;
-  padding: 11px 12px;
+  gap: 8px;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 7px 10px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 450;
   color: var(--console-sidebar-muted);
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fafafa;
 }
 
 .nav-link-active {
-  background: linear-gradient(90deg, rgba(255, 92, 26, 0.34), rgba(255, 255, 255, 0.04));
-  color: #fff;
-  font-weight: 800;
-  box-shadow: inset 3px 0 0 var(--signal);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fafafa;
+  font-weight: 500;
+  box-shadow: none;
 }
 
 .nav-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
-  border: 1.5px solid currentColor;
-  background: transparent;
-  opacity: 0.45;
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    opacity 0.15s ease,
-    border-color 0.15s ease;
+  border: none;
+  background: currentColor;
+  opacity: 0.35;
+  transition: opacity 0.12s ease, background 0.12s ease;
 }
 
 .nav-link-active .nav-dot {
   opacity: 1;
-  border-color: var(--signal);
-  background: var(--signal);
-  box-shadow: 0 0 0 4px rgba(255, 92, 26, 0.3);
+  border-color: transparent;
+  background: #fafafa;
+  box-shadow: none;
 }
 
 .pulse-dot {
-  animation: pulseDot 1.8s ease-in-out infinite;
+  animation: pulseDot 2s ease-in-out infinite;
 }
 
 @keyframes pulseDot {
   0%,
   100% {
-    transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.35);
-    opacity: 0.45;
+    opacity: 0.4;
   }
 }
 
 .photo-lift {
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
+  transition: border-color 0.15s ease;
 }
 
 .photo-lift:hover {
-  transform: translateY(-4px) scale(1.008);
-  box-shadow: var(--shadow-lg);
+  transform: none;
+  box-shadow: none;
+  border-color: var(--line-strong);
 }
 
 .signal-sweep {
@@ -439,58 +407,7 @@ a {
 }
 
 .signal-sweep::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 38%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 62%
-  );
-  transform: translateX(-120%);
-  animation: sweep 4.2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes sweep {
-  0%,
-  55% {
-    transform: translateX(-120%);
-  }
-  78%,
-  100% {
-    transform: translateX(120%);
-  }
-}
-
-.sidebar-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.brand-flare {
-  animation: brandFlare 5.5s ease-in-out infinite;
-}
-
-@keyframes brandFlare {
-  0%,
-  100% {
-    opacity: 0.22;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.08);
-  }
-}
-
-.portal-hero-band {
-  background:
-    radial-gradient(600px 220px at 10% 0%, rgba(255, 92, 26, 0.18), transparent 60%),
-    linear-gradient(180deg, #0b1622 0%, #132536 100%);
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -499,8 +416,6 @@ a {
   .stagger-2,
   .pulse-dot,
   .photo-lift,
-  .signal-sweep::after,
-  .brand-flare,
   .console-btn,
   .console-table tbody tr td {
     animation: none !important;

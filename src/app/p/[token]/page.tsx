@@ -29,7 +29,7 @@ export default async function PortalPage({
 
   return (
     <PortalShell organizationName={portal.organizationName}>
-      <section className="console-panel overflow-hidden">
+      <section className="overflow-hidden rounded-lg border border-border bg-card">
         {heroPhoto ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -38,45 +38,41 @@ export default async function PortalPage({
             className="aspect-[21/9] w-full object-cover sm:aspect-[2.4/1]"
           />
         ) : (
-          <div className="flex aspect-[21/9] items-center justify-center bg-gradient-to-br from-[var(--console-bg)] to-white text-[13px] text-[var(--console-muted)] sm:aspect-[2.4/1]">
+          <div className="flex aspect-[21/9] items-center justify-center bg-muted text-[13px] text-muted-foreground sm:aspect-[2.4/1]">
             No verified photos yet
           </div>
         )}
-        <div className="border-t border-[var(--console-border)] px-5 py-5">
+        <div className="border-t border-border px-5 py-5">
           <div className="flex flex-wrap items-center gap-2">
             <span className="console-badge">{portal.stage}</span>
             <span className="console-badge">{portal.status}</span>
           </div>
-          <h1 className="display-title mt-3 text-[30px] text-[var(--text)] sm:text-[34px]">
+          <h1 className="display-title mt-3 text-[26px] text-foreground sm:text-[28px]">
             {portal.addressLine1}
           </h1>
-          <p className="mt-2 text-[15px] text-[var(--muted)]">
+          <p className="mt-1.5 text-[14px] text-muted-foreground">
             {portal.city}, {portal.state} · Hi {portal.homeownerName}
           </p>
         </div>
       </section>
 
-      <section className="stagger-1 console-panel mt-4 p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
-          Project progress
-        </p>
-        <div className="mt-3.5">
+      <section className="mt-4 rounded-lg border border-border bg-card p-5">
+        <p className="text-[12px] font-medium text-muted-foreground">Project progress</p>
+        <div className="mt-3">
           <PortalStageRail stage={portal.stage} />
         </div>
       </section>
 
       {milestones.length > 0 ? (
-        <section className="stagger-1 console-panel mt-4 p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
-            Milestones
-          </p>
+        <section className="mt-4 rounded-lg border border-border bg-card p-5">
+          <p className="text-[12px] font-medium text-muted-foreground">Milestones</p>
           <ul className="mt-3 space-y-2">
             {milestones.map((m, i) => (
               <li
                 key={`${m.name}-${i}`}
-                className="flex items-center justify-between gap-3 border-b border-[var(--line)] pb-2 last:border-0 last:pb-0"
+                className="flex items-center justify-between gap-3 border-b border-border pb-2 last:border-0 last:pb-0"
               >
-                <span className="text-[14px] font-semibold text-[var(--text)]">{m.name}</span>
+                <span className="text-[14px] font-medium text-foreground">{m.name}</span>
                 <span className="console-badge">{m.status}</span>
               </li>
             ))}
@@ -84,36 +80,32 @@ export default async function PortalPage({
         </section>
       ) : null}
 
-      <section className="stagger-2 console-panel mt-4 p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--console-muted)]">
+      <section className="mt-4 rounded-lg border border-border bg-card p-5">
+        <p className="text-[12px] font-medium text-muted-foreground">
           Latest update · {portal.stage}
         </p>
-        <p className="mt-2.5 text-[16px] leading-relaxed tracking-[-0.01em] text-[var(--console-text)] sm:text-[17px]">
-          {portal.latestUpdate}
-        </p>
-        <p className="mt-3 text-[13px] text-[var(--console-muted)]">
+        <p className="mt-2 text-[15px] leading-relaxed text-foreground">{portal.latestUpdate}</p>
+        <p className="mt-3 text-[13px] text-muted-foreground">
           Status: {portal.status}. Only PM-approved photos and messages show here.
         </p>
       </section>
 
-      <section className="mt-5">
+      <section className="mt-6">
         <div className="mb-3 flex items-end justify-between gap-3">
-          <h2 className="display-title text-[17px] font-semibold text-[var(--console-text)]">
-            Verified photos
-          </h2>
-          <span className="text-[12px] text-[var(--console-muted)]">{photos.length} visible</span>
+          <h2 className="text-[15px] font-medium text-foreground">Verified photos</h2>
+          <span className="text-[12px] text-muted-foreground">{photos.length} visible</span>
         </div>
         {photos.length === 0 ? (
-          <div className="console-panel px-4 py-10 text-center text-[13px] text-[var(--console-muted)]">
+          <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center text-[13px] text-muted-foreground">
             No customer-visible photos yet. Check back after the next approved update.
           </div>
         ) : (
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {photos.map((photo) => (
-              <figure key={photo.id} className="console-panel photo-lift overflow-hidden">
+              <figure key={photo.id} className="overflow-hidden rounded-lg border border-border bg-card">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photo.imageUrl} alt={photo.caption} className="w-full object-cover" />
-                <figcaption className="border-t border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-white px-4 py-3 text-[13px] text-[var(--console-muted)]">
+                <figcaption className="border-t border-border px-4 py-3 text-[13px] text-muted-foreground">
                   {photo.caption}
                 </figcaption>
               </figure>
