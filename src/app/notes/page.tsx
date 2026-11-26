@@ -55,13 +55,13 @@ export default async function NotesPage() {
               {notes.map((n) => (
                 <tr key={n.id}>
                   <td className="max-w-md text-[13px]">{n.body}</td>
-                  <td className="font-mono-data text-[11px] text-[var(--muted)]">
+                  <td className="font-mono-data text-[11px] text-muted-foreground">
                     {n.jobId?.slice(0, 8) ?? "—"}
                   </td>
-                  <td className="font-mono-data text-[11px] text-[var(--muted)]">
+                  <td className="font-mono-data text-[11px] text-muted-foreground">
                     {n.contactId?.slice(0, 8) ?? "—"}
                   </td>
-                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--muted)]">
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-muted-foreground">
                     {new Date(n.createdAt).toLocaleString("en-US", {
                       timeZone: "America/Chicago",
                     })}

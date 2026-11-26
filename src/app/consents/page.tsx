@@ -84,10 +84,10 @@ export default async function ConsentsPage() {
                     {c.smsStopped ? (
                       <span className="console-badge console-badge-accent">STOP</span>
                     ) : (
-                      <span className="text-[12px] text-[var(--muted)]">—</span>
+                      <span className="text-[12px] text-muted-foreground">—</span>
                     )}
                   </td>
-                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--muted)]">
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-muted-foreground">
                     {new Date(c.updatedAt).toLocaleString("en-US", {
                       timeZone: "America/Chicago",
                     })}

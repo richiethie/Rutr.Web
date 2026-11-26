@@ -57,16 +57,16 @@ export default async function TasksPage() {
                   <td>
                     <p className="font-semibold">{t.title}</p>
                     {t.description ? (
-                      <p className="mt-0.5 text-[12px] text-[var(--muted)]">{t.description}</p>
+                      <p className="mt-0.5 text-[12px] text-muted-foreground">{t.description}</p>
                     ) : null}
                   </td>
                   <td>
                     <span className="console-badge">{t.status}</span>
                   </td>
-                  <td className="font-mono-data text-[11px] text-[var(--muted)]">
+                  <td className="font-mono-data text-[11px] text-muted-foreground">
                     {t.jobId?.slice(0, 8) ?? t.contactId?.slice(0, 8) ?? "—"}
                   </td>
-                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--muted)]">
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-muted-foreground">
                     {t.dueAt
                       ? new Date(t.dueAt).toLocaleString("en-US", {
                           timeZone: "America/Chicago",

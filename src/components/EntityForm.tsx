@@ -15,7 +15,7 @@ export type FieldDef = {
 };
 
 const fieldClass =
-  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/10";
+  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none placeholder:text-zinc-600 focus:border-ring focus:ring-2 focus:ring-ring/10";
 
 export function EntityForm({
   fields,

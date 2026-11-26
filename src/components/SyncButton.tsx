@@ -39,7 +39,7 @@ export function SyncButton() {
         {pending ? "Syncing…" : "Run mock sync"}
       </button>
       {result ? (
-        <p className="max-w-md text-right text-[12px] text-[var(--console-muted)]">
+        <p className="max-w-md text-right text-[12px] text-muted-foreground">
           {result.message || "Sync complete."} · jobs {result.jobsUpserted} · photos{" "}
           {result.photosAdded} · drafts {result.draftsCreated}
         </p>

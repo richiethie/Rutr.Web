@@ -24,7 +24,7 @@ export function PortalShell({
 
       <footer className="border-t border-border py-6 text-center text-[12px] text-muted-foreground">
         Updates appear only after your project manager approves them.
-        <span className="mx-2 text-zinc-300">·</span>
+        <span className="mx-2 text-zinc-500">·</span>
         <Link href="/login" className="font-medium text-foreground underline-offset-4 hover:underline">
           Staff
         </Link>

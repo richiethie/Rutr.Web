@@ -70,7 +70,7 @@ export function DraftActions({
   if (mode === "approved") {
     return (
       <div className="flex flex-col items-end gap-2">
-        <p className="text-[11px] text-[var(--console-muted)]">Approved · photos visible</p>
+        <p className="text-[11px] text-muted-foreground">Approved · photos visible</p>
         <div className="flex items-center gap-2">
           <button
             type="button"

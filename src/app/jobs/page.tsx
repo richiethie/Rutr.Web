@@ -91,7 +91,7 @@ export default async function JobsPage({
                     >
                       {job.addressLine1}
                     </Link>
-                    <p className="mt-0.5 text-[12px] text-[var(--console-muted)]">
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">
                       {job.city}, {job.state}
                       {job.title ? ` · ${job.title}` : ""}
                     </p>
@@ -100,8 +100,8 @@ export default async function JobsPage({
                   <td>
                     <span className="console-badge">{job.stage}</span>
                   </td>
-                  <td className="text-[13px] text-[var(--console-muted)]">{job.status}</td>
-                  <td className="font-mono-data text-[12px] text-[var(--console-muted)]">
+                  <td className="text-[13px] text-muted-foreground">{job.status}</td>
+                  <td className="font-mono-data text-[12px] text-muted-foreground">
                     {job.photoCount}
                   </td>
                   <td>

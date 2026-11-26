@@ -47,7 +47,7 @@ export default async function EvidencePage() {
                 alt={photo.caption}
                 className="aspect-[16/10] w-full object-cover"
               />
-              <figcaption className="border-t border-[var(--line)] px-3 py-2.5 text-[12px] text-[var(--muted)]">
+              <figcaption className="border-t border-[var(--line)] px-3 py-2.5 text-[12px] text-muted-foreground">
                 <p className="font-semibold text-[var(--text)]">{photo.caption}</p>
                 <p className="mt-1">
                   <Link href={`/jobs/${photo.jobId}`} className="hover:text-[var(--signal)]">

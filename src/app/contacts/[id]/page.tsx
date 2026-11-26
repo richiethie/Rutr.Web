@@ -19,7 +19,7 @@ export default async function ContactDetailPage({
   if (!result.ok) {
     return (
       <StaffChrome active="contacts">
-        <Link href="/contacts" className="mb-3 inline-block text-[12px] font-semibold text-[var(--muted)]">
+        <Link href="/contacts" className="mb-3 inline-block text-[12px] font-semibold text-muted-foreground">
           ← Contacts
         </Link>
         {isNotFound(result.error) ? (
@@ -35,7 +35,7 @@ export default async function ContactDetailPage({
 
   return (
     <StaffChrome active="contacts" live title={contact.displayName}>
-      <Link href="/contacts" className="mb-3 inline-block text-[12px] font-semibold text-[var(--muted)]">
+      <Link href="/contacts" className="mb-3 inline-block text-[12px] font-semibold text-muted-foreground">
         ← Contacts
       </Link>
       <PageHeader

@@ -25,7 +25,7 @@ export default async function JobDetailPage({
         <div className="mb-3">
           <Link
             href="/jobs"
-            className="text-[12px] font-semibold text-[var(--muted)] hover:text-[var(--signal)]"
+            className="text-[12px] font-semibold text-muted-foreground hover:text-[var(--signal)]"
           >
             ← Jobs
           </Link>
@@ -54,7 +54,7 @@ export default async function JobDetailPage({
       <div className="mb-3">
         <Link
           href="/jobs"
-          className="text-[12px] font-semibold text-[var(--console-muted)] transition-colors hover:text-[var(--console-accent)]"
+          className="text-[12px] font-semibold text-muted-foreground transition-colors hover:text-[var(--console-accent)]"
         >
           ← Jobs
         </Link>
@@ -92,7 +92,7 @@ export default async function JobDetailPage({
               Evidence
             </h2>
             <div className="flex items-center gap-3">
-              <p className="text-[11px] font-medium text-[var(--console-muted)]">
+              <p className="text-[11px] font-medium text-muted-foreground">
                 {visiblePhotos.length} portal · {staffOnlyPhotos.length} staff-only
               </p>
               <EvidenceCreate jobId={job.id} />
@@ -110,7 +110,7 @@ export default async function JobDetailPage({
                   alt={photo.caption}
                   className="aspect-[16/10] w-full object-cover"
                 />
-                <figcaption className="border-t border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-white px-3 py-2.5 text-[12px] text-[var(--console-muted)]">
+                <figcaption className="border-t border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-white px-3 py-2.5 text-[12px] text-muted-foreground">
                   {photo.caption}
                   <span className="ml-2 font-semibold text-[var(--console-text)]">
                     {photo.customerVisible ? "Customer visible" : "Staff only"}
@@ -120,7 +120,7 @@ export default async function JobDetailPage({
               </figure>
             ))}
             {photos.length === 0 ? (
-              <p className="text-[13px] text-[var(--console-muted)]">No evidence yet.</p>
+              <p className="text-[13px] text-muted-foreground">No evidence yet.</p>
             ) : null}
           </div>
         </section>
@@ -137,14 +137,14 @@ export default async function JobDetailPage({
               <li key={draft.id} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--console-muted)]">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {draft.channel} · {draft.status}
                     </p>
                     <p className="mt-1 text-[13px] font-semibold text-[var(--console-text)]">
                       {draft.subject}
                     </p>
-                    <p className="mt-1 text-[13px] text-[var(--console-muted)]">{draft.body}</p>
-                    <p className="mt-2 font-mono-data text-[11px] text-[var(--console-muted)]">
+                    <p className="mt-1 text-[13px] text-muted-foreground">{draft.body}</p>
+                    <p className="mt-2 font-mono-data text-[11px] text-muted-foreground">
                       {draft.evidenceSummary}
                     </p>
                     <div className="mt-2">
@@ -161,7 +161,7 @@ export default async function JobDetailPage({
               </li>
             ))}
             {drafts.length === 0 ? (
-              <li className="px-4 py-8 text-[13px] text-[var(--console-muted)]">No drafts yet.</li>
+              <li className="px-4 py-8 text-[13px] text-muted-foreground">No drafts yet.</li>
             ) : null}
           </ul>
         </section>
@@ -183,7 +183,7 @@ export default async function JobDetailPage({
             <ErrorState error={auditResult.error} />
           </div>
         ) : audit.length === 0 ? (
-          <p className="px-4 py-6 text-[13px] text-[var(--console-muted)]">
+          <p className="px-4 py-6 text-[13px] text-muted-foreground">
             No audit events yet. Approve / reject / send will appear here.
           </p>
         ) : (
@@ -203,8 +203,8 @@ export default async function JobDetailPage({
                       {event.action}
                     </span>
                   </td>
-                  <td className="text-[13px] text-[var(--console-muted)]">{event.detail}</td>
-                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--console-muted)]">
+                  <td className="text-[13px] text-muted-foreground">{event.detail}</td>
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-muted-foreground">
                     {new Date(event.createdAt).toLocaleString("en-US", {
                       timeZone: "America/Chicago",
                     })}

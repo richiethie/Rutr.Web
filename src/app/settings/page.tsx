@@ -51,7 +51,7 @@ export default async function SettingsPage() {
             </div>
           ) : (
             <div className="mt-3">
-              <p className="mb-3 font-mono-data text-[11px] text-[var(--muted)]">
+              <p className="mb-3 font-mono-data text-[11px] text-muted-foreground">
                 slug · {org.data.slug} · id · {org.data.id}
               </p>
               <OrgEditForm org={org.data} />
@@ -70,7 +70,7 @@ export default async function SettingsPage() {
           ) : (
             <dl className="mt-3 grid gap-3 sm:grid-cols-2">
               <div>
-                <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                   Name
                 </dt>
                 <dd className="mt-1 text-[13px]">
@@ -78,14 +78,14 @@ export default async function SettingsPage() {
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                   Email
                 </dt>
                 <dd className="mt-1 text-[13px]">{staff!.email}</dd>
               </div>
             </dl>
           )}
-          <p className="mt-4 text-[13px] text-[var(--muted)]">
+          <p className="mt-4 text-[13px] text-muted-foreground">
             Messaging mode:{" "}
             <span className="font-semibold text-[var(--signal)]">
               {messaging}

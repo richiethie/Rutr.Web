@@ -61,7 +61,7 @@ export default async function PropertiesPage() {
                     >
                       {p.addressLine1}
                     </Link>
-                    <p className="mt-0.5 text-[12px] text-[var(--muted)]">
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">
                       {p.city}, {p.state} {p.postalCode}
                     </p>
                   </td>

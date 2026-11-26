@@ -19,7 +19,7 @@ export default async function PropertyDetailPage({
   if (!result.ok) {
     return (
       <StaffChrome active="properties">
-        <Link href="/properties" className="mb-3 inline-block text-[12px] font-semibold text-[var(--muted)]">
+        <Link href="/properties" className="mb-3 inline-block text-[12px] font-semibold text-muted-foreground">
           ← Properties
         </Link>
         {isNotFound(result.error) ? (
@@ -35,7 +35,7 @@ export default async function PropertyDetailPage({
 
   return (
     <StaffChrome active="properties" live title={property.addressLine1}>
-      <Link href="/properties" className="mb-3 inline-block text-[12px] font-semibold text-[var(--muted)]">
+      <Link href="/properties" className="mb-3 inline-block text-[12px] font-semibold text-muted-foreground">
         ← Properties
       </Link>
       <PageHeader

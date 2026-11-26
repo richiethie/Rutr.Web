@@ -108,7 +108,7 @@ export default async function IntegrationsPage() {
                   <tr key={c.id}>
                     <td>
                       <p className="font-semibold">{c.displayName}</p>
-                      <p className="font-mono-data text-[11px] text-[var(--muted)]">
+                      <p className="font-mono-data text-[11px] text-muted-foreground">
                         {c.provider}
                       </p>
                     </td>
@@ -123,7 +123,7 @@ export default async function IntegrationsPage() {
                         {c.isConnected ? "Connected" : "Disconnected"}
                       </span>
                     </td>
-                    <td className="font-mono-data text-[12px] text-[var(--muted)]">
+                    <td className="font-mono-data text-[12px] text-muted-foreground">
                       {c.connectedAt
                         ? new Date(c.connectedAt).toLocaleString("en-US", {
                             timeZone: "America/Chicago",
@@ -144,7 +144,7 @@ export default async function IntegrationsPage() {
           {!connectionsResult.ok ? (
             <div className="mb-4">
               <ErrorState error={connectionsResult.error} />
-              <p className="mt-2 text-[12px] text-[var(--muted)]">
+              <p className="mt-2 text-[12px] text-muted-foreground">
                 Showing legacy status until `/api/v1/integrations/connections` lands.
               </p>
             </div>
@@ -164,15 +164,15 @@ export default async function IntegrationsPage() {
                   <tr key={item.name}>
                     <td>
                       <p className="font-semibold">{item.name}</p>
-                      <p className="text-[12px] text-[var(--console-muted)]">{item.role}</p>
+                      <p className="text-[12px] text-muted-foreground">{item.role}</p>
                     </td>
                     <td>
                       <span className="console-badge console-badge-accent">{item.status}</span>
                     </td>
-                    <td className="max-w-md text-[13px] text-[var(--console-muted)]">
+                    <td className="max-w-md text-[13px] text-muted-foreground">
                       {item.detail}
                     </td>
-                    <td className="font-mono-data text-[11px] text-[var(--console-muted)]">
+                    <td className="font-mono-data text-[11px] text-muted-foreground">
                       {item.webhook}
                     </td>
                   </tr>

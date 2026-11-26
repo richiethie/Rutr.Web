@@ -78,7 +78,7 @@ export default async function ApprovalsPage() {
                     >
                       {item.addressLine1}
                     </Link>
-                    <p className="mt-0.5 text-[12px] text-[var(--console-muted)]">
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">
                       {item.homeownerName}
                     </p>
                   </td>
@@ -87,11 +87,11 @@ export default async function ApprovalsPage() {
                   </td>
                   <td className="max-w-md">
                     <p className="text-[13px] font-semibold">{item.subject}</p>
-                    <p className="mt-0.5 line-clamp-2 text-[12px] text-[var(--console-muted)]">
+                    <p className="mt-0.5 line-clamp-2 text-[12px] text-muted-foreground">
                       {item.body}
                     </p>
                   </td>
-                  <td className="font-mono-data max-w-[12rem] text-[11px] text-[var(--console-muted)]">
+                  <td className="font-mono-data max-w-[12rem] text-[11px] text-muted-foreground">
                     {item.evidenceSummary}
                   </td>
                   <td className="text-right">

@@ -190,10 +190,9 @@ export function StaffSearch() {
       <button
         type="button"
         onClick={openPalette}
-        className="hidden h-8 w-56 items-center rounded-md border border-border bg-background px-3 text-left text-[12px] text-muted-foreground transition-colors hover:bg-muted md:flex"
+        className="hidden h-8 w-56 items-center rounded-md border border-border bg-background px-3 text-left text-[12px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
         aria-label="Search"
       >
-        <span className="mr-2 text-zinc-400">⌘K</span>
         Search…
       </button>
       <button
@@ -220,13 +219,12 @@ export function StaffSearch() {
             className="relative mx-auto mt-[12vh] w-full max-w-xl overflow-hidden rounded-xl border border-border bg-background shadow-lg"
           >
             <div className="flex items-center gap-2 border-b border-border px-3">
-              <span className="text-[12px] text-muted-foreground">⌘K</span>
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search jobs, contacts, properties…"
-                className="h-12 w-full bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted-foreground"
+                className="h-12 w-full bg-transparent text-[14px] text-foreground outline-none placeholder:text-zinc-600"
                 aria-controls={listId}
                 aria-autocomplete="list"
                 onKeyDown={(e) => {

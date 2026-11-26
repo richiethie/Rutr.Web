@@ -60,10 +60,10 @@ export default async function MilestonesPage() {
                     <span className="console-badge">{m.status}</span>
                   </td>
                   <td className="font-mono-data text-[12px]">{m.sortOrder}</td>
-                  <td className="font-mono-data text-[11px] text-[var(--muted)]">
+                  <td className="font-mono-data text-[11px] text-muted-foreground">
                     {m.jobId.slice(0, 8)}
                   </td>
-                  <td className="font-mono-data whitespace-nowrap text-[12px] text-[var(--muted)]">
+                  <td className="font-mono-data whitespace-nowrap text-[12px] text-muted-foreground">
                     {m.dueAt
                       ? new Date(m.dueAt).toLocaleString("en-US", {
                           timeZone: "America/Chicago",

@@ -62,7 +62,7 @@ function NavGroup({
 }) {
   return (
     <div className="mb-4">
-      <p className="mb-1 px-2 text-[11px] font-medium text-zinc-500">{label}</p>
+      <p className="mb-1 px-2 text-[11px] font-medium text-zinc-400">{label}</p>
       <div className="flex flex-col gap-0.5">
         {links.map((link) => {
           const isActive = link.keys.includes(active);
@@ -99,7 +99,7 @@ export function StaffChrome({
           <Link href="/jobs" className="brand-mark text-[15px] tracking-tight text-white">
             RUTR
           </Link>
-          <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[10px] font-medium text-zinc-400">
+          <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[10px] font-medium text-zinc-300">
             Connect
           </span>
         </div>
@@ -112,15 +112,15 @@ export function StaffChrome({
 
         <div className="border-t border-zinc-800 px-4 py-3">
           <p className="text-[12px] font-medium text-zinc-200">Rutters</p>
-          <p className="text-[11px] text-zinc-500">Roofing &amp; Exteriors</p>
-          <p className="mt-2 text-[11px] text-zinc-500">
+          <p className="text-[11px] text-zinc-400">Roofing &amp; Exteriors</p>
+          <p className="mt-2 text-[11px] text-zinc-400">
             {live ? (
               <span className="inline-flex items-center gap-1.5 text-zinc-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 API · 5188
               </span>
             ) : (
-              <span>Staff console</span>
+              <span className="text-zinc-400">Staff console</span>
             )}
           </p>
         </div>
