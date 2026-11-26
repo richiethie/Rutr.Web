@@ -43,7 +43,7 @@ export default async function SettingsPage() {
 
       <div className="stagger-1 grid gap-4 lg:grid-cols-2">
         <section className="console-panel overflow-hidden lg:col-span-2">
-          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+          <div className="border-b border-border bg-muted px-5 py-3">
             <h2 className="text-[14px] font-semibold text-foreground">Appearance</h2>
             <p className="mt-0.5 text-[12px] text-muted-foreground">
               Light, dark, or match your OS — surfaces stay layered either way.
@@ -55,7 +55,7 @@ export default async function SettingsPage() {
         </section>
 
         <section className="console-panel overflow-hidden">
-          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+          <div className="border-b border-border bg-muted px-5 py-3">
             <h2 className="text-[14px] font-semibold text-foreground">Organization</h2>
           </div>
           <div className="p-5">
@@ -73,7 +73,7 @@ export default async function SettingsPage() {
         </section>
 
         <section className="console-panel overflow-hidden">
-          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+          <div className="border-b border-border bg-muted px-5 py-3">
             <h2 className="text-[14px] font-semibold text-foreground">Signed-in staff</h2>
           </div>
           <div className="p-5">
@@ -81,13 +81,13 @@ export default async function SettingsPage() {
               <ErrorState error={me.error} />
             ) : (
               <dl className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-lg border border-border bg-muted/40 p-3 dark:bg-muted/30">
+                <div className="rounded-lg border border-border bg-content p-3 dark:bg-muted">
                   <dt className="text-[11px] font-medium text-muted-foreground">Name</dt>
                   <dd className="mt-1 text-[13px] font-medium">
                     {staff!.displayName} · {staff!.role}
                   </dd>
                 </div>
-                <div className="rounded-lg border border-border bg-muted/40 p-3 dark:bg-muted/30">
+                <div className="rounded-lg border border-border bg-content p-3 dark:bg-muted">
                   <dt className="text-[11px] font-medium text-muted-foreground">Email</dt>
                   <dd className="mt-1 text-[13px] font-medium">{staff!.email}</dd>
                 </div>
@@ -104,7 +104,7 @@ export default async function SettingsPage() {
         </section>
 
         <section className="console-panel overflow-hidden lg:col-span-2">
-          <div className="border-b border-border bg-muted/50 px-5 py-3 dark:bg-muted/40">
+          <div className="border-b border-border bg-muted px-5 py-3">
             <h2 className="text-[14px] font-semibold text-foreground">Members &amp; roles</h2>
           </div>
           {!members.ok ? (

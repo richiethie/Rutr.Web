@@ -148,7 +148,7 @@ export function StaffChrome({
             </Link>
             <Link
               href="/approvals"
-              className="flex size-9 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-background/60 text-sidebar-foreground hover:bg-sidebar-accent dark:bg-muted"
+              className="flex size-9 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-secondary"
               title="Approvals"
               aria-label="Approvals"
             >
@@ -163,7 +163,7 @@ export function StaffChrome({
           <NavGroup label="System" links={system} active={active} />
         </nav>
 
-        <div className="mt-auto space-y-2 border-t border-sidebar-border bg-muted/30 p-3 dark:bg-muted/20">
+        <div className="mt-auto space-y-2 border-t border-sidebar-border p-3">
           <p className="px-1 text-[11px] text-sidebar-muted">
             {live ? (
               <span className="inline-flex items-center gap-1.5">
@@ -175,19 +175,21 @@ export function StaffChrome({
               "Staff console"
             )}
           </p>
-          <StaffSession variant="sidebar" />
+          <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/80 p-1 dark:bg-sidebar-accent/40">
+            <StaffSession variant="sidebar" />
+          </div>
         </div>
       </aside>
 
-      {/* Inset main — raised white/dark panel over canvas */}
-      <div className="relative m-2 flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-background shadow-sm dark:border-border-strong">
-        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-muted/40 px-4 dark:bg-muted/30">
+      {/* Inset main — white chrome; muted content well so cards lift (light) */}
+      <div className="relative m-2 flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-background dark:border-border">
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <h1 className="truncate text-[14px] font-medium text-foreground">{pageTitle}</h1>
             {live ? (
               <>
                 <span className="hidden h-4 w-px bg-border sm:block" />
-                <span className="hidden items-center gap-1.5 rounded-full border border-ok/20 bg-ok-soft px-2 py-0.5 text-[11px] font-medium text-ok sm:inline-flex">
+                <span className="hidden items-center gap-1.5 rounded-full bg-ok-soft px-2 py-0.5 text-[11px] font-medium text-ok sm:inline-flex">
                   <span className="size-1.5 rounded-full bg-ok" />
                   Live
                 </span>
@@ -197,7 +199,7 @@ export function StaffChrome({
           <StaffSearch />
         </header>
 
-        <main className="page-enter flex-1 overflow-auto bg-background">
+        <main className="page-enter flex-1 overflow-auto bg-content">
           <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">{children}</div>
         </main>
       </div>

@@ -10,7 +10,7 @@ export type StatCardItem = {
   tone?: "default" | "ok" | "warn" | "brand" | "danger";
 };
 
-/** Metric cards with footer wells — layered like shadcn blocks SectionCards. */
+/** White cards on muted content well — blocks SectionCards layering. */
 export function StatCards({ items }: { items: StatCardItem[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -33,7 +33,7 @@ export function StatCard({
 
   return (
     <div className="console-panel flex flex-col overflow-hidden">
-      <div className="flex flex-1 flex-col gap-3 p-4 pb-3">
+      <div className="flex flex-1 flex-col gap-2 p-4 pb-3">
         <div className="flex items-start justify-between gap-3">
           <p className="text-[13px] text-muted-foreground">{label}</p>
           {trend ? (
@@ -56,23 +56,32 @@ export function StatCard({
         <p className="display-title text-[26px] tracking-tight text-foreground tabular-nums">
           {value}
         </p>
+        {hint ? (
+          <div className="space-y-0.5 pt-1">
+            <p
+              className={cn(
+                "text-[12px] font-medium",
+                tone === "ok" && "text-ok",
+                tone === "warn" && "text-warn",
+                tone === "brand" && "text-brand",
+                tone === "danger" && "text-destructive",
+                tone === "default" && "text-foreground",
+              )}
+            >
+              {hint}
+            </p>
+            <p className="text-[12px] text-muted-foreground">
+              {tone === "ok"
+                ? "On track"
+                : tone === "warn"
+                  ? "Needs attention"
+                  : tone === "brand"
+                    ? "Connect pulse"
+                    : "From live API"}
+            </p>
+          </div>
+        ) : null}
       </div>
-      {hint ? (
-        <div className="border-t border-border bg-muted/70 px-4 py-2.5 dark:bg-muted/50">
-          <p
-            className={cn(
-              "text-[12px] font-medium",
-              tone === "ok" && "text-ok",
-              tone === "warn" && "text-warn",
-              tone === "brand" && "text-brand",
-              tone === "danger" && "text-destructive",
-              tone === "default" && "text-muted-foreground",
-            )}
-          >
-            {hint}
-          </p>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -85,8 +94,8 @@ export function PageToolbar({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted/60 p-2 sm:flex-row sm:items-center sm:justify-between dark:bg-muted/40">
-      <div className="min-w-0 px-1">{children}</div>
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0 rounded-lg bg-muted/80 p-1 dark:bg-muted/50">{children}</div>
       {actions ? (
         <div className="flex shrink-0 flex-wrap items-center gap-2 px-1">{actions}</div>
       ) : null}

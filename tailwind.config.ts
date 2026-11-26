@@ -45,6 +45,7 @@ export default {
         input: "var(--input)",
         ring: "var(--ring)",
         canvas: "var(--canvas)",
+        content: "var(--content)",
         brand: {
           DEFAULT: "var(--brand)",
           foreground: "var(--brand-foreground)",
