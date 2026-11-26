@@ -14,6 +14,7 @@ import {
 } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
 import { readToken } from "@/lib/auth";
+import { STAFF_PASSWORD_MIN, staffPasswordError } from "@/lib/password";
 
 type Mode = "invite" | "add";
 
@@ -67,6 +68,13 @@ export default function OnboardingTeamPage() {
 
     setFormError(null);
     setNotice(null);
+    if (mode === "add") {
+      const pwErr = staffPasswordError(temporaryPassword);
+      if (pwErr) {
+        setFormError(pwErr);
+        return;
+      }
+    }
     startTransition(async () => {
       try {
         if (mode === "add") {
@@ -219,9 +227,12 @@ export default function OnboardingTeamPage() {
                 className="console-input mt-1.5"
                 name="temporaryPassword"
                 type="password"
-                minLength={6}
+                minLength={STAFF_PASSWORD_MIN}
                 required
               />
+              <span className="mt-1.5 block text-[11px] font-normal text-muted-foreground">
+                At least {STAFF_PASSWORD_MIN} characters, with a letter and a number.
+              </span>
             </label>
           ) : null}
           {formError ? <p className="text-[12px] text-destructive">{formError}</p> : null}

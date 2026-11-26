@@ -14,11 +14,14 @@ function readErrorDetail(body: unknown, fallback: string): string {
   };
   if (b.error) return b.error;
   if (b.detail) return b.detail;
-  if (b.title) return b.title;
   if (b.errors) {
+    // Prefer Password[] (FluentValidation) when present — matches signup/accept-invite.
+    const passwordMsgs = b.errors.Password ?? b.errors.password;
+    if (passwordMsgs?.length) return passwordMsgs.join(" ");
     const first = Object.values(b.errors).flat()[0];
     if (first) return first;
   }
+  if (b.title) return b.title;
   return fallback;
 }
 

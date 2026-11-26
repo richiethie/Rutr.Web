@@ -6,19 +6,47 @@ import { AuthCard, AuthShell } from "@/components/AuthShell";
 import { signupStaff } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
 import { persistSession } from "@/lib/auth";
+import {
+  STAFF_PASSWORD_MAX,
+  STAFF_PASSWORD_MESSAGES,
+  STAFF_PASSWORD_MIN,
+  passwordsMatch,
+  staffPasswordError,
+} from "@/lib/password";
 
 export default function SignupPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  function validatePasswords(nextPassword = password, nextConfirm = confirmPassword) {
+    const strength = staffPasswordError(nextPassword);
+    setPasswordError(strength);
+    if (!nextConfirm) {
+      setConfirmError(null);
+    } else if (!passwordsMatch(nextPassword, nextConfirm)) {
+      setConfirmError(STAFF_PASSWORD_MESSAGES.mismatch);
+    } else {
+      setConfirmError(null);
+    }
+    return !strength && !!nextConfirm && passwordsMatch(nextPassword, nextConfirm);
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const email = String(form.get("email") ?? "").trim();
-    const password = String(form.get("password") ?? "");
     const displayName = String(form.get("displayName") ?? "").trim();
     const organizationName = String(form.get("organizationName") ?? "").trim();
     const brandPrimaryColor = String(form.get("brandPrimaryColor") ?? "").trim();
+
+    if (!validatePasswords()) {
+      setError(null);
+      return;
+    }
 
     setBusy(true);
     setError(null);
@@ -54,7 +82,7 @@ export default function SignupPage() {
         title="Create your account"
         description="Sign up creates your staff user and organization in one step."
       >
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <label className="block text-[12px] font-medium text-foreground">
             Your name
             <input
@@ -76,17 +104,65 @@ export default function SignupPage() {
               placeholder="jamie@acme-roofing.example"
             />
           </label>
-          <label className="block text-[12px] font-medium text-foreground">
-            Password
-            <input
-              className="console-input mt-1.5"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              minLength={6}
-              required
-            />
-          </label>
+          <div>
+            <label className="block text-[12px] font-medium text-foreground">
+              Password
+              <input
+                className="console-input mt-1.5"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                minLength={STAFF_PASSWORD_MIN}
+                maxLength={STAFF_PASSWORD_MAX}
+                required
+                value={password}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setPassword(next);
+                  validatePasswords(next, confirmPassword);
+                }}
+                onBlur={() => validatePasswords()}
+                aria-invalid={Boolean(passwordError)}
+                aria-describedby="signup-password-hint signup-password-error"
+              />
+            </label>
+            <p id="signup-password-hint" className="mt-1.5 text-[11px] text-muted-foreground">
+              At least {STAFF_PASSWORD_MIN} characters, with a letter and a number.
+            </p>
+            {passwordError ? (
+              <p id="signup-password-error" className="mt-1 text-[12px] text-destructive">
+                {passwordError}
+              </p>
+            ) : null}
+          </div>
+          <div>
+            <label className="block text-[12px] font-medium text-foreground">
+              Confirm password
+              <input
+                className="console-input mt-1.5"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                minLength={STAFF_PASSWORD_MIN}
+                maxLength={STAFF_PASSWORD_MAX}
+                required
+                value={confirmPassword}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setConfirmPassword(next);
+                  validatePasswords(password, next);
+                }}
+                onBlur={() => validatePasswords()}
+                aria-invalid={Boolean(confirmError)}
+                aria-describedby="signup-confirm-error"
+              />
+            </label>
+            {confirmError ? (
+              <p id="signup-confirm-error" className="mt-1 text-[12px] text-destructive">
+                {confirmError}
+              </p>
+            ) : null}
+          </div>
           <div className="border-t border-border pt-4">
             <p className="mb-3 text-[12px] font-medium text-muted-foreground">
               Organization
