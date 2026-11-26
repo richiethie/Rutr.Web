@@ -42,12 +42,15 @@ export default async function JobsPage({
               {filtered.length} shown · {jobs.length} total
             </span>
             {waiting > 0 ? (
-              <span className="console-badge console-badge-accent">
-                <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--signal)]" />
+              <span className="console-badge console-badge-warn">
+                <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-warn" />
                 {waiting} digests waiting
               </span>
             ) : (
-              <span className="console-badge console-badge-success">Queue clear</span>
+              <span className="console-badge console-badge-success">
+                <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                Queue clear
+              </span>
             )}
           </>
         }
@@ -106,11 +109,15 @@ export default async function JobsPage({
                   </td>
                   <td>
                     {job.pendingApprovals > 0 ? (
-                      <span className="console-badge console-badge-accent">
+                      <span className="console-badge console-badge-warn">
+                        <span className="h-1.5 w-1.5 rounded-full bg-warn" />
                         {job.pendingApprovals} waiting
                       </span>
                     ) : (
-                      <span className="console-badge console-badge-success">Clear</span>
+                      <span className="console-badge console-badge-success">
+                        <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                        Clear
+                      </span>
                     )}
                   </td>
                 </tr>

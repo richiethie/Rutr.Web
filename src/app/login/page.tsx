@@ -28,13 +28,16 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="page-enter w-full max-w-[360px]">
+      <div className="page-enter w-full max-w-[380px]">
         <div className="mb-8 text-center">
-          <p className="brand-mark text-[20px] text-foreground">RUTR</p>
-          <p className="mt-2 text-[13px] text-muted-foreground">Connect staff console</p>
+          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-[13px] font-semibold text-primary-foreground">
+            R
+          </div>
+          <p className="brand-mark text-[20px] text-foreground">RUTR Connect</p>
+          <p className="mt-2 text-[13px] text-muted-foreground">Staff console</p>
         </div>
 
-        <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h1 className="display-title text-[20px] text-foreground">Sign in</h1>
           <p className="mt-1 text-[13px] text-muted-foreground">
             Demo: pm@rutters.demo / rutters-demo

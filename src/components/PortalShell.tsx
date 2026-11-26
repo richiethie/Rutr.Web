@@ -9,7 +9,7 @@ export function PortalShell({
   organizationName: string;
 }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="portal-shell min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-4 px-5 sm:px-8">
           <div className="min-w-0">

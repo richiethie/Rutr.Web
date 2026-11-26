@@ -47,14 +47,22 @@ export default async function ApprovalsPage() {
             <span
               className={
                 pendingCount
-                  ? "console-badge console-badge-accent"
+                  ? "console-badge console-badge-warn"
                   : "console-badge console-badge-success"
               }
             >
+              <span
+                className={
+                  pendingCount
+                    ? "h-1.5 w-1.5 rounded-full bg-warn"
+                    : "h-1.5 w-1.5 rounded-full bg-ok"
+                }
+              />
               {pendingCount} pending
             </span>
             {readyCount > 0 ? (
               <span className="console-badge console-badge-accent">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                 {readyCount} ready to send
               </span>
             ) : null}
@@ -107,10 +115,17 @@ export default async function ApprovalsPage() {
                     <span
                       className={
                         item.status === "Approved"
-                          ? "console-badge console-badge-accent"
-                          : "console-badge"
+                          ? "console-badge console-badge-success"
+                          : "console-badge console-badge-warn"
                       }
                     >
+                      <span
+                        className={
+                          item.status === "Approved"
+                            ? "h-1.5 w-1.5 rounded-full bg-ok"
+                            : "h-1.5 w-1.5 rounded-full bg-warn"
+                        }
+                      />
                       {item.status === "Approved" ? "Ready to send" : "Pending"}
                     </span>
                   </td>

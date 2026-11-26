@@ -1,6 +1,7 @@
 import { ErrorState } from "@/components/ApiState";
 import { MemberRoleSelect, OrgEditForm } from "@/components/OrgSettings";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
+import { ThemeToggle } from "@/components/theme";
 import {
   fetchIntegrationStatus,
   fetchOrganization,
@@ -37,10 +38,22 @@ export default async function SettingsPage() {
     <StaffChrome active="settings" live={me.ok || org.ok}>
       <PageHeader
         title="Settings"
-        description="Org name, quiet hours, branding light, and staff roles (Admin / Pm / Sales)."
+        description="Appearance, org defaults, and staff roles (Admin / Pm / Sales)."
       />
 
       <div className="stagger-1 grid gap-4 lg:grid-cols-2">
+        <section className="console-panel p-5 lg:col-span-2">
+          <h2 className="display-title text-[15px] font-semibold text-foreground">
+            Appearance
+          </h2>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            Switch between light and dark. System follows your OS preference.
+          </p>
+          <div className="mt-4">
+            <ThemeToggle />
+          </div>
+        </section>
+
         <section className="console-panel p-5">
           <h2 className="display-title text-[15px] font-semibold text-[var(--console-text)]">
             Organization
