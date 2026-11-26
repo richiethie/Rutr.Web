@@ -70,38 +70,35 @@ export function TaskCreate({ defaultJobId }: { defaultJobId?: string }) {
 
 export function TaskRowActions({ task }: { task: TaskItem }) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false);
-  if (!editing) {
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="console-btn console-btn-ghost text-[12px]"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-        <DeleteButton
-          label="Delete"
-          confirm="Delete this task?"
-          onDelete={async () => {
-            await deleteTask(task.id);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <CrudPanel
+        title="Edit task"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit"
+        triggerClassName="console-btn console-btn-ghost text-[12px]"
+      >
+        <EntityForm
+          fields={fields(task)}
+          submitLabel="Save"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateTask(task.id, toWrite(values));
+            setOpen(false);
             router.refresh();
           }}
         />
-      </div>
-    );
-  }
-  return (
-    <EntityForm
-      fields={fields(task)}
-      submitLabel="Save"
-      onCancel={() => setEditing(false)}
-      onSubmit={async (values) => {
-        await updateTask(task.id, toWrite(values));
-        setEditing(false);
-        router.refresh();
-      }}
-    />
+      </CrudPanel>
+      <DeleteButton
+        label="Delete"
+        confirm="Delete this task?"
+        onDelete={async () => {
+          await deleteTask(task.id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

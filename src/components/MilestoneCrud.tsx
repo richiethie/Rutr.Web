@@ -78,38 +78,35 @@ export function MilestoneCreate({ defaultJobId }: { defaultJobId?: string }) {
 
 export function MilestoneRowActions({ milestone }: { milestone: Milestone }) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false);
-  if (!editing) {
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="console-btn console-btn-ghost text-[12px]"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-        <DeleteButton
-          label="Delete"
-          confirm="Delete this milestone?"
-          onDelete={async () => {
-            await deleteMilestone(milestone.id);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <CrudPanel
+        title="Edit milestone"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit"
+        triggerClassName="console-btn console-btn-ghost text-[12px]"
+      >
+        <EntityForm
+          fields={fields(milestone)}
+          submitLabel="Save"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateMilestone(milestone.id, toWrite(values));
+            setOpen(false);
             router.refresh();
           }}
         />
-      </div>
-    );
-  }
-  return (
-    <EntityForm
-      fields={fields(milestone)}
-      submitLabel="Save"
-      onCancel={() => setEditing(false)}
-      onSubmit={async (values) => {
-        await updateMilestone(milestone.id, toWrite(values));
-        setEditing(false);
-        router.refresh();
-      }}
-    />
+      </CrudPanel>
+      <DeleteButton
+        label="Delete"
+        confirm="Delete this milestone?"
+        onDelete={async () => {
+          await deleteMilestone(milestone.id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

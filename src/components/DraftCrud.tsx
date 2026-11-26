@@ -73,38 +73,35 @@ export function DraftCreate({ jobId }: { jobId: string }) {
 
 export function DraftEdit({ jobId, draft }: { jobId: string; draft: MessageDraft }) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false);
-  if (!editing) {
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="console-btn console-btn-ghost text-[12px]"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-        <DeleteButton
-          label="Delete"
-          confirm="Delete this draft?"
-          onDelete={async () => {
-            await deleteDraft(draft.id);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <CrudPanel
+        title="Edit draft"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit"
+        triggerClassName="console-btn console-btn-ghost text-[12px]"
+      >
+        <EntityForm
+          fields={fields(jobId, draft)}
+          submitLabel="Save draft"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateDraft(draft.id, toWrite(jobId, values));
+            setOpen(false);
             router.refresh();
           }}
         />
-      </div>
-    );
-  }
-  return (
-    <EntityForm
-      fields={fields(jobId, draft)}
-      submitLabel="Save draft"
-      onCancel={() => setEditing(false)}
-      onSubmit={async (values) => {
-        await updateDraft(draft.id, toWrite(jobId, values));
-        setEditing(false);
-        router.refresh();
-      }}
-    />
+      </CrudPanel>
+      <DeleteButton
+        label="Delete"
+        confirm="Delete this draft?"
+        onDelete={async () => {
+          await deleteDraft(draft.id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

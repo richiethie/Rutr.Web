@@ -77,11 +77,14 @@ export default async function JobDetailPage({
           </>
         }
         actions={
-          portalHref ? (
-            <Link href={portalHref} className="console-btn console-btn-secondary">
-              Open portal
-            </Link>
-          ) : null
+          <div className="flex flex-wrap items-center gap-2">
+            <JobEdit job={job} />
+            {portalHref ? (
+              <Link href={portalHref} className="console-btn console-btn-secondary">
+                Open portal
+              </Link>
+            ) : null}
+          </div>
         }
       />
 
@@ -166,11 +169,6 @@ export default async function JobDetailPage({
           </ul>
         </section>
       </div>
-
-      <section className="stagger-2 console-panel mt-4 p-5">
-        <h2 className="display-title mb-3 text-[15px] font-semibold">Edit job</h2>
-        <JobEdit job={job} />
-      </section>
 
       <section className="stagger-2 console-panel mt-4 overflow-hidden">
         <div className="border-b border-[var(--console-border)] bg-gradient-to-b from-[#fafbfd] to-[#f4f6fa] px-4 py-3">

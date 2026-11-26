@@ -67,16 +67,27 @@ export function PropertyCreate() {
 
 export function PropertyEdit({ property }: { property: Property }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="space-y-4">
-      <EntityForm
-        fields={propertyFields(property)}
-        submitLabel="Save property"
-        onSubmit={async (values) => {
-          await updateProperty(property.id, toWrite(values));
-          router.refresh();
-        }}
-      />
+    <div className="flex flex-wrap items-center gap-2">
+      <CrudPanel
+        title="Edit property"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit property"
+        triggerClassName="console-btn console-btn-secondary"
+      >
+        <EntityForm
+          fields={propertyFields(property)}
+          submitLabel="Save property"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateProperty(property.id, toWrite(values));
+            setOpen(false);
+            router.refresh();
+          }}
+        />
+      </CrudPanel>
       <DeleteButton
         confirm="Delete this property?"
         onDelete={async () => {

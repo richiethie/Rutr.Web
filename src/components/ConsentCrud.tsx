@@ -82,38 +82,35 @@ export function ConsentCreate({ defaultJobId }: { defaultJobId?: string }) {
 
 export function ConsentRowActions({ consent }: { consent: Consent }) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false);
-  if (!editing) {
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="console-btn console-btn-ghost text-[12px]"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-        <DeleteButton
-          label="Delete"
-          confirm="Delete this consent record?"
-          onDelete={async () => {
-            await deleteConsent(consent.id);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <CrudPanel
+        title="Edit consent"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit"
+        triggerClassName="console-btn console-btn-ghost text-[12px]"
+      >
+        <EntityForm
+          fields={fields(consent)}
+          submitLabel="Save"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateConsent(consent.id, toWrite(values));
+            setOpen(false);
             router.refresh();
           }}
         />
-      </div>
-    );
-  }
-  return (
-    <EntityForm
-      fields={fields(consent)}
-      submitLabel="Save"
-      onCancel={() => setEditing(false)}
-      onSubmit={async (values) => {
-        await updateConsent(consent.id, toWrite(values));
-        setEditing(false);
-        router.refresh();
-      }}
-    />
+      </CrudPanel>
+      <DeleteButton
+        label="Delete"
+        confirm="Delete this consent record?"
+        onDelete={async () => {
+          await deleteConsent(consent.id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

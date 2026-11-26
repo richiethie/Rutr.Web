@@ -48,38 +48,35 @@ export function NoteCreate({ defaultJobId }: { defaultJobId?: string }) {
 
 export function NoteRowActions({ note }: { note: Note }) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false);
-  if (!editing) {
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="console-btn console-btn-ghost text-[12px]"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-        <DeleteButton
-          label="Delete"
-          confirm="Delete this note?"
-          onDelete={async () => {
-            await deleteNote(note.id);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <CrudPanel
+        title="Edit note"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit"
+        triggerClassName="console-btn console-btn-ghost text-[12px]"
+      >
+        <EntityForm
+          fields={fields(note)}
+          submitLabel="Save"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateNote(note.id, toWrite(values));
+            setOpen(false);
             router.refresh();
           }}
         />
-      </div>
-    );
-  }
-  return (
-    <EntityForm
-      fields={fields(note)}
-      submitLabel="Save"
-      onCancel={() => setEditing(false)}
-      onSubmit={async (values) => {
-        await updateNote(note.id, toWrite(values));
-        setEditing(false);
-        router.refresh();
-      }}
-    />
+      </CrudPanel>
+      <DeleteButton
+        label="Delete"
+        confirm="Delete this note?"
+        onDelete={async () => {
+          await deleteNote(note.id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

@@ -102,7 +102,13 @@ export function JobCreate() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   return (
-    <CrudPanel title="New job" open={open} onOpenChange={setOpen} triggerLabel="New job">
+    <CrudPanel
+      title="New job"
+      open={open}
+      onOpenChange={setOpen}
+      triggerLabel="New job"
+      wide
+    >
       <EntityForm
         fields={jobFields()}
         submitLabel="Create job"
@@ -120,24 +126,36 @@ export function JobCreate() {
 
 export function JobEdit({ job }: { job: JobDetail }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="space-y-4">
-      <EntityForm
-        fields={jobFields(job)}
-        submitLabel="Save job"
-        onSubmit={async (values) => {
-          const body = toWrite(values);
-          await updateJob(job.id, body);
-          if (body.status || body.stage) {
-            try {
-              await updateJobStatus(job.id, body.status ?? job.status, body.stage);
-            } catch {
-              /* status endpoint may land with full CRUD */
+    <div className="flex flex-wrap items-center gap-2">
+      <CrudPanel
+        title="Edit job"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit job"
+        triggerClassName="console-btn console-btn-secondary"
+        wide
+      >
+        <EntityForm
+          fields={jobFields(job)}
+          submitLabel="Save job"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            const body = toWrite(values);
+            await updateJob(job.id, body);
+            if (body.status || body.stage) {
+              try {
+                await updateJobStatus(job.id, body.status ?? job.status, body.stage);
+              } catch {
+                /* status endpoint may land with full CRUD */
+              }
             }
-          }
-          router.refresh();
-        }}
-      />
+            setOpen(false);
+            router.refresh();
+          }}
+        />
+      </CrudPanel>
       <DeleteButton
         confirm="Delete this job?"
         onDelete={async () => {

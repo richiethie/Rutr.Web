@@ -47,10 +47,8 @@ export default async function ContactDetailPage({
             <span className="console-badge">{contact.preferredChannel}</span>
           </>
         }
+        actions={<ContactEdit contact={contact} />}
       />
-      <div className="console-panel max-w-lg p-5">
-        <ContactEdit contact={contact} />
-      </div>
     </StaffChrome>
   );
 }

@@ -61,16 +61,27 @@ export function ContactCreate() {
 
 export function ContactEdit({ contact }: { contact: Contact }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="space-y-4">
-      <EntityForm
-        fields={contactFields(contact)}
-        submitLabel="Save contact"
-        onSubmit={async (values) => {
-          await updateContact(contact.id, toWrite(values));
-          router.refresh();
-        }}
-      />
+    <div className="flex flex-wrap items-center gap-2">
+      <CrudPanel
+        title="Edit contact"
+        open={open}
+        onOpenChange={setOpen}
+        triggerLabel="Edit contact"
+        triggerClassName="console-btn console-btn-secondary"
+      >
+        <EntityForm
+          fields={contactFields(contact)}
+          submitLabel="Save contact"
+          onCancel={() => setOpen(false)}
+          onSubmit={async (values) => {
+            await updateContact(contact.id, toWrite(values));
+            setOpen(false);
+            router.refresh();
+          }}
+        />
+      </CrudPanel>
       <DeleteButton
         confirm="Delete this contact?"
         onDelete={async () => {

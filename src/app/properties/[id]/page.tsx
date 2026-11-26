@@ -47,10 +47,8 @@ export default async function PropertyDetailPage({
             <span className="console-badge">{property.jobCount} jobs</span>
           </>
         }
+        actions={<PropertyEdit property={property} />}
       />
-      <div className="console-panel max-w-lg p-5">
-        <PropertyEdit property={property} />
-      </div>
     </StaffChrome>
   );
 }

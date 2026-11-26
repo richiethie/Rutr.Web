@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { Dialog } from "@/components/ui/dialog";
 import { ApiError } from "@/lib/api/errors";
 
 export type FieldDef = {
@@ -15,7 +16,7 @@ export type FieldDef = {
 };
 
 const fieldClass =
-  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none placeholder:text-zinc-600 focus:border-ring focus:ring-2 focus:ring-ring/10";
+  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20";
 
 export function EntityForm({
   fields,
@@ -129,7 +130,12 @@ export function EntityForm({
         </label>
       ))}
       {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
-      <div className="flex flex-wrap gap-2 pt-1">
+      <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
+        {onCancel ? (
+          <button type="button" className="console-btn console-btn-ghost" onClick={onCancel}>
+            Cancel
+          </button>
+        ) : null}
         <button
           type="submit"
           disabled={pending}
@@ -141,11 +147,6 @@ export function EntityForm({
         >
           {pending ? "Saving…" : submitLabel}
         </button>
-        {onCancel ? (
-          <button type="button" className="console-btn console-btn-ghost" onClick={onCancel}>
-            Cancel
-          </button>
-        ) : null}
       </div>
     </form>
   );
@@ -196,35 +197,44 @@ export function DeleteButton({
   );
 }
 
+/** Create/edit trigger → modal dialog (replaces inline CrudPanel expand). */
 export function CrudPanel({
   title,
   open,
   onOpenChange,
   children,
   triggerLabel = "New",
+  description,
+  wide,
+  triggerClassName,
 }: {
   title: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   triggerLabel?: string;
+  description?: string;
+  wide?: boolean;
+  triggerClassName?: string;
 }) {
   return (
-    <div>
-      {!open ? (
-        <button
-          type="button"
-          className="console-btn console-btn-primary"
-          onClick={() => onOpenChange(true)}
-        >
-          {triggerLabel}
-        </button>
-      ) : (
-        <div className="max-w-lg rounded-lg border border-border bg-card p-5">
-          <h2 className="mb-4 text-[14px] font-medium text-foreground">{title}</h2>
-          {children}
-        </div>
-      )}
-    </div>
+    <>
+      <button
+        type="button"
+        className={triggerClassName ?? "console-btn console-btn-primary"}
+        onClick={() => onOpenChange(true)}
+      >
+        {triggerLabel}
+      </button>
+      <Dialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title={title}
+        description={description}
+        wide={wide}
+      >
+        {children}
+      </Dialog>
+    </>
   );
 }
