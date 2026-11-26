@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StaffSearch } from "@/components/StaffSearch";
 import { StaffSession } from "@/components/StaffSession";
 
 const fieldOps = [
@@ -136,13 +137,7 @@ export function StaffChrome({
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div
-              className="hidden h-8 w-56 items-center rounded-md border border-border bg-background px-3 text-[12px] text-muted-foreground md:flex"
-              title="Search coming later"
-            >
-              <span className="mr-2 text-zinc-400">⌘K</span>
-              Search…
-            </div>
+            <StaffSearch />
             <StaffSession />
           </div>
         </header>
