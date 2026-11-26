@@ -114,6 +114,7 @@ export function DraftActions({
             startTransition(async () => {
               try {
                 await approveDraft(draftId);
+                // Stay on Approved/Send UI; refresh keeps the row (queue includes Approved).
                 setMode("approved");
                 await refresh();
               } catch (err) {

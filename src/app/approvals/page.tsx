@@ -28,10 +28,14 @@ export default async function ApprovalsPage() {
       const job = await loadApi(() => fetchJob(item.jobId));
       return {
         ...item,
+        status: item.status || "PendingApproval",
         portalToken: job.ok ? job.data.portalToken : null,
       };
     }),
   );
+
+  const pendingCount = withPortal.filter((i) => i.status === "PendingApproval").length;
+  const readyCount = withPortal.filter((i) => i.status === "Approved").length;
 
   return (
     <StaffChrome active="approvals" live>
@@ -39,15 +43,22 @@ export default async function ApprovalsPage() {
         title="Approvals"
         description="Digests wait here until a PM verifies evidence. Approve → send marks audit and unlocks portal updates."
         meta={
-          <span
-            className={
-              withPortal.length
-                ? "console-badge console-badge-accent"
-                : "console-badge console-badge-success"
-            }
-          >
-            {withPortal.length} in queue
-          </span>
+          <>
+            <span
+              className={
+                pendingCount
+                  ? "console-badge console-badge-accent"
+                  : "console-badge console-badge-success"
+              }
+            >
+              {pendingCount} pending
+            </span>
+            {readyCount > 0 ? (
+              <span className="console-badge console-badge-accent">
+                {readyCount} ready to send
+              </span>
+            ) : null}
+          </>
         }
       />
 
@@ -64,6 +75,7 @@ export default async function ApprovalsPage() {
                 <th>Job</th>
                 <th>Channel</th>
                 <th>Digest</th>
+                <th>Status</th>
                 <th>Evidence</th>
                 <th className="text-right">Actions</th>
               </tr>
@@ -74,7 +86,7 @@ export default async function ApprovalsPage() {
                   <td>
                     <Link
                       href={`/jobs/${item.jobId}`}
-                      className="font-semibold tracking-tight transition-colors hover:text-[var(--console-accent)]"
+                      className="font-semibold tracking-tight transition-colors hover:text-foreground"
                     >
                       {item.addressLine1}
                     </Link>
@@ -91,13 +103,24 @@ export default async function ApprovalsPage() {
                       {item.body}
                     </p>
                   </td>
+                  <td>
+                    <span
+                      className={
+                        item.status === "Approved"
+                          ? "console-badge console-badge-accent"
+                          : "console-badge"
+                      }
+                    >
+                      {item.status === "Approved" ? "Ready to send" : "Pending"}
+                    </span>
+                  </td>
                   <td className="font-mono-data max-w-[12rem] text-[11px] text-muted-foreground">
                     {item.evidenceSummary}
                   </td>
                   <td className="text-right">
                     <DraftActions
                       draftId={item.draftId}
-                      status="PendingApproval"
+                      status={item.status}
                       channel={item.channel}
                       portalHref={item.portalToken ? `/p/${item.portalToken}` : null}
                     />

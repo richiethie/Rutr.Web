@@ -128,6 +128,8 @@ export type ApprovalItem = {
   subject: string;
   body: string;
   evidenceSummary: string;
+  /** PendingApproval | Approved (queue); Sent/Rejected leave the queue. */
+  status: string;
   createdAt: string;
 };
 

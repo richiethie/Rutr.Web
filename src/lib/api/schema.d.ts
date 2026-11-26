@@ -1020,7 +1020,85 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/integrations/{provider}/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    provider: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["IntegrationConnectionDto"];
+                        "application/json": components["schemas"]["IntegrationConnectionDto"];
+                        "text/json": components["schemas"]["IntegrationConnectionDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/integrations/connections/{provider}/disconnect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    provider: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["IntegrationConnectionDto"];
+                        "application/json": components["schemas"]["IntegrationConnectionDto"];
+                        "text/json": components["schemas"]["IntegrationConnectionDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/integrations/{provider}/disconnect": {
         parameters: {
             query?: never;
             header?: never;
@@ -2340,6 +2418,7 @@ export interface components {
             subject?: string | null;
             body?: string | null;
             evidenceSummary?: string | null;
+            status?: string | null;
             /** Format: date-time */
             createdAt?: string;
         };
