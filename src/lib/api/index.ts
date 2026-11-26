@@ -3,6 +3,8 @@
  * Paths match Rutr.Api controllers + CrmDtos REST conventions.
  */
 import { apiFetch, API_URL } from "@/lib/api/http";
+import { ApiError } from "@/lib/api/errors";
+import { clientAuthHeaders } from "@/lib/auth";
 import type {
   ApprovalItem,
   AuditEvent,
@@ -265,6 +267,55 @@ export async function createEvidence(body: EvidenceWrite): Promise<Evidence> {
     method: "POST",
     body: JSON.stringify(body),
   });
+}
+
+/** Multipart image upload (file explorer / drag-drop). */
+export async function createEvidenceUpload(input: {
+  jobId: string;
+  caption: string;
+  file: File;
+  externalCompanyCamId?: string | null;
+  customerVisible?: boolean;
+}): Promise<Evidence> {
+  const form = new FormData();
+  form.append("jobId", input.jobId);
+  form.append("caption", input.caption);
+  form.append("file", input.file);
+  if (input.externalCompanyCamId) {
+    form.append("externalCompanyCamId", input.externalCompanyCamId);
+  }
+  form.append("customerVisible", String(Boolean(input.customerVisible)));
+
+  // Do not set Content-Type — browser sets multipart boundary.
+  const auth =
+    typeof window === "undefined"
+      ? { "X-Demo-Auth": "pm" }
+      : clientAuthHeaders();
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/api/v1/evidence/upload`, {
+      method: "POST",
+      headers: { ...auth },
+      body: form,
+      cache: "no-store",
+    });
+  } catch {
+    throw new ApiError(0, "/api/v1/evidence/upload", "Cannot reach API. Is Rutr.Api running on :5188?");
+  }
+
+  if (!res.ok) {
+    let detail = `API ${res.status}`;
+    try {
+      const body = (await res.json()) as { title?: string; detail?: string; error?: string };
+      detail = body.error || body.detail || body.title || detail;
+    } catch {
+      /* ignore */
+    }
+    throw new ApiError(res.status, "/api/v1/evidence/upload", detail);
+  }
+
+  return res.json() as Promise<Evidence>;
 }
 
 export async function updateEvidenceVisibility(
