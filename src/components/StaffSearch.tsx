@@ -190,7 +190,7 @@ export function StaffSearch() {
       <button
         type="button"
         onClick={openPalette}
-        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-border bg-muted px-3 text-left text-[12px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground dark:bg-muted md:flex"
+        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-border bg-muted px-3 text-left text-[12px] text-muted-foreground transition-colors hover:border-border-strong hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 dark:bg-muted dark:hover:bg-accent md:flex"
         aria-label="Search"
       >
         <span className="truncate">Search…</span>
@@ -218,13 +218,13 @@ export function StaffSearch() {
             aria-label="Search"
             className="relative mx-auto mt-[12vh] w-full max-w-xl overflow-hidden rounded-xl border border-border bg-background shadow-lg"
           >
-            <div className="flex items-center gap-2 border-b border-border px-3">
+            <div className="flex items-center gap-2 border-b border-border bg-background px-3">
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search jobs, contacts, properties…"
-                className="h-12 w-full bg-transparent text-[14px] text-foreground outline-none placeholder:text-zinc-600"
+                className="h-12 w-full bg-transparent text-[14px] text-foreground caret-foreground outline-none placeholder:text-muted-foreground hover:text-foreground focus:text-foreground focus-visible:outline-none"
                 aria-controls={listId}
                 aria-autocomplete="list"
                 onKeyDown={(e) => {
@@ -271,8 +271,8 @@ export function StaffSearch() {
                               aria-selected={isActive}
                               className={
                                 isActive
-                                  ? "flex w-full flex-col rounded-md bg-zinc-100 px-3 py-2 text-left"
-                                  : "flex w-full flex-col rounded-md px-3 py-2 text-left hover:bg-muted"
+                                  ? "flex w-full flex-col rounded-md bg-accent px-3 py-2 text-left text-accent-foreground"
+                                  : "flex w-full flex-col rounded-md px-3 py-2 text-left text-foreground hover:bg-accent/70 hover:text-accent-foreground"
                               }
                               onMouseEnter={() => setActive(index)}
                               onClick={() => go(hit)}

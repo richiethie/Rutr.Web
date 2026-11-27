@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { useId, useState, useTransition, type FormEvent, type ReactNode } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { ApiError } from "@/lib/api/errors";
 
@@ -15,8 +15,11 @@ export type FieldDef = {
   defaultValue?: string | number | boolean | null;
 };
 
-const fieldClass =
-  "mt-1.5 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20";
+const controlClass =
+  "flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50";
+
+const textareaClass =
+  "flex min-h-[96px] w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50";
 
 export function EntityForm({
   fields,
@@ -31,6 +34,7 @@ export function EntityForm({
   onCancel?: () => void;
   danger?: boolean;
 }) {
+  const formId = useId();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -66,71 +70,97 @@ export function EntityForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {fields.map((field) => (
-        <label key={field.name} className="block">
-          <span className="text-[12px] font-medium text-foreground">
-            {field.label}
-            {field.required ? " *" : ""}
-          </span>
-          {field.type === "textarea" ? (
-            <textarea
-              name={field.name}
-              required={field.required}
-              placeholder={field.placeholder}
-              defaultValue={
-                field.defaultValue === null || field.defaultValue === undefined
-                  ? ""
-                  : String(field.defaultValue)
-              }
-              rows={4}
-              className={fieldClass}
-            />
-          ) : field.type === "checkbox" ? (
-            <span className="mt-2 flex items-center gap-2 text-[13px] text-foreground">
+    <form onSubmit={handleSubmit} className="space-y-4 text-left">
+      {fields.map((field) => {
+        const controlId = `${formId}-${field.name}`;
+        if (field.type === "checkbox") {
+          return (
+            <div key={field.name} className="flex items-start gap-2 text-left">
               <input
+                id={controlId}
                 type="checkbox"
                 name={field.name}
                 defaultChecked={Boolean(field.defaultValue)}
-                className="h-4 w-4 rounded border-input accent-foreground"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-foreground"
               />
-              {field.placeholder ?? field.label}
-            </span>
-          ) : field.type === "select" ? (
-            <select
-              name={field.name}
-              required={field.required}
-              defaultValue={
-                field.defaultValue === null || field.defaultValue === undefined
-                  ? ""
-                  : String(field.defaultValue)
-              }
-              className={fieldClass}
+              <label
+                htmlFor={controlId}
+                className="text-left text-[13px] leading-snug text-foreground"
+              >
+                {field.placeholder ?? field.label}
+              </label>
+            </div>
+          );
+        }
+
+        return (
+          <div key={field.name} className="space-y-1.5 text-left">
+            <label
+              htmlFor={controlId}
+              className="block text-left text-[12px] font-medium leading-none text-foreground"
             >
-              {(field.options ?? []).map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type={field.type ?? "text"}
-              name={field.name}
-              required={field.required}
-              placeholder={field.placeholder}
-              defaultValue={
-                field.defaultValue === null || field.defaultValue === undefined
-                  ? ""
-                  : String(field.defaultValue)
-              }
-              className={fieldClass}
-            />
-          )}
-        </label>
-      ))}
-      {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
-      <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
+              {field.label}
+              {field.required ? (
+                <span className="text-destructive" aria-hidden>
+                  {" "}
+                  *
+                </span>
+              ) : null}
+            </label>
+            {field.type === "textarea" ? (
+              <textarea
+                id={controlId}
+                name={field.name}
+                required={field.required}
+                placeholder={field.placeholder}
+                defaultValue={
+                  field.defaultValue === null || field.defaultValue === undefined
+                    ? ""
+                    : String(field.defaultValue)
+                }
+                rows={4}
+                className={textareaClass}
+              />
+            ) : field.type === "select" ? (
+              <select
+                id={controlId}
+                name={field.name}
+                required={field.required}
+                defaultValue={
+                  field.defaultValue === null || field.defaultValue === undefined
+                    ? ""
+                    : String(field.defaultValue)
+                }
+                className={controlClass}
+              >
+                {(field.options ?? []).map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={controlId}
+                type={field.type ?? "text"}
+                name={field.name}
+                required={field.required}
+                placeholder={field.placeholder}
+                defaultValue={
+                  field.defaultValue === null || field.defaultValue === undefined
+                    ? ""
+                    : String(field.defaultValue)
+                }
+                className={controlClass}
+              />
+            )}
+          </div>
+        );
+      })}
+      {error ? (
+        <p className="text-left text-[12px] text-destructive">{error}</p>
+      ) : null}
+      <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border pt-4">
         {onCancel ? (
           <button type="button" className="console-btn console-btn-ghost" onClick={onCancel}>
             Cancel
@@ -166,7 +196,7 @@ export function DeleteButton({
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <div>
+    <div className="text-left">
       <button
         type="button"
         disabled={pending}

@@ -171,7 +171,7 @@ export function EvidenceCreate({ jobId }: { jobId: string }) {
               </button>
             </div>
 
-            <form onSubmit={onSubmit} className="space-y-4 px-5 py-5">
+            <form onSubmit={onSubmit} className="space-y-4 px-5 py-5 text-left">
               <div
                 role="button"
                 tabIndex={0}
@@ -227,36 +227,54 @@ export function EvidenceCreate({ jobId }: { jobId: string }) {
                 />
               </div>
 
-              <label className="block text-[12px] font-medium text-foreground">
-                Caption *
+              <div className="space-y-1.5 text-left">
+                <label
+                  htmlFor="evidence-caption"
+                  className="block text-left text-[12px] font-medium leading-none text-foreground"
+                >
+                  Caption *
+                </label>
                 <input
-                  className="console-input mt-1.5"
+                  id="evidence-caption"
+                  className="console-input text-left placeholder:text-left"
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   required
                   placeholder="e.g. North slope after tear-off"
                 />
-              </label>
+              </div>
 
-              <label className="block text-[12px] font-medium text-foreground">
-                CompanyCam id
+              <div className="space-y-1.5 text-left">
+                <label
+                  htmlFor="evidence-cc-id"
+                  className="block text-left text-[12px] font-medium leading-none text-foreground"
+                >
+                  CompanyCam id
+                </label>
                 <input
-                  className="console-input mt-1.5"
+                  id="evidence-cc-id"
+                  className="console-input text-left placeholder:text-left"
                   value={companyCamId}
                   onChange={(e) => setCompanyCamId(e.target.value)}
                   placeholder="Optional"
                 />
-              </label>
+              </div>
 
-              <label className="flex items-center gap-2 text-[13px] text-foreground">
+              <div className="flex items-start gap-2 text-left">
                 <input
+                  id="evidence-portal-visible"
                   type="checkbox"
                   checked={customerVisible}
                   onChange={(e) => setCustomerVisible(e.target.checked)}
-                  className="h-4 w-4 rounded border-input accent-foreground"
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-foreground"
                 />
-                Show on homeowner portal
-              </label>
+                <label
+                  htmlFor="evidence-portal-visible"
+                  className="text-left text-[13px] leading-snug text-foreground"
+                >
+                  Show on homeowner portal
+                </label>
+              </div>
 
               {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
 
