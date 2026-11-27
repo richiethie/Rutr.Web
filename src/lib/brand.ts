@@ -37,40 +37,55 @@ export function normalizeBrandColor(color: string | null | undefined): string {
   return parseHex(color) ? color.trim() : DEFAULT_BRAND;
 }
 
-/** Soft fill + ring + readable foreground on brand solid. */
+/**
+ * Soft fill + ring + readable foreground on brand solid.
+ * Applied on StaffBrandScope so staff chrome follows org brandPrimaryColor.
+ */
 export function brandTokenSet(color: string | null | undefined): Record<string, string> {
   const hex = normalizeBrandColor(color);
   const rgb = parseHex(hex) ?? { r: 3, g: 105, b: 161 };
   const soft = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.14)`;
-  const ring = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.22)`;
+  const ring = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.28)`;
   const fg = relativeLuminance(rgb.r, rgb.g, rgb.b) > 0.55 ? "#18181b" : "#fafafa";
-  // Slightly darken for hover if needed
   const deep = `rgb(${clamp(rgb.r * 0.85)}, ${clamp(rgb.g * 0.85)}, ${clamp(rgb.b * 0.85)})`;
   return {
+    // Core brand
     "--brand": hex,
     "--brand-foreground": fg,
     "--brand-soft": soft,
     "--brand-ring": ring,
+    // Aliases used across console / signal copy
     "--signal": hex,
+    "--signal-deep": deep,
     "--signal-soft": soft,
     "--signal-glow": ring,
     "--console-accent": hex,
     "--console-accent-hover": deep,
     "--console-accent-soft": soft,
     "--console-accent-ring": ring,
+    // Drive shadcn/primary + focus ring tokens (staff scope only)
+    "--primary": hex,
+    "--primary-foreground": fg,
+    "--ring": hex,
     "--sidebar-primary": hex,
     "--sidebar-primary-foreground": fg,
-    "--ring": hex,
+    // Status “info” was hardcoded sky — follow brand in staff chrome
+    "--info": hex,
+    "--info-soft": soft,
+    // Native checkbox / radio / progress accents
+    accentColor: hex,
   };
 }
 
 /**
- * What org brandPrimaryColor drives in the staff console (Phase 1).
- * Document for Richie / settings copy.
+ * What org brandPrimaryColor drives in the staff console.
  */
 export const BRAND_COLOR_DRIVES = [
-  "Sidebar logo mark + “New job” primary button (--sidebar-primary)",
-  "Brand accents: badges, key links, console accent (--brand / --signal)",
-  "Input focus rings (--ring / --brand-ring)",
-  "Active nav emphasis when using brand-soft highlights",
+  "Primary buttons (.console-btn-primary / --primary)",
+  "Focus + outline rings (--ring / --brand-ring)",
+  "Input focus borders (.console-input / EntityForm)",
+  "Native checkbox/radio accent-color",
+  "Active nav inset + brand-soft well",
+  "Sidebar logo mark + filter/tab selected pills",
+  "Brand badges, key links, console accent (--brand / --signal)",
 ] as const;

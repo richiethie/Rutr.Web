@@ -190,7 +190,7 @@ export function StaffSearch() {
       <button
         type="button"
         onClick={openPalette}
-        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-border bg-muted px-3 text-left text-[12px] text-muted-foreground transition-colors hover:border-border-strong hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 dark:bg-muted dark:hover:bg-accent md:flex"
+        className="hidden h-8 w-56 items-center gap-2 rounded-md border border-border bg-muted px-3 text-left text-[12px] text-muted-foreground transition-colors hover:border-border-strong hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_var(--brand-ring)] dark:bg-muted dark:hover:bg-accent md:flex"
         aria-label="Search"
       >
         <span className="truncate">Search…</span>

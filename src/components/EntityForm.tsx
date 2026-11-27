@@ -16,10 +16,10 @@ export type FieldDef = {
 };
 
 const controlClass =
-  "flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50";
+  "flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-brand focus-visible:shadow-[0_0_0_3px_var(--brand-ring)] disabled:cursor-not-allowed disabled:opacity-50";
 
 const textareaClass =
-  "flex min-h-[96px] w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50";
+  "flex min-h-[96px] w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-brand focus-visible:shadow-[0_0_0_3px_var(--brand-ring)] disabled:cursor-not-allowed disabled:opacity-50";
 
 export function EntityForm({
   fields,
@@ -81,7 +81,7 @@ export function EntityForm({
                 type="checkbox"
                 name={field.name}
                 defaultChecked={Boolean(field.defaultValue)}
-                className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-foreground"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-brand"
               />
               <label
                 htmlFor={controlId}

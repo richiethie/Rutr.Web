@@ -288,7 +288,7 @@ export default function OnboardingImportPage() {
                   key={id}
                   className={
                     choice === id
-                      ? "flex cursor-pointer gap-3 rounded-lg border border-primary bg-muted px-3 py-3"
+                      ? "flex cursor-pointer gap-3 rounded-lg border border-brand bg-brand-soft/40 px-3 py-3"
                       : "flex cursor-pointer gap-3 rounded-lg border border-border bg-card px-3 py-3 hover:bg-muted/60"
                   }
                 >
@@ -369,7 +369,7 @@ export default function OnboardingImportPage() {
                   type="checkbox"
                   checked={dryRun}
                   onChange={(e) => setDryRun(e.target.checked)}
-                  className="h-4 w-4 rounded border-input accent-foreground"
+                  className="h-4 w-4 rounded border-input accent-brand"
                 />
                 Dry-run (preview counts — no writes)
               </label>

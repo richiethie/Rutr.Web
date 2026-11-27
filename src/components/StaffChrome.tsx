@@ -138,7 +138,7 @@ export function StaffChrome({
             </Link>
             <Link
               href="/approvals"
-              className="flex size-9 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-sidebar-accent text-sidebar-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+              className="flex size-9 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-sidebar-accent text-sidebar-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_var(--brand-ring)]"
               title="Approvals"
               aria-label="Approvals"
             >

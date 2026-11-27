@@ -84,7 +84,7 @@ export function StaffBrandScope({ children }: { children: ReactNode }) {
   return (
     <OrgBrandContext.Provider value={brand}>
       <div
-        className="flex min-h-svh w-full bg-canvas text-foreground"
+        className="staff-brand-scope flex min-h-svh w-full bg-canvas text-foreground"
         style={style}
         data-org={brand.name}
       >

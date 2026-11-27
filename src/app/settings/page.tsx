@@ -67,8 +67,9 @@ export default async function SettingsPage() {
                   slug · {org.data.slug} · id · {org.data.id}
                 </p>
                 <p className="mb-3 text-[12px] text-muted-foreground">
-                  Brand color drives sidebar mark / New job button, active nav accent,
-                  focus rings, and key brand links — not the whole zinc surface system.
+                  Brand color drives primary buttons, focus/outline rings, input focus,
+                  checkbox accents, active nav, selected filters/tabs, and brand links —
+                  zinc chrome stays neutral.
                 </p>
                 <OrgEditForm org={org.data} />
               </>
