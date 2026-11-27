@@ -12,11 +12,11 @@ export type OnboardingStepId = (typeof steps)[number]["id"];
 
 export function AuthBrand() {
   return (
-    <Link href="/login" className="flex items-center gap-2 self-center font-medium">
-      <div className="flex size-6 items-center justify-center rounded-md bg-primary text-[11px] font-semibold text-primary-foreground">
+    <Link href="/login" className="flex items-center gap-2.5 self-center font-medium">
+      <div className="flex size-8 items-center justify-center rounded-md bg-primary text-[13px] font-semibold text-primary-foreground">
         R
       </div>
-      <span className="brand-mark text-[15px]">RUTR Connect</span>
+      <span className="brand-mark text-[18px] tracking-tight">RUTR Connect</span>
     </Link>
   );
 }
@@ -67,9 +67,9 @@ export function AuthShell({
   wide?: boolean;
 }) {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-canvas p-6 md:p-10">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-8 bg-canvas p-6 md:p-10">
       <div
-        className={`page-enter flex w-full flex-col gap-6 ${wide ? "max-w-xl" : "max-w-sm"}`}
+        className={`page-enter flex w-full flex-col gap-7 ${wide ? "max-w-2xl" : "max-w-md md:max-w-lg"}`}
       >
         <AuthBrand />
         {step ? <OnboardingSteps active={step} /> : null}
@@ -89,12 +89,16 @@ export function AuthCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-      <h1 className="display-title text-[20px] text-foreground">{title}</h1>
+    <div className="rounded-xl border border-border bg-card p-7 shadow-sm md:p-9">
+      <h1 className="display-title text-[24px] leading-tight text-foreground md:text-[28px]">
+        {title}
+      </h1>
       {description ? (
-        <p className="mt-1 text-[13px] text-muted-foreground">{description}</p>
+        <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground md:text-[15px]">
+          {description}
+        </p>
       ) : null}
-      <div className="mt-6">{children}</div>
+      <div className="mt-7 md:mt-8">{children}</div>
     </div>
   );
 }

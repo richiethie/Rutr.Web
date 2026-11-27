@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import { AuthCard, AuthShell } from "@/components/AuthShell";
 import { fetchOrganization, loginStaff } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
-import { persistSession } from "@/lib/auth";
+import { persistDemoSession, persistSession } from "@/lib/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("pm@rutters.demo");
@@ -61,11 +61,11 @@ export default function LoginPage() {
         title="Sign in"
         description="Use your account, or the Rutters demo as a fallback."
       >
-        <form onSubmit={onSubmit} className="space-y-4">
-          <label className="block text-[12px] font-medium text-foreground">
+        <form onSubmit={onSubmit} className="space-y-5">
+          <label className="block text-[13px] font-medium text-foreground">
             Email
             <input
-              className="console-input mt-1.5"
+              className="console-input mt-2 h-10 text-[14px]"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -73,10 +73,10 @@ export default function LoginPage() {
               required
             />
           </label>
-          <label className="block text-[12px] font-medium text-foreground">
+          <label className="block text-[13px] font-medium text-foreground">
             Password
             <input
-              className="console-input mt-1.5"
+              className="console-input mt-2 h-10 text-[14px]"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -84,21 +84,21 @@ export default function LoginPage() {
               required
             />
           </label>
-          <p className="rounded-md bg-muted px-3 py-2 text-[11px] text-muted-foreground">
+          <p className="rounded-md bg-muted px-3.5 py-2.5 text-[12px] text-muted-foreground">
             Demo fallback: pm@rutters.demo / rutters-demo
           </p>
-          {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
+          {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
           <button
             type="submit"
             disabled={busy}
-            className="console-btn console-btn-primary mt-1 w-full"
+            className="console-btn console-btn-primary mt-1 h-10 w-full text-[14px]"
           >
             {busy ? "Signing in…" : "Continue"}
           </button>
         </form>
       </AuthCard>
 
-      <div className="space-y-2 text-center text-[12px] text-muted-foreground">
+      <div className="space-y-2.5 text-center text-[13px] text-muted-foreground">
         <p>
           New org?{" "}
           <Link
@@ -109,12 +109,16 @@ export default function LoginPage() {
           </Link>
         </p>
         <p>
-          <Link
-            href="/jobs"
+          <button
+            type="button"
             className="font-medium text-foreground underline-offset-4 hover:underline"
+            onClick={() => {
+              persistDemoSession();
+              window.location.href = "/jobs";
+            }}
           >
-            Continue with demo header
-          </Link>
+            Continue with demo (Rutters seed)
+          </button>
         </p>
       </div>
     </AuthShell>

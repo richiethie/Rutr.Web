@@ -83,21 +83,21 @@ export default function SignupPage() {
         title="Create your account"
         description="Sign up creates your staff user and organization in one step."
       >
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
-          <label className="block text-[12px] font-medium text-foreground">
+        <form onSubmit={onSubmit} className="space-y-5" noValidate>
+          <label className="block text-[13px] font-medium text-foreground">
             Your name
             <input
-              className="console-input mt-1.5"
+              className="console-input mt-2 h-10 text-[14px]"
               name="displayName"
               autoComplete="name"
               required
               placeholder="Jamie Acme"
             />
           </label>
-          <label className="block text-[12px] font-medium text-foreground">
+          <label className="block text-[13px] font-medium text-foreground">
             Work email
             <input
-              className="console-input mt-1.5"
+              className="console-input mt-2 h-10 text-[14px]"
               name="email"
               type="email"
               autoComplete="username"
@@ -114,40 +114,40 @@ export default function SignupPage() {
             onConfirmChange={setConfirmPassword}
           />
 
-          <div className="border-t border-border pt-4">
-            <p className="mb-3 text-[12px] font-medium text-muted-foreground">
+          <div className="border-t border-border pt-5">
+            <p className="mb-3.5 text-[13px] font-medium text-muted-foreground">
               Organization
             </p>
-            <label className="block text-[12px] font-medium text-foreground">
+            <label className="block text-[13px] font-medium text-foreground">
               Company name
               <input
-                className="console-input mt-1.5"
+                className="console-input mt-2 h-10 text-[14px]"
                 name="organizationName"
                 required
                 placeholder="Acme Roofing"
               />
             </label>
-            <label className="mt-4 block text-[12px] font-medium text-foreground">
+            <label className="mt-5 block text-[13px] font-medium text-foreground">
               Brand color <span className="font-normal text-muted-foreground">(optional)</span>
               <input
-                className="console-input mt-1.5"
+                className="console-input mt-2 h-10 text-[14px]"
                 name="brandPrimaryColor"
                 placeholder="#B87333"
               />
             </label>
           </div>
-          {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
+          {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
           <button
             type="submit"
             disabled={busy}
-            className="console-btn console-btn-primary mt-1 w-full"
+            className="console-btn console-btn-primary mt-1 h-10 w-full text-[14px]"
           >
             {busy ? "Creating account…" : "Create account"}
           </button>
         </form>
       </AuthCard>
 
-      <p className="text-center text-[12px] text-muted-foreground">
+      <p className="text-center text-[13px] text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"

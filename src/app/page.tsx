@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 
-/** Staff product entry — console opens on Jobs. */
+/**
+ * Entry is handled by middleware (session → /jobs, else → /login).
+ * Keep a server redirect as a fallback if middleware is bypassed.
+ */
 export default function HomePage() {
-  redirect("/jobs");
+  redirect("/login");
 }

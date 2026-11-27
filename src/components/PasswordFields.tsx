@@ -14,7 +14,7 @@ function CheckRow({ ok, label, active }: { ok: boolean; label: string; active: b
   return (
     <li
       className={cn(
-        "flex items-center gap-2 text-[12px]",
+        "flex items-center gap-2 text-[13px]",
         !active
           ? "text-muted-foreground"
           : ok
@@ -63,12 +63,12 @@ function PasswordInput({
 }) {
   const [visible, setVisible] = useState(false);
   return (
-    <label className="block text-[12px] font-medium text-foreground" htmlFor={id}>
+    <label className="block text-[13px] font-medium text-foreground" htmlFor={id}>
       {label}
-      <div className="relative mt-1.5">
+      <div className="relative mt-2">
         <input
           id={id}
-          className="console-input pr-10"
+          className="console-input h-10 pr-10 text-[14px]"
           name={name}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
