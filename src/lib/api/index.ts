@@ -37,6 +37,8 @@ import type {
   OrganizationWrite,
   Photo,
   PortalJob,
+  PlacesAutocompleteResult,
+  PlacesDetailsResult,
   Property,
   PropertyWrite,
   SignupRequest,
@@ -192,6 +194,32 @@ export async function updateProperty(id: string, body: PropertyWrite): Promise<P
 
 export async function deleteProperty(id: string): Promise<void> {
   await apiFetch<void>(`/api/v1/properties/${id}`, { method: "DELETE" });
+}
+
+// ── Places (Api proxy — Google or mock; never browser Maps key) ───────────
+
+export async function fetchPlacesAutocomplete(
+  q: string,
+  sessionToken?: string | null,
+): Promise<PlacesAutocompleteResult> {
+  const params = new URLSearchParams();
+  params.set("q", q);
+  if (sessionToken) params.set("sessionToken", sessionToken);
+  return apiFetch<PlacesAutocompleteResult>(
+    `/api/v1/places/autocomplete?${params.toString()}`,
+  );
+}
+
+export async function fetchPlacesDetails(
+  placeId: string,
+  sessionToken?: string | null,
+): Promise<PlacesDetailsResult> {
+  const params = new URLSearchParams();
+  params.set("placeId", placeId);
+  if (sessionToken) params.set("sessionToken", sessionToken);
+  return apiFetch<PlacesDetailsResult>(
+    `/api/v1/places/details?${params.toString()}`,
+  );
 }
 
 // ── Notes ─────────────────────────────────────────────────────────────────

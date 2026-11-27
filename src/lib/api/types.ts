@@ -32,6 +32,8 @@ export type Property = {
   notes: string | null;
   jobCount: number;
   updatedAt: string;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type PropertyWrite = {
@@ -42,6 +44,33 @@ export type PropertyWrite = {
   propertyType?: string | null;
   yearBuilt?: number | null;
   notes?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+};
+
+export type PlacesSuggestion = {
+  placeId: string;
+  primaryText: string;
+  secondaryText?: string | null;
+  description?: string | null;
+};
+
+export type PlacesAutocompleteResult = {
+  provider: "google" | "mock" | string;
+  suggestions: PlacesSuggestion[];
+};
+
+export type PlacesDetailsResult = {
+  provider: "google" | "mock" | string;
+  placeId: string;
+  addressLine1: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country?: string | null;
+  formattedAddress?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type JobListItem = {
