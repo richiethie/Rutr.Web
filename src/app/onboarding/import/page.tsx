@@ -8,6 +8,7 @@ import { importOnboarding, seedOnboarding } from "@/lib/api";
 import type { OnboardingImportError, OnboardingImportResult } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/errors";
 import { readToken } from "@/lib/auth";
+import { toastError, toastSuccess } from "@/lib/toast";
 import {
   CSV_HEADERS,
   SAMPLE_CSV,
@@ -108,6 +109,9 @@ export default function OnboardingImportPage() {
             { ...res, skipped: 0, warnings: [], errors: [], idempotencyRule: null, dryRun: false },
             false,
           );
+          toastSuccess(
+            choice === "empty" ? "Organization left empty" : "Sample data seeded",
+          );
         } else if (choice === "jobnimbus") {
           const res = await importOnboarding({
             source: "jobnimbus",
@@ -115,6 +119,11 @@ export default function OnboardingImportPage() {
             dryRun,
           });
           applyResult("jobnimbus", res, dryRun);
+          toastSuccess(
+            dryRun || res.dryRun
+              ? "JobNimbus dry-run complete"
+              : `Imported ${res.jobsCreated} jobs from JobNimbus`,
+          );
         } else {
           if (csvPreview && !csvPreview.ok) {
             setError(csvPreview.error ?? "CSV failed client checks.");
@@ -126,8 +135,14 @@ export default function OnboardingImportPage() {
             dryRun,
           });
           applyResult("csv", res, dryRun);
+          toastSuccess(
+            dryRun || res.dryRun
+              ? "CSV dry-run complete"
+              : `Imported ${res.jobsCreated} jobs from CSV`,
+          );
         }
       } catch (err) {
+        toastError("Import failed", err);
         setError(
           err instanceof ApiError
             ? err.message

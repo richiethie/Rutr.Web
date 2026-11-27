@@ -12,6 +12,7 @@ import {
   type Property,
 } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const controlClass =
   "flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-left text-[13px] text-foreground outline-none placeholder:text-left placeholder:text-muted-foreground focus-visible:border-brand focus-visible:shadow-[0_0_0_3px_var(--brand-ring)] disabled:cursor-not-allowed disabled:opacity-50";
@@ -247,9 +248,15 @@ export function PropertyCreate() {
         submitLabel="Create property"
         onCancel={() => setOpen(false)}
         onSaved={async (body) => {
-          await createProperty(body);
-          setOpen(false);
-          router.refresh();
+          try {
+            await createProperty(body);
+            toastSuccess("Property created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create property", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -273,14 +280,22 @@ export function PropertyEdit({ property }: { property: Property }) {
           submitLabel="Save property"
           onCancel={() => setOpen(false)}
           onSaved={async (body) => {
-            await updateProperty(property.id, body);
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateProperty(property.id, body);
+              toastSuccess("Property updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save property", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         confirm="Delete this property?"
+        successToast="Property deleted"
+        failToast="Failed to delete property"
         onDelete={async () => {
           await deleteProperty(property.id);
           router.push("/properties");

@@ -9,6 +9,7 @@ import {
   updateContact,
   type Contact,
 } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const contactFields = (c?: Contact) => [
   { name: "firstName", label: "First name", required: true, defaultValue: c?.firstName },
@@ -50,9 +51,15 @@ export function ContactCreate() {
         submitLabel="Create contact"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createContact(toWrite(values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createContact(toWrite(values));
+            toastSuccess("Contact created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create contact", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -76,14 +83,22 @@ export function ContactEdit({ contact }: { contact: Contact }) {
           submitLabel="Save contact"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateContact(contact.id, toWrite(values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateContact(contact.id, toWrite(values));
+              toastSuccess("Contact updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save contact", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         confirm="Delete this contact?"
+        successToast="Contact deleted"
+        failToast="Failed to delete contact"
         onDelete={async () => {
           await deleteContact(contact.id);
           router.push("/contacts");

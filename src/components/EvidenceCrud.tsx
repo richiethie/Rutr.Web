@@ -20,6 +20,7 @@ import {
   type Photo,
 } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const MAX_BYTES = 12 * 1024 * 1024;
 
@@ -120,9 +121,11 @@ export function EvidenceCreate({ jobId }: { jobId: string }) {
           externalCompanyCamId: companyCamId.trim() || null,
           customerVisible,
         });
+        toastSuccess("Photo added");
         close();
         router.refresh();
       } catch (err) {
+        toastError("Failed to upload photo", err);
         setError(
           err instanceof ApiError
             ? err.message
@@ -347,6 +350,8 @@ export function EvidenceActions({
       <DeleteButton
         label="Soft-delete"
         confirm="Soft-delete this photo?"
+        successToast="Photo deleted"
+        failToast="Failed to delete photo"
         onDelete={async () => {
           await deleteEvidence(photo.id);
           router.refresh();

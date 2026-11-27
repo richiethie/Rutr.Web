@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { approveDraft, rejectDraft, sendDraft } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Mode = "idle" | "approved" | "sent" | "rejected";
 
@@ -81,9 +82,11 @@ export function DraftActions({
               startTransition(async () => {
                 try {
                   await sendDraft(draftId);
+                  toastSuccess("Digest sent");
                   setMode("sent");
                   await refresh();
                 } catch (err) {
+                  toastError("Failed to send digest", err);
                   setError(errMsg(err));
                 }
               });
@@ -114,10 +117,12 @@ export function DraftActions({
             startTransition(async () => {
               try {
                 await approveDraft(draftId);
+                toastSuccess("Draft approved");
                 // Stay on Approved/Send UI; refresh keeps the row (queue includes Approved).
                 setMode("approved");
                 await refresh();
               } catch (err) {
+                toastError("Failed to approve draft", err);
                 setError(errMsg(err));
               }
             });
@@ -134,9 +139,11 @@ export function DraftActions({
             startTransition(async () => {
               try {
                 await rejectDraft(draftId, "Evidence incomplete");
+                toastSuccess("Draft rejected");
                 setMode("rejected");
                 await refresh();
               } catch (err) {
+                toastError("Failed to reject draft", err);
                 setError(errMsg(err));
               }
             });

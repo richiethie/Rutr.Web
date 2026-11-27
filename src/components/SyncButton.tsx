@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { runIntegrationSync, type SyncResult } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export function SyncButton() {
   const router = useRouter();
@@ -23,8 +24,10 @@ export function SyncButton() {
             try {
               const res = await runIntegrationSync();
               setResult(res);
+              toastSuccess(res.message || "Sync complete");
               router.refresh();
             } catch (err) {
+              toastError("Sync failed", err);
               setError(
                 err instanceof ApiError
                   ? err.message

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useId, useState, useTransition, type FormEvent, type ReactNode } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type FieldDef = {
   name: string;
@@ -185,10 +186,14 @@ export function EntityForm({
 export function DeleteButton({
   label = "Delete",
   confirm = "Delete this record?",
+  successToast = "Deleted",
+  failToast = "Failed to delete",
   onDelete,
 }: {
   label?: string;
   confirm?: string;
+  successToast?: string;
+  failToast?: string;
   onDelete: () => Promise<void>;
 }) {
   const router = useRouter();
@@ -207,8 +212,10 @@ export function DeleteButton({
           startTransition(async () => {
             try {
               await onDelete();
+              toastSuccess(successToast);
               router.refresh();
             } catch (err) {
+              toastError(failToast, err);
               setError(
                 err instanceof ApiError
                   ? err.message

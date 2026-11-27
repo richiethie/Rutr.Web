@@ -11,6 +11,7 @@ import {
   type StaffMember,
 } from "@/lib/api";
 import { ApiError } from "@/lib/api/errors";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export function OrgEditForm({ org }: { org: Organization }) {
   const router = useRouter();
@@ -91,23 +92,29 @@ export function OrgEditForm({ org }: { org: Organization }) {
         submitLabel="Save organization"
         onCancel={() => setEditing(false)}
         onSubmit={async (values) => {
-          await updateOrganization({
-            name: values.name ? String(values.name) : null,
-            brandPrimaryColor: values.brandPrimaryColor
-              ? String(values.brandPrimaryColor)
-              : null,
-            quietHoursStartLocal:
-              typeof values.quietHoursStartLocal === "number"
-                ? values.quietHoursStartLocal
+          try {
+            await updateOrganization({
+              name: values.name ? String(values.name) : null,
+              brandPrimaryColor: values.brandPrimaryColor
+                ? String(values.brandPrimaryColor)
                 : null,
-            quietHoursEndLocal:
-              typeof values.quietHoursEndLocal === "number"
-                ? values.quietHoursEndLocal
-                : null,
-            timeZoneId: values.timeZoneId ? String(values.timeZoneId) : null,
-          });
-          setEditing(false);
-          router.refresh();
+              quietHoursStartLocal:
+                typeof values.quietHoursStartLocal === "number"
+                  ? values.quietHoursStartLocal
+                  : null,
+              quietHoursEndLocal:
+                typeof values.quietHoursEndLocal === "number"
+                  ? values.quietHoursEndLocal
+                  : null,
+              timeZoneId: values.timeZoneId ? String(values.timeZoneId) : null,
+            });
+            toastSuccess("Organization updated");
+            setEditing(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to save organization", err);
+            throw err;
+          }
         }}
       />
     </div>
@@ -149,10 +156,12 @@ export function MemberRoleSelect({ member }: { member: StaffMember }) {
           startTransition(async () => {
             try {
               await updateMemberRole(member.id, next);
+              toastSuccess(`Role updated to ${next}`);
               setEditing(false);
               router.refresh();
             } catch (err) {
               setRole(member.role);
+              toastError("Failed to update role", err);
               setError(
                 err instanceof ApiError
                   ? err.message

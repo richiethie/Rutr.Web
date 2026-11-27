@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CrudPanel, DeleteButton, EntityForm } from "@/components/EntityForm";
 import { createTask, deleteTask, updateTask, type TaskItem } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 function fields(t?: Partial<TaskItem>) {
   return [
@@ -59,9 +60,15 @@ export function TaskCreate({ defaultJobId }: { defaultJobId?: string }) {
         submitLabel="Create task"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createTask(toWrite(values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createTask(toWrite(values));
+            toastSuccess("Task created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create task", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -85,15 +92,23 @@ export function TaskRowActions({ task }: { task: TaskItem }) {
           submitLabel="Save"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateTask(task.id, toWrite(values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateTask(task.id, toWrite(values));
+              toastSuccess("Task updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save task", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         label="Delete"
         confirm="Delete this task?"
+        successToast="Task deleted"
+        failToast="Failed to delete task"
         onDelete={async () => {
           await deleteTask(task.id);
           router.refresh();

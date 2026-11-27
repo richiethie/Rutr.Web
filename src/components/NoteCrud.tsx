@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CrudPanel, DeleteButton, EntityForm } from "@/components/EntityForm";
 import { createNote, deleteNote, updateNote, type Note } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 function fields(n?: Note) {
   return [
@@ -37,9 +38,15 @@ export function NoteCreate({ defaultJobId }: { defaultJobId?: string }) {
         submitLabel="Create note"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createNote(toWrite(values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createNote(toWrite(values));
+            toastSuccess("Note created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create note", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -63,15 +70,23 @@ export function NoteRowActions({ note }: { note: Note }) {
           submitLabel="Save"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateNote(note.id, toWrite(values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateNote(note.id, toWrite(values));
+              toastSuccess("Note updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save note", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         label="Delete"
         confirm="Delete this note?"
+        successToast="Note deleted"
+        failToast="Failed to delete note"
         onDelete={async () => {
           await deleteNote(note.id);
           router.refresh();

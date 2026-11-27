@@ -11,6 +11,7 @@ import {
   type JobDetail,
 } from "@/lib/api";
 import { JOB_STAGES } from "@/lib/api/types";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const jobFields = (j?: JobDetail) => [
   { name: "title", label: "Title", defaultValue: j?.title },
@@ -114,10 +115,16 @@ export function JobCreate() {
         submitLabel="Create job"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          const job = await createJob(toWrite(values));
-          setOpen(false);
-          router.push(`/jobs/${job.id}`);
-          router.refresh();
+          try {
+            const job = await createJob(toWrite(values));
+            toastSuccess("Job created");
+            setOpen(false);
+            router.push(`/jobs/${job.id}`);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create job", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -142,22 +149,30 @@ export function JobEdit({ job }: { job: JobDetail }) {
           submitLabel="Save job"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            const body = toWrite(values);
-            await updateJob(job.id, body);
-            if (body.status || body.stage) {
-              try {
-                await updateJobStatus(job.id, body.status ?? job.status, body.stage);
-              } catch {
-                /* status endpoint may land with full CRUD */
+            try {
+              const body = toWrite(values);
+              await updateJob(job.id, body);
+              if (body.status || body.stage) {
+                try {
+                  await updateJobStatus(job.id, body.status ?? job.status, body.stage);
+                } catch {
+                  /* status endpoint may land with full CRUD */
+                }
               }
+              toastSuccess("Job updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save job", err);
+              throw err;
             }
-            setOpen(false);
-            router.refresh();
           }}
         />
       </CrudPanel>
       <DeleteButton
         confirm="Delete this job?"
+        successToast="Job deleted"
+        failToast="Failed to delete job"
         onDelete={async () => {
           await deleteJob(job.id);
           router.push("/jobs");

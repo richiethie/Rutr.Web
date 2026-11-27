@@ -9,6 +9,7 @@ import {
   updateDraft,
   type MessageDraft,
 } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 function fields(jobId: string, d?: MessageDraft) {
   return [
@@ -62,9 +63,15 @@ export function DraftCreate({ jobId }: { jobId: string }) {
         submitLabel="Create draft"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createDraft(toWrite(jobId, values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createDraft(toWrite(jobId, values));
+            toastSuccess("Draft created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create draft", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -88,15 +95,23 @@ export function DraftEdit({ jobId, draft }: { jobId: string; draft: MessageDraft
           submitLabel="Save draft"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateDraft(draft.id, toWrite(jobId, values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateDraft(draft.id, toWrite(jobId, values));
+              toastSuccess("Draft updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save draft", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         label="Delete"
         confirm="Delete this draft?"
+        successToast="Draft deleted"
+        failToast="Failed to delete draft"
         onDelete={async () => {
           await deleteDraft(draft.id);
           router.refresh();

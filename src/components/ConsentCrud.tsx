@@ -9,6 +9,7 @@ import {
   updateConsent,
   type Consent,
 } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 function fields(c?: Partial<Consent>) {
   return [
@@ -71,9 +72,15 @@ export function ConsentCreate({ defaultJobId }: { defaultJobId?: string }) {
         submitLabel="Create consent"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createConsent(toWrite(values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createConsent(toWrite(values));
+            toastSuccess("Consent created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create consent", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -97,15 +104,23 @@ export function ConsentRowActions({ consent }: { consent: Consent }) {
           submitLabel="Save"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateConsent(consent.id, toWrite(values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateConsent(consent.id, toWrite(values));
+              toastSuccess("Consent updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save consent", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         label="Delete"
         confirm="Delete this consent record?"
+        successToast="Consent deleted"
+        failToast="Failed to delete consent"
         onDelete={async () => {
           await deleteConsent(consent.id);
           router.refresh();

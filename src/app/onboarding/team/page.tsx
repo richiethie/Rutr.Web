@@ -16,6 +16,7 @@ import { TemporaryPasswordField } from "@/components/PasswordFields";
 import { ApiError } from "@/lib/api/errors";
 import { readToken } from "@/lib/auth";
 import { staffPasswordError } from "@/lib/password";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Mode = "invite" | "add";
 
@@ -86,6 +87,7 @@ export default function OnboardingTeamPage() {
             temporaryPassword: tempPassword,
           });
           setNotice(`Added ${member.displayName} as ${member.role}.`);
+          toastSuccess(`Added ${member.displayName} as ${member.role}`);
           setTempPassword("");
           e.currentTarget.reset();
         } else {
@@ -96,10 +98,12 @@ export default function OnboardingTeamPage() {
           });
           const link = `${window.location.origin}/invite?token=${encodeURIComponent(invite.inviteToken)}`;
           setNotice(`Invite created for ${invite.email}. Share link: ${link}`);
+          toastSuccess(`Invite created for ${invite.email}`);
           e.currentTarget.reset();
         }
         refresh();
       } catch (err) {
+        toastError("Failed to add teammate", err);
         setFormError(
           err instanceof ApiError
             ? err.message

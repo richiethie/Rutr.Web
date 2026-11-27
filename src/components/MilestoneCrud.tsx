@@ -9,6 +9,7 @@ import {
   updateMilestone,
   type Milestone,
 } from "@/lib/api";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 function fields(m?: Milestone) {
   return [
@@ -67,9 +68,15 @@ export function MilestoneCreate({ defaultJobId }: { defaultJobId?: string }) {
         submitLabel="Create milestone"
         onCancel={() => setOpen(false)}
         onSubmit={async (values) => {
-          await createMilestone(toWrite(values));
-          setOpen(false);
-          router.refresh();
+          try {
+            await createMilestone(toWrite(values));
+            toastSuccess("Milestone created");
+            setOpen(false);
+            router.refresh();
+          } catch (err) {
+            toastError("Failed to create milestone", err);
+            throw err;
+          }
         }}
       />
     </CrudPanel>
@@ -93,15 +100,23 @@ export function MilestoneRowActions({ milestone }: { milestone: Milestone }) {
           submitLabel="Save"
           onCancel={() => setOpen(false)}
           onSubmit={async (values) => {
-            await updateMilestone(milestone.id, toWrite(values));
-            setOpen(false);
-            router.refresh();
+            try {
+              await updateMilestone(milestone.id, toWrite(values));
+              toastSuccess("Milestone updated");
+              setOpen(false);
+              router.refresh();
+            } catch (err) {
+              toastError("Failed to save milestone", err);
+              throw err;
+            }
           }}
         />
       </CrudPanel>
       <DeleteButton
         label="Delete"
         confirm="Delete this milestone?"
+        successToast="Milestone deleted"
+        failToast="Failed to delete milestone"
         onDelete={async () => {
           await deleteMilestone(milestone.id);
           router.refresh();
