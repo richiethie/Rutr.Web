@@ -123,9 +123,10 @@ export function ThemeToggle() {
             onClick={() => setPreference(opt.value)}
             className={
               active
-                ? "flex flex-col items-start gap-2 rounded-lg border border-brand/40 bg-brand-soft p-3 text-left shadow-sm ring-1 ring-brand/20 transition-colors"
+                ? "flex flex-col items-start gap-2 rounded-lg border bg-[var(--brand-soft)] p-3 text-left transition-colors shadow-[0_0_0_1px_var(--brand)]"
                 : "flex flex-col items-start gap-2 rounded-lg border border-border bg-content p-3 text-left transition-colors hover:bg-muted dark:bg-muted"
             }
+            style={active ? { borderColor: "var(--brand)" } : undefined}
           >
             <span
               className={

@@ -288,9 +288,10 @@ export default function OnboardingImportPage() {
                   key={id}
                   className={
                     choice === id
-                      ? "flex cursor-pointer gap-3 rounded-lg border border-brand bg-brand-soft/40 px-3 py-3"
+                      ? "flex cursor-pointer gap-3 rounded-lg border bg-[var(--brand-soft)] px-3 py-3 shadow-[0_0_0_1px_var(--brand)]"
                       : "flex cursor-pointer gap-3 rounded-lg border border-border bg-card px-3 py-3 hover:bg-muted/60"
                   }
+                  style={choice === id ? { borderColor: "var(--brand)" } : undefined}
                 >
                   <input
                     type="radio"
