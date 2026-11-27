@@ -68,7 +68,7 @@ export function ContactEdit({ contact }: { contact: Contact }) {
         title="Edit contact"
         open={open}
         onOpenChange={setOpen}
-        triggerLabel="Edit contact"
+        triggerLabel="Edit"
         triggerClassName="console-btn console-btn-secondary"
       >
         <EntityForm

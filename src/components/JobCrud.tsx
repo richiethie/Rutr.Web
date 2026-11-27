@@ -133,7 +133,7 @@ export function JobEdit({ job }: { job: JobDetail }) {
         title="Edit job"
         open={open}
         onOpenChange={setOpen}
-        triggerLabel="Edit job"
+        triggerLabel="Edit"
         triggerClassName="console-btn console-btn-secondary"
         wide
       >

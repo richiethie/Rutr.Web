@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EmptyState, ErrorState } from "@/components/ApiState";
 import { ContactEdit } from "@/components/ContactCrud";
+import { DetailFields } from "@/components/DetailFields";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchContact } from "@/lib/api";
 import { isNotFound } from "@/lib/api/errors";
@@ -47,7 +48,18 @@ export default async function ContactDetailPage({
             <span className="console-badge">{contact.preferredChannel}</span>
           </>
         }
+      />
+      <DetailFields
+        title="Contact details"
         actions={<ContactEdit contact={contact} />}
+        fields={[
+          { label: "First name", value: contact.firstName },
+          { label: "Last name", value: contact.lastName },
+          { label: "Email", value: contact.email },
+          { label: "Phone", value: contact.phone },
+          { label: "Role", value: contact.role },
+          { label: "Preferred channel", value: contact.preferredChannel },
+        ]}
       />
     </StaffChrome>
   );

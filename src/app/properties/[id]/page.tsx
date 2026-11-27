@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EmptyState, ErrorState } from "@/components/ApiState";
+import { DetailFields } from "@/components/DetailFields";
 import { PropertyEdit } from "@/components/PropertyCrud";
 import { PageHeader, StaffChrome } from "@/components/StaffChrome";
 import { fetchProperty } from "@/lib/api";
@@ -47,7 +48,26 @@ export default async function PropertyDetailPage({
             <span className="console-badge">{property.jobCount} jobs</span>
           </>
         }
+      />
+      <DetailFields
+        title="Property details"
         actions={<PropertyEdit property={property} />}
+        fields={[
+          { label: "Address", value: property.addressLine1 },
+          { label: "City", value: property.city },
+          { label: "State", value: property.state },
+          { label: "ZIP", value: property.postalCode },
+          { label: "Type", value: property.propertyType },
+          { label: "Year built", value: property.yearBuilt },
+          { label: "Notes", value: property.notes },
+          {
+            label: "Coordinates",
+            value:
+              property.latitude != null && property.longitude != null
+                ? `${property.latitude}, ${property.longitude}`
+                : null,
+          },
+        ]}
       />
     </StaffChrome>
   );

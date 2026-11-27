@@ -265,7 +265,7 @@ export function PropertyEdit({ property }: { property: Property }) {
         title="Edit property"
         open={open}
         onOpenChange={setOpen}
-        triggerLabel="Edit property"
+        triggerLabel="Edit"
         triggerClassName="console-btn console-btn-secondary"
       >
         <PropertyForm

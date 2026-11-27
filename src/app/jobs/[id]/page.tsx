@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EmptyState, ErrorState } from "@/components/ApiState";
+import { DetailFields } from "@/components/DetailFields";
 import { DraftActions } from "@/components/DraftActions";
 import { DraftCreate, DraftEdit } from "@/components/DraftCrud";
 import { EvidenceActions, EvidenceCreate } from "@/components/EvidenceCrud";
@@ -77,16 +78,32 @@ export default async function JobDetailPage({
           </>
         }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
-            <JobEdit job={job} />
-            {portalHref ? (
-              <Link href={portalHref} className="console-btn console-btn-secondary">
-                Open portal
-              </Link>
-            ) : null}
-          </div>
+          portalHref ? (
+            <Link href={portalHref} className="console-btn console-btn-secondary">
+              Open portal
+            </Link>
+          ) : null
         }
       />
+
+      <div className="mb-4">
+        <DetailFields
+          title="Job details"
+          actions={<JobEdit job={job} />}
+          fields={[
+            { label: "Title", value: job.title },
+            { label: "Address", value: job.addressLine1 },
+            { label: "City", value: `${job.city}, ${job.state} ${job.postalCode}` },
+            { label: "Homeowner", value: job.homeownerName },
+            { label: "Email", value: job.homeownerEmail },
+            { label: "Phone", value: job.homeownerPhone },
+            { label: "Status", value: job.status },
+            { label: "Stage", value: job.stage },
+            { label: "Type", value: job.jobType },
+            { label: "JobNimbus id", value: job.externalJobNimbusId },
+          ]}
+        />
+      </div>
 
       <div className="stagger-1 grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <section className="console-panel p-5">
